@@ -15,6 +15,7 @@
 
 #include "apps/tree.h"
 #include "apps/list.h"
+#include "util/util.h"
 
 /*
  *  ------------------------------- DEFINITION -------------------------------
@@ -51,26 +52,6 @@ typedef enum
 /*
  *  -------------------------------- STRUCTURE --------------------------------
  */
-
-typedef struct
-{
-  list_t List;
-  const xs_element_t* Element;
-  uint32_t Ref_Count;
-}element_list_t;
-
-typedef struct
-{
-  list_t List;
-  const xs_attribute_t* Attribute;
-}attribute_list_t;
-
-typedef struct
-{
-  list_t List;
-  const xs_element_t* Element;
-  string_t Reference;
-}reference_list_t;
 
 typedef struct
 {

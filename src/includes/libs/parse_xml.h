@@ -122,6 +122,7 @@ struct xs_element_t
 /*
  *  ---------------------------- EXPORTED FUNCTION ----------------------------
  */
+
  extern xml_parse_result_t parse_xml(const xs_element_t* root, const char* source,
                                      void** context);
 

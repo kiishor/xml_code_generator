@@ -83,10 +83,6 @@
 		<Unit filename="../../src/apps/main.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="../../src/apps/pool.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="../../src/apps/pool.h" />
 		<Unit filename="../../src/apps/tree.c">
 			<Option compilerVar="CC" />
 		</Unit>
