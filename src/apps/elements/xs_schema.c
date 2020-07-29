@@ -17,9 +17,12 @@
 #include <string.h>
 #include <stdio.h>
 
+#include "apps/tree.h"
+
 #include "common.h"
 
 #include "libs/parse_xml.h"
+#include "xs_schema.h"
 
 #include "apps/xsd.h"
 #include "xs_element.h"
@@ -34,7 +37,7 @@
 typedef struct
 {
   size_t ElementQuantity;
-  root_element_t* Elements;
+  element_t* Elements;
 }schema_t;
 
 
@@ -54,12 +57,12 @@ tree_t SchemaTree =
 {
   .Data = &Schema,
 };
-void* pXsdData = &SchemaTree;
+tree_t* pXsdData = &SchemaTree;
 
 
 const xs_element_t* schemaDescendant[] =
 {
-  &xs_root_element,
+  &xs_global_element,
   &xs_complexType,
   &xs_attribute,
   &xs_simpleType,
@@ -95,13 +98,13 @@ static const xs_element_t xsd_schema =
   .Child_Type      = EN_CHOICE,
   .Child          = schemaDescendant,
 };
+
 const xs_element_t* const xsd_roots = &xsd_schema;
 const xs_element_t xsd_root =
 {
   .Child_Quantity = 1,
   .Child_Type     = EN_CHOICE,
   .Child = &xsd_roots,
-
 };
 
 /*

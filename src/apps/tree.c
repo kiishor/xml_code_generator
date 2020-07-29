@@ -1,6 +1,6 @@
 /**
  * \file
- * \brief  Handles the tree data structure
+ * \brief  Library the tree data structure
 
  * \author  Nandkishor Biradar
  * \date  15 June 2019

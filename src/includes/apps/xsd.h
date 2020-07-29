@@ -8,47 +8,87 @@
  * \author  Nandkishor Biradar
  * \date    18 August 2019
  */
- 
+
 /*
- *	-------------------- INCLUDE FILES --------------------
+ *  ------------------------------ INCLUDE FILES ------------------------------
  */
-#include "tree.h"
 
+#include "apps/tree.h"
+#include "apps/list.h"
 
 /*
- *	-------------------- DEFINITION --------------------
+ *  ------------------------------- DEFINITION -------------------------------
  */
 
 #define DEFAULT_MIN_STRING_LENGTH 1
 #define DEFAULT_MAX_STRING_LENGTH 128
 
+#define ALL_XSD_TAG                                   \
+  ADD_TAG(XS_SCHEMA_TAG,          xs:schema)          \
+  ADD_TAG(XS_GLOBAL_ELEMENT_TAG,  xs:element)         \
+  ADD_TAG(XS_CHILD_ELEMENT_TAG,   xs:element)         \
+  ADD_TAG(XS_COMPLEX_TAG,         xs:complexType)      \
+  ADD_TAG(XS_SEQUENCE_TAG,        xs:sequence)        \
+  ADD_TAG(XS_SIMPLE_CONTENT_TAG,  xs:simpleContent)   \
+  ADD_TAG(XS_EXTENSION_TAG,       xs:extension)       \
+  ADD_TAG(XS_ATTRIBUTE_TAG,       xs:attribute)       \
+  ADD_TAG(XS_RESTRICTION_TAG,     xs:restriction)     \
+  ADD_TAG(XS_SIMPLE_TYPE_TAG,     xs:simpleType)      \
+  ADD_TAG(XS_ENUMERATION_TAG,     xs:enumeration)
+
 /*
- *	-------------------- ENUMERATION --------------------
+ *  ------------------------------- ENUMERATION -------------------------------
  */
 
+#define ADD_TAG(TAG, ...) TAG,
 typedef enum
 {
-  XS_SCHEMA_TAG,
-  XS_ROOT_ELEMENT_TAG,
-  XS_CHILD_ELEMENT_TAG,
-  XS_COMPLEX_TAG,
-  XS_SEQUENCE_TAG,
-  XS_SIMPLE_CONTENT_TAG,
-  XS_EXTENSION_TAG,
-  XS_ATTRIBUTE_TAG,
-  XS_RESTRICTION_TAG,
-  XS_SIMPLE_TYPE_TAG,
-
-  XS_ENUMERATION_TAG,
+  ALL_XSD_TAG
+  TOTAL_XSD_TAGS
 }xsd_tag_t;
+#undef ADD_TAG
 
 /*
- *	-------------------- STRUCTURE --------------------
+ *  -------------------------------- STRUCTURE --------------------------------
  */
 
+typedef struct
+{
+  list_t List;
+  const xs_element_t* Element;
+  uint32_t Ref_Count;
+}element_list_t;
+
+typedef struct
+{
+  list_t List;
+  const xs_attribute_t* Attribute;
+}attribute_list_t;
+
+typedef struct
+{
+  list_t List;
+  const xs_element_t* Element;
+  string_t Reference;
+}reference_list_t;
+
+typedef struct
+{
+  reference_list_t Element_List;
+  attribute_list_t Attribute_List;
+}context_t;
+
 /*
- *	-------------------- EXPORTED FUNCTION --------------------
+ *  ------------------------ EXTERNAL GLOBAL VARIABLES ------------------------
  */
+
+extern const char* const XsdTag[TOTAL_XSD_TAGS];
+
+/*
+ *  ---------------------------- EXPORTED FUNCTION ----------------------------
+ */
+extern xs_element_t* compile_xsd(const tree_t* tree);
+extern void print_xsd(const tree_t* const tree, uint32_t level);
 
 #endif // XSD_H
 

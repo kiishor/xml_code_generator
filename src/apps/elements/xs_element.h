@@ -12,11 +12,10 @@
  *  -------------------------------- STRUCTURE --------------------------------
  */
 
-
 typedef struct
 {
   string_t id;         // Optional
-  string_t name;       // required if root element
+  string_t name;       // required if global element
   string_t type;
 }common_element_attribute_t;
 
@@ -24,7 +23,7 @@ typedef struct
 {
   common_element_attribute_t;
   string_t substitutionGroup;
-}root_element_attribute_t;
+}global_element_attribute_t;
 
 typedef struct
 {
@@ -34,26 +33,26 @@ typedef struct
   uint32_t maxOccurs;
 }child_element_attribute_t;
 
+//typedef struct
+//{
+//  xsd_tag_t Type;
+//}child_element_t;
 
 typedef struct
 {
   xsd_tag_t Type;
-  child_element_attribute_t attr;
-}child_element_t;
-
-typedef struct
-{
-  xsd_tag_t Type;
-  root_element_attribute_t attr;
-}root_element_t;
-
-
+  union
+  {
+    global_element_attribute_t global;
+    child_element_attribute_t child;
+  };
+}element_t;
 
 /*
  *  ------------------------ EXTERNAL GLOBAL VARIABLES ------------------------
  */
 
-extern const xs_element_t xs_root_element;
+extern const xs_element_t xs_global_element;
 extern const xs_element_t xs_child_element;
 
 #endif // XS_ELEMENT_H

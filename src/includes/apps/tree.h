@@ -17,7 +17,7 @@ typedef struct tree_t tree_t;
 
 struct tree_t
 {
-  void* Data;
+  const void* Data;
   tree_t* Parent;
   tree_t* Next;
   tree_t* Descendant;
