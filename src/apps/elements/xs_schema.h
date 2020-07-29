@@ -14,7 +14,7 @@
  */
 
 extern const xs_element_t xsd_root;
-extern void* pXsdData;
+extern tree_t* pXsdData;
 
 /*
  *  ---------------------------- EXPORTED FUNCTION ----------------------------

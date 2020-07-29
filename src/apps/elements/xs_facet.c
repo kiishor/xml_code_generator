@@ -18,7 +18,7 @@
 #include "common.h"
 #include "libs/parse_xml.h"
 #include "apps/xsd.h"
-
+#include "apps/tree.h"
 #include "xs_facet.h"
 
 /*
@@ -40,7 +40,7 @@ static const xs_attribute_t facet_Attr[] =
   [0].Target.Type = EN_RELATIVE,
   [0].Target.Offset = offsetof(xs_facet_t, attr.value),
 
-  [0].Content.Type = XS_STRING_DYNAMIC,
+  [0].Content.Type = EN_STRING_DYNAMIC,
   [0].Content.Facet.String.MinLength = DEFAULT_MIN_STRING_LENGTH,
   [0].Content.Facet.String.MaxLength = DEFAULT_MAX_STRING_LENGTH,
 

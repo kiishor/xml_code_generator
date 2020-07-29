@@ -16,6 +16,7 @@
 
 #include "common.h"
 #include "libs/parse_xml.h"
+#include "apps/tree.h"
 #include "apps/xsd.h"
 
 #include "xs_complex_type.h"
@@ -49,7 +50,7 @@ static const xs_attribute_t complexType_Attr[] =
   [0].Target.Type   = EN_RELATIVE,
   [0].Target.Offset = offsetof(complexType_t, attr.id),
 
-  [0].Content.Type = XS_STRING_DYNAMIC,
+  [0].Content.Type = EN_STRING_DYNAMIC,
   [0].Content.Facet.String.MinLength = DEFAULT_MIN_STRING_LENGTH,
   [0].Content.Facet.String.MaxLength = DEFAULT_MAX_STRING_LENGTH,
 
@@ -61,7 +62,7 @@ static const xs_attribute_t complexType_Attr[] =
   [1].Target.Type = EN_RELATIVE,
   [1].Target.Offset = offsetof(complexType_t, attr.name),
 
-  [1].Content.Type = XS_STRING_DYNAMIC,
+  [1].Content.Type = EN_STRING_DYNAMIC,
   [1].Content.Facet.String.MinLength = DEFAULT_MIN_STRING_LENGTH,
   [1].Content.Facet.String.MaxLength = DEFAULT_MAX_STRING_LENGTH,
 

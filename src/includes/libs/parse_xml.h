@@ -16,8 +16,24 @@
 #include "xml_content.h"
 
 /*
+ *  ------------------------------- DEFINITION -------------------------------
+ */
+
+#define ALL_XSD_ATTRIBUTE_USE_VALUE   \
+  ADD_USE_TYPE(EN_OPTIONAL, optional)   \
+  ADD_USE_TYPE(EN_REQUIRED, required)   \
+  ADD_USE_TYPE(EN_PROHIBITED, prohibited)
+
+#define ALL_TARGET_ADDRESS_TYPE \
+  ADD_TYPE(EN_STATIC)   \
+  ADD_TYPE(EN_DYNAMIC)  \
+  ADD_TYPE(EN_RELATIVE)
+
+
+/*
  *  ------------------------------- ENUMERATION -------------------------------
  */
+
 typedef enum
 {
   XML_PARSE_SUCCESS,
@@ -34,20 +50,13 @@ typedef enum
   XML_END_TAG_NOT_FOUND,
 }xml_parse_result_t;
 
+#define ADD_TYPE(TYPE)  TYPE,
 typedef enum
 {
-  EN_STATIC,
-  EN_DYNAMIC,
-  EN_RELATIVE
+  ALL_TARGET_ADDRESS_TYPE
+  TOTAL_TARGET_ADDRESS_TYPE
 }address_type_t;
-
-//! List of Use values in the XML attribute
-typedef enum
-{
-  EN_OPTIONAL,      //!< Use of attribute is optional in an element
-  EN_PROHIBITED,    //!< Use of attribute is prohibited in an element
-  EN_REQUIRED,      //!< Use of attribute is required in an element
-}xs_attribute_use;
+#undef ADD_TYPE
 
 typedef enum
 {
@@ -55,30 +64,29 @@ typedef enum
   EN_SEQUENCE,
 }element_descendant_type_t;
 
+#define ADD_USE_TYPE(TAG, ...) TAG,
+typedef enum
+{
+  ALL_XSD_ATTRIBUTE_USE_VALUE
+  TOTAL_XSD_ATTRIBUTE_USE_VALUES
+}xs_attribute_use_t;
+#undef ADD_USE_TYPE
+
 /*
  *  -------------------------------- STRUCTURE --------------------------------
  */
 
-typedef struct
-{
-  const char* String;
-  size_t Length;
-}string_t;
-
 typedef void (*element_callback)(uint32_t occurrence, void* const content, void** context);
 typedef void* (*allocate)(uint32_t occurrence, void** context);
-
-typedef union
-{
-  void* Address;
-  allocate Allocate;
-  size_t Offset;
-}address_t;
 
 typedef struct
 {
   address_type_t Type;
-  address_t;
+  union  {
+    void* Address;
+    allocate Allocate;
+    size_t Offset;
+  };
 // Size of Target in case of multiple occurrence to calculate the next target address.
   uint32_t Size;
 }target_address_t;
@@ -88,7 +96,7 @@ typedef struct
   string_t Name;
   target_address_t Target;
   xml_content_t Content;
-  xs_attribute_use Use;
+  xs_attribute_use_t Use;
 }xs_attribute_t;
 
 typedef struct xs_element_t xs_element_t;

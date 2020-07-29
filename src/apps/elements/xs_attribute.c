@@ -16,7 +16,7 @@
 
 #include "common.h"
 #include "libs/parse_xml.h"
-
+#include "apps/tree.h"
 #include "apps/xsd.h"
 
 #include "xs_simple_type.h"
@@ -47,7 +47,7 @@ static const xs_attribute_t attribute_Attr[] =
   [0].Target.Type = EN_RELATIVE,
   [0].Target.Offset = offsetof(attribute_t, attr.id),
 
-  [0].Content.Type = XS_STRING_DYNAMIC,
+  [0].Content.Type = EN_STRING_DYNAMIC,
   [0].Content.Facet.String.MinLength = DEFAULT_MIN_STRING_LENGTH,
   [0].Content.Facet.String.MaxLength = DEFAULT_MAX_STRING_LENGTH,
 
@@ -59,7 +59,7 @@ static const xs_attribute_t attribute_Attr[] =
   [1].Target.Type = EN_RELATIVE,
   [1].Target.Offset = offsetof(attribute_t, attr.name),
 
-  [1].Content.Type = XS_STRING_DYNAMIC,
+  [1].Content.Type = EN_STRING_DYNAMIC,
   [1].Content.Facet.String.MinLength = DEFAULT_MIN_STRING_LENGTH,
   [1].Content.Facet.String.MaxLength = DEFAULT_MAX_STRING_LENGTH,
 
@@ -71,7 +71,7 @@ static const xs_attribute_t attribute_Attr[] =
   [2].Target.Type = EN_RELATIVE,
   [2].Target.Offset = offsetof(attribute_t, attr.type),
 
-  [2].Content.Type = XS_STRING_DYNAMIC,
+  [2].Content.Type = EN_STRING_DYNAMIC,
   [2].Content.Facet.String.MinLength = DEFAULT_MIN_STRING_LENGTH,
   [2].Content.Facet.String.MaxLength = DEFAULT_MAX_STRING_LENGTH,
 
@@ -83,7 +83,7 @@ static const xs_attribute_t attribute_Attr[] =
   [3].Target.Type = EN_RELATIVE,
   [3].Target.Offset = offsetof(attribute_t, attr.ref),
 
-  [3].Content.Type = XS_STRING_DYNAMIC,
+  [3].Content.Type = EN_STRING_DYNAMIC,
   [3].Content.Facet.String.MinLength = DEFAULT_MIN_STRING_LENGTH,
   [3].Content.Facet.String.MaxLength = DEFAULT_MAX_STRING_LENGTH,
 
@@ -95,7 +95,7 @@ static const xs_attribute_t attribute_Attr[] =
   [4].Target.Type = EN_RELATIVE,
   [4].Target.Offset = offsetof(attribute_t, attr.use),
 
-  [4].Content.Type = XS_STRING_DYNAMIC,
+  [4].Content.Type = EN_STRING_DYNAMIC,
   [4].Content.Facet.String.MinLength = DEFAULT_MIN_STRING_LENGTH,
   [4].Content.Facet.String.MaxLength = DEFAULT_MAX_STRING_LENGTH,
 
@@ -107,7 +107,7 @@ static const xs_attribute_t attribute_Attr[] =
   [5].Target.Type = EN_RELATIVE,
   [5].Target.Offset = offsetof(attribute_t, attr.Default),
 
-  [5].Content.Type = XS_STRING_DYNAMIC,
+  [5].Content.Type = EN_STRING_DYNAMIC,
   [5].Content.Facet.String.MinLength = DEFAULT_MIN_STRING_LENGTH,
   [5].Content.Facet.String.MaxLength = DEFAULT_MAX_STRING_LENGTH,
 
@@ -119,7 +119,7 @@ static const xs_attribute_t attribute_Attr[] =
   [6].Target.Type = EN_RELATIVE,
   [6].Target.Offset = offsetof(attribute_t, attr.fixed),
 
-  [6].Content.Type = XS_STRING_DYNAMIC,
+  [6].Content.Type = EN_STRING_DYNAMIC,
   [6].Content.Facet.String.MinLength = DEFAULT_MIN_STRING_LENGTH,
   [6].Content.Facet.String.MaxLength = DEFAULT_MAX_STRING_LENGTH,
 

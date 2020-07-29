@@ -16,7 +16,7 @@
 typedef struct
 {
   string_t id;         // Optional
-  string_t name;       // required if root element
+  string_t name;       // required if global element
 }complex_type_attribute_t;
 
 typedef struct

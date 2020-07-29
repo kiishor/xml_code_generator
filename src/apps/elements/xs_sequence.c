@@ -17,6 +17,8 @@
 #include "common.h"
 #include "libs/parse_xml.h"
 #include "apps/xsd.h"
+#include "apps/tree.h"
+
 #include "xs_sequence.h"
 #include "util/util.h"
 
@@ -45,7 +47,7 @@ static const xs_attribute_t sequence_attr[] =
   [0].Target.Type = EN_RELATIVE,
   [0].Target.Offset = offsetof(sequence_t, attr.id),
 
-  [0].Content.Type = XS_STRING_DYNAMIC,
+  [0].Content.Type = EN_STRING_DYNAMIC,
   [0].Content.Facet.String.MinLength = DEFAULT_MIN_STRING_LENGTH,
   [0].Content.Facet.String.MaxLength = DEFAULT_MAX_STRING_LENGTH,
 
@@ -57,7 +59,7 @@ static const xs_attribute_t sequence_attr[] =
   [1].Target.Type = EN_RELATIVE,
   [1].Target.Offset = offsetof(sequence_t, attr.minOccurs),
 
-  [1].Content.Type = XS_UNSIGNED,
+  [1].Content.Type = EN_UNSIGNED,
   [1].Content.Facet.Uint.MinValue = 0,
   [1].Content.Facet.Uint.MaxValue = UINT32_MAX,
 
@@ -69,7 +71,7 @@ static const xs_attribute_t sequence_attr[] =
   [2].Target.Type = EN_RELATIVE,
   [2].Target.Offset = offsetof(sequence_t, attr.maxOccurs),
 
-  [2].Content.Type = XS_UNSIGNED,
+  [2].Content.Type = EN_UNSIGNED,
   [2].Content.Facet.Uint.MinValue = 0,
   [2].Content.Facet.Uint.MaxValue = UINT32_MAX,
 
