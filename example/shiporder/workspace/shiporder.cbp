@@ -11,7 +11,7 @@
 				<Option object_output="obj/Debug/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
-				<Option parameters="C:\project\xml_code_generator\xsd/shiporder.xml C:\project\xml_code_generator/xsd/test.c" />
+				<Option parameters="C:\project\xml_code_generator\xsd/shiporder.xml" />
 				<Compiler>
 					<Add option="-g" />
 				</Compiler>
@@ -36,7 +36,6 @@
 		<Unit filename="../../../src/includes/common.h" />
 		<Unit filename="../../../src/includes/libs/parse_xml.h" />
 		<Unit filename="../../../src/includes/libs/xml_content.h" />
-		<Unit filename="../../../src/includes/libs/xs_data_type.h" />
 		<Unit filename="../../../src/libs/parse_xml.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -53,6 +52,7 @@
 		<Unit filename="../src/shiporder.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="../src/shiporder.h" />
 		<Extensions />
 	</Project>
 </CodeBlocks_project_file>

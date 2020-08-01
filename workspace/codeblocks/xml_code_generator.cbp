@@ -11,7 +11,7 @@
 				<Option object_output="obj/Debug/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
-				<Option parameters="../../xsd/shiporder1.xsd ../../xsd/test.c" />
+				<Option parameters="../../xsd/shiporder3.xsd ../../xsd/test.c" />
 				<Compiler>
 					<Add option="-g" />
 				</Compiler>
@@ -110,6 +110,7 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../../xsd/shiporder.xml" />
+		<Unit filename="../../xsd/shiporder1.xsd" />
 		<Unit filename="../../xsd/shiporder2.xsd" />
 		<Unit filename="../../xsd/shiporder3.xsd" />
 		<Extensions>

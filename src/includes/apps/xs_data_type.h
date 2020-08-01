@@ -26,7 +26,7 @@ typedef enum
  *  ------------------------ EXTERNAL GLOBAL VARIABLES ------------------------
  */
 
-extern const char* const xs_data_type[TOTAL_XSD_DATA_TYPE];
+extern const string_t xs_data_type[TOTAL_XSD_DATA_TYPE];
 extern const string_t xs_attribute_use_type[TOTAL_XSD_ATTRIBUTE_USE_VALUES];
 extern const char* const xml_attribute_use_type[TOTAL_XSD_ATTRIBUTE_USE_VALUES];
 extern const char* const xml_data_type[];

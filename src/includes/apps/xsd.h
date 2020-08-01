@@ -57,6 +57,8 @@ typedef struct
 {
   reference_list_t Element_List;
   attribute_list_t Attribute_List;
+  element_list_t   ComplexType_List;
+  element_list_t   SimpleType_List;
 }context_t;
 
 /*

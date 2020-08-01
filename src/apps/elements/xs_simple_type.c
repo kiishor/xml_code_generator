@@ -44,7 +44,7 @@ static const xs_attribute_t simple_type_Attr[] =
   [0].Name.Length = sizeof("id") - 1,
 
   [0].Target.Type = EN_RELATIVE,
-  [0].Target.Offset = offsetof(simple_type_t, attr.id),
+  [0].Target.Offset = offsetof(simpleType_t, attr.id),
 
   [0].Content.Type = EN_STRING_DYNAMIC,
   [0].Content.Facet.String.MinLength = DEFAULT_MIN_STRING_LENGTH,
@@ -56,7 +56,7 @@ static const xs_attribute_t simple_type_Attr[] =
   [1].Name.Length = sizeof("name") - 1,
 
   [1].Target.Type = EN_RELATIVE,
-  [1].Target.Offset = offsetof(simple_type_t, attr.name),
+  [1].Target.Offset = offsetof(simpleType_t, attr.name),
 
   [1].Content.Type = EN_STRING_DYNAMIC,
   [1].Content.Facet.String.MinLength = DEFAULT_MIN_STRING_LENGTH,
@@ -90,7 +90,7 @@ const xs_element_t xs_simpleType =
 
 static void* allocate_simple_type(uint32_t occurrence, void** context)
 {
-  simple_type_t* simpleType = calloc(1, sizeof(simple_type_t));
+  simpleType_t* simpleType = calloc(1, sizeof(simpleType_t));
   simpleType->Type = XS_SIMPLE_TYPE_TAG;
   tree_t* node = create_node(simpleType);
   add_descendant_node(*context, node);

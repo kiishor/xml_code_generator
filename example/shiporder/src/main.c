@@ -16,43 +16,36 @@
 #include <stdbool.h>
 
 #include "libs/parse_xml.h"
+#include "shiporder.h"
 
 /*
  *  ------------------------------ FUNCTION BODY ------------------------------
  */
-extern const xs_element_t xml_root;
-
 int main(int argc, char *argv[])
 {
 
-  if(argc < 3)
+  if(argc < 2)
   {
-    printf("Please enter the schema file name and Target source file\n");
+    printf("Please enter the XML file name\n");
     return 1;
   }
 
-  FILE* fSchema = fopen(argv[1], "r");
-  if(fSchema == NULL )
+  FILE* fXml = fopen(argv[1], "r");
+  if(fXml == NULL )
   {
-    printf("Error in opening XML schema file\n");
+    printf("Error in opening XML file\n");
     return 2;
   }
 
-  fseek(fSchema, 0, SEEK_END);
-  size_t size = ftell(fSchema);
-  fseek(fSchema, 0, SEEK_SET);
+  fseek(fXml, 0, SEEK_END);
+  size_t size = ftell(fXml);
+  fseek(fXml, 0, SEEK_SET);
 
-  char* schema = malloc(size);
-  fread(schema, 1, size, fSchema);
-  fclose(fSchema);
+  char* const xml = malloc(size);
+  fread(xml, 1, size, fXml);
+  fclose(fXml);
 
-  FILE* cSource = fopen(argv[2], "w");
-  if(cSource == NULL)
-  {
-    printf("Error in creating C source file\n");
-  }
-
-  xml_parse_result_t result = parse_xml(&xml_root, schema, NULL);
+  xml_parse_result_t result = parse_xml(&xml_root, xml, NULL);
   if(result == XML_PARSE_SUCCESS)
   {
     printf("Parsing completed successfully\n");
@@ -62,9 +55,7 @@ int main(int argc, char *argv[])
     printf("Failed to parse XML file\n");
   }
 
-  free(schema);
-  fclose(fSchema);
-  fclose(cSource);
+  free(xml);
 
   return 0;
 }

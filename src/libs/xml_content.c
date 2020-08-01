@@ -89,7 +89,15 @@ const char* extract_content(const xml_content_t* const content,
 
   switch(content->Type)
   {
-  case EN_STRING_STATIC:
+  case EN_STRING:
+  {
+    string_t* const String = target;
+    String->String = tag;
+    String->Length = length;
+    break;
+  }
+
+  case EN_CHAR_ARRAY:
     ASSERT2((length >= content->Facet.String.MinLength) &&
        (length <= content->Facet.String.MaxLength));
     memcpy(target, tag, length);

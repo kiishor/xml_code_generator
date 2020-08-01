@@ -18,7 +18,7 @@
 
 #include "apps/tree.h"
 #include "apps/list.h"
-#include "apps/util.h"
+#include "util/util.h"
 
 /*
  *  ------------------------------ FUNCTION BODY ------------------------------
@@ -83,6 +83,11 @@ element_list_t* search_element_node(element_list_t* list, const string_t* const 
 {
   while(list)
   {
+    if(list->Element == NULL)
+    {
+      return NULL;
+    }
+
     const string_t* const name = &list->Element->Name;
     if((name->Length == reference->Length) &&
        (!memcmp(name->String, reference->String, name->Length)))

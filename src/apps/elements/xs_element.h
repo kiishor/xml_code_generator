@@ -30,13 +30,8 @@ typedef struct
   common_element_attribute_t;
   string_t ref;
   uint32_t minOccurs;
-  uint32_t maxOccurs;
+  string_t maxOccurs;
 }child_element_attribute_t;
-
-//typedef struct
-//{
-//  xsd_tag_t Type;
-//}child_element_t;
 
 typedef struct
 {

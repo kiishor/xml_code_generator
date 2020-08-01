@@ -56,8 +56,9 @@ ADD_DATA_TYPE(XS_DURATION,             xs:duration,           uint32_t, string)
 
 #define ALL_XML_CONTENT_TYPES       \
   ADD_CONTENT(EN_NO_XML_DATA_TYPE, XML element does not hold the content)    \
+  ADD_CONTENT(EN_STRING, satrting address of string from the imput xml buffer and length of content is copied to string_t)  \
   ADD_CONTENT(EN_STRING_DYNAMIC, String will be dynamically allocated using malloc and the pointer is copied to the target) \
-  ADD_CONTENT(EN_STRING_STATIC, String will be directly copied to the target using memcpy)  \
+  ADD_CONTENT(EN_CHAR_ARRAY, String will be directly copied to the target using memcpy)  \
   ADD_CONTENT(EN_ENUM_STRING, Enumeration)          \
   ADD_CONTENT(EN_ENUM_INT, Enumeration of integers. e.g. enum { red = 10, green = 50};) \
   ADD_CONTENT(EN_ENUM_UINT, Enumeration of unsigned integers) \

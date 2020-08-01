@@ -12,13 +12,13 @@
 
 1583670340 c:\project\xml_code_generator\src\includes\common.h
 
-1595662403 c:\project\xml_code_generator\src\includes\libs\parse_xml.h
+1596040246 c:\project\xml_code_generator\src\includes\libs\parse_xml.h
 	"xml_content.h"
 
-1595662732 c:\project\xml_code_generator\src\includes\libs\xml_content.h
+1596282805 c:\project\xml_code_generator\src\includes\libs\xml_content.h
 	<stdbool.h>
 
-1594524723 source:c:\project\xml_code_generator\src\libs\parse_xml.c
+1596028746 source:c:\project\xml_code_generator\src\libs\parse_xml.c
 	<stdint.h>
 	<string.h>
 	<stdbool.h>
@@ -34,27 +34,28 @@
 
 1591533388 c:\project\xml_code_generator\src\includes\libs\xs_data_type.h
 
-1595081333 source:c:\project\xml_code_generator\src\libs\xml_content.c
+1596282956 source:c:\project\xml_code_generator\src\libs\xml_content.c
 	<stdint.h>
 	<string.h>
 	<stdbool.h>
 	<stdlib.h>
 	"libs/xml_content.h"
 
-1595081333 source:c:\project\xml_code_generator\example\shiporder\src\shiporder.c
+1596285582 source:c:\project\xml_code_generator\example\shiporder\src\shiporder.c
 	<stdint.h>
 	<stdbool.h>
-	<stdlib.h>
-	<stddef.h>
-	<string.h>
-	<stdio.h>
 	<float.h>
-	"common.h"
-	"libs/parse_xml.h"
+	"shiporder.h"
 
-1584437532 source:c:\project\xml_code_generator\example\shiporder\src\main.c
+1596280678 source:c:\project\xml_code_generator\example\shiporder\src\main.c
 	<stdio.h>
 	<stdlib.h>
+	<stdint.h>
+	<stdbool.h>
+	"libs/parse_xml.h"
+	"shiporder.h"
+
+1596285582 c:\project\xml_code_generator\example\shiporder\src\shiporder.h
 	<stdint.h>
 	<stdbool.h>
 	"libs/parse_xml.h"

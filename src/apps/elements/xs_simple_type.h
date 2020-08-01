@@ -23,7 +23,7 @@ typedef struct
 {
   xsd_tag_t Type;
   xs_simple_type_attribute_t attr;
-}simple_type_t;
+}simpleType_t;
 
 /*
  *  ------------------------ EXTERNAL GLOBAL VARIABLES ------------------------

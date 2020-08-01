@@ -112,9 +112,7 @@ static const xs_attribute_t child_element_attr[] =
   [5].Target.Type = EN_RELATIVE,
   [5].Target.Offset = offsetof(element_t, child.maxOccurs),
 
-  [5].Content.Type = EN_UNSIGNED,
-  [5].Content.Facet.Uint.MinValue = 0,
-  [5].Content.Facet.Uint.MaxValue = UINT32_MAX,
+  [5].Content.Type = EN_STRING,
 
   [5].Use = EN_OPTIONAL,
 };
@@ -216,7 +214,6 @@ void* allocate_child_schema_element(uint32_t occurrence, void** context)
 {
   element_t* element = calloc(1, sizeof(element_t));
   element->Type = XS_CHILD_ELEMENT_TAG;
-  element->child.maxOccurs = 1;
   element->child.minOccurs = 1;
   tree_t* node = create_node(element);
   add_descendant_node(*context, node);
@@ -226,28 +223,12 @@ void* allocate_child_schema_element(uint32_t occurrence, void** context)
 
 void add_global_element(uint32_t occurrence, void *content, void** context)
 {
-//  const global_element_t* element = content;
-
-//  printf("id: %s, element: %s, type: %s\n", element->attr.id.String,
-//                                             element->attr.name.String,
-//                                             element->attr.type.String
-//                                             );
-
   tree_t* node = *context;
   *context = node->Parent;
 }
 
 void add_child_element(uint32_t occurrence, void* content, void** context)
 {
-//  const child_element_t* element = content;
-//  printf("id: %s, element: %s, type: %s, ref: %s, minOccurs: %d, maxOccurs: %d\n", element->attr.id.String,
-//                                             element->attr.name.String,
-//                                             element->attr.type.String,
-//                                             element->attr.ref.String,
-//                                             element->attr.minOccurs,
-//                                             element->attr.maxOccurs
-//                                             );
-
   tree_t* node = *context;
   *context = node->Parent;
 }

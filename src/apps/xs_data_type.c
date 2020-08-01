@@ -19,8 +19,8 @@
  *  ---------------------------- GLOBAL VARIABLES -----------------------------
  */
 
-#define ADD_DATA_TYPE(TAG, NAME, ...)  #NAME,
-const char* const xs_data_type[TOTAL_XSD_DATA_TYPE] = {ALL_XSD_DATA_TYPE};
+#define ADD_DATA_TYPE(TAG, NAME, ...)  [TAG].String = #NAME, [TAG].Length = sizeof(#NAME) - 1,
+const string_t xs_data_type[TOTAL_XSD_DATA_TYPE] = {ALL_XSD_DATA_TYPE};
 #undef ADD_DATA_TYPE
 
 #define ADD_USE_TYPE(TAG, NAME)  [TAG].String = #NAME, [TAG].Length = sizeof(#NAME) - 1,
@@ -47,8 +47,9 @@ const char* const xml_content_type[TOTAL_XML_CONTENT_TYPES] = {ALL_XML_CONTENT_T
 
 const char* const xml_data_type[] =
 {
+  [EN_STRING] = "string_t",
   [EN_STRING_DYNAMIC] = "char*",
-  [EN_STRING_STATIC] = "char*",
+  [EN_CHAR_ARRAY] = "char*",
   [EN_DECIMAL] = "float",
   [EN_INTEGER] = "int32_t",
   [EN_UNSIGNED] = "uint32_t",

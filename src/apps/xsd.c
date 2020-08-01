@@ -23,6 +23,7 @@
 #include "elements/xs_complex_type.h"
 #include "elements/xs_attribute.h"
 #include "elements/xs_simple_type.h"
+#include "elements/xs_restriction.h"
 #include "apps/xs_data_type.h"
 
 /*
@@ -36,65 +37,7 @@ const char* const XsdTag[TOTAL_XSD_TAGS] = {ALL_XSD_TAG};
 /*
  *  ------------------------------ FUNCTION BODY ------------------------------
  */
-
-static void parse_element(const tree_t* node, xs_element_t* const element, context_t* context);
-
-//xs_element_t* parse_common_element_attr(const tree_t* const node,
-//                                        xs_element_t* const element,
-//                                        const common_element_attribute_t* const attr)
-//{
-//  element->Name.Length = strlen(attr->name.String);
-//  element->Name.String = attr->name.String;
-//
-//  if(attr->type.String)
-//  {
-//    element->Content.Type = TOTAL_XSD_DATA_TYPE;
-//    size_t type_length = strlen(attr->type.String);
-//    for(uint32_t i = 0; i < TOTAL_XSD_DATA_TYPE; i++)
-//    {
-//      if((type_length == strlen(xs_data_type[i])) &&
-//         (!memcmp(attr->type.String, xs_data_type[i], type_length)))
-//      {
-//        convert_xsd_data_type(&element->Content, i);
-//        element->Target.Type = EN_RELATIVE;
-//        break;
-//      }
-//    }
-//
-//    if(element->Content.Type == TOTAL_XSD_DATA_TYPE)
-//    {
-////      const tree_t* const complexType = find_tag(node, &attr->type, XS_COMPLEX_TAG);
-////      if(complexType != NULL)
-////      {
-////        return element;
-////      }
-//
-////      const tree_t* const simpleType = find_tag(node, &attr->type, XS_SIMPLE_TYPE_TAG);
-////      if(simpleType == NULL)
-////      {
-////       return NULL;
-////      }
-//    }
-//  }
-//  return element;
-//}
-
-void parse_child_element(const tree_t* node, xs_element_t* const element, context_t* context)
-{
-  element_t* source = node->Data;
-
-  element->MinOccur = source->child.minOccurs;
-  element->MaxOccur = source->child.maxOccurs;
-
-  if(source->child.ref.String)
-  {
-    source->child.ref.Length = strlen(source->child.ref.String);
-    add_reference_node(&context->Element_List, element, &source->child.ref);
-    return;
-  }
-  parse_element(node, element, context);
-
-}
+static void parse_child_element(const tree_t* node, xs_element_t* const element, context_t* context);
 
 xs_element_t* parse_sequence(const tree_t* sequence, xs_element_t* const element,
                              context_t* context)
@@ -140,7 +83,7 @@ xs_attribute_use_t parse_attribute_use(const string_t* use)
 }
 
 void parse_attribute(const tree_t* node, xs_attribute_t* const attribute,
-                     attribute_list_t* attr_list)
+                     context_t* context)
 {
   attribute_t* source = node->Data;
   xs_attribute_use_t use = EN_OPTIONAL;
@@ -150,10 +93,12 @@ void parse_attribute(const tree_t* node, xs_attribute_t* const attribute,
     use = parse_attribute_use(&source->attr.use);
   }
 
-  if(source->attr.ref.String)
+  string_t* const ref = &source->attr.ref;
+  if(ref->String)
   {
-    source->attr.ref.Length = strlen(source->attr.ref.String);
-    attr_list = search_attribute_node(attr_list, &source->attr.ref);
+    ref->Length = strlen(ref->String);
+    const attribute_list_t* const attr_list =
+                          search_attribute_node(&context->Attribute_List, ref);
     memcpy(attribute, attr_list->Attribute, sizeof(xs_attribute_t));
     attribute->Use = use;
     return;
@@ -163,28 +108,30 @@ void parse_attribute(const tree_t* node, xs_attribute_t* const attribute,
   attribute->Name.Length = strlen(source->attr.name.String);
   attribute->Name.String = source->attr.name.String;
 
-  if(source->attr.type.String)
+  string_t* const type = &source->attr.type;
+  if(type->String)
   {
-    attribute->Content.Type = TOTAL_XSD_DATA_TYPE;
-    size_t type_length = strlen(source->attr.type.String);
+    attribute->Target.Type = EN_RELATIVE;
+    attribute->Content.Type = EN_NO_XML_DATA_TYPE;
+    type->Length = strlen(type->String);
     for(uint32_t i = 0; i < TOTAL_XSD_DATA_TYPE; i++)
     {
-      if((type_length == strlen(xs_data_type[i])) &&
-         (!memcmp(source->attr.type.String, xs_data_type[i], type_length)))
+      if((type->Length == xs_data_type[i].Length) &&
+         (!memcmp(type->String, xs_data_type[i].String, type->Length)))
       {
         convert_xsd_data_type(&attribute->Content, i);
-        attribute->Target.Type = EN_RELATIVE;
         break;
       }
     }
 
-    if(attribute->Content.Type == TOTAL_XSD_DATA_TYPE)
+    if(attribute->Content.Type == EN_NO_XML_DATA_TYPE)
     {
-//      const tree_t* const simpleType = find_tag(node, &source->attr.type, XS_SIMPLE_TYPE_TAG);
-//      if(simpleType == NULL)
-//      {
-//        return;
-//      }
+      const element_list_t* simpleType_List = search_element_node(&context->SimpleType_List, type);
+      if(simpleType_List)
+      {
+        const xs_element_t* const element = simpleType_List->Element;
+        memcpy(&attribute->Content, &element->Content, sizeof(xml_content_t));
+      }
     }
   }
 }
@@ -230,14 +177,66 @@ void parse_complex_element(const tree_t* complexType,
       break;
 
     case XS_ATTRIBUTE_TAG:
-       parse_attribute(node, &attributes[attr_index++], &context->Attribute_List);
+       parse_attribute(node, &attributes[attr_index++], context);
       break;
 
     default:
+      assert(false);
       return;
     }
     node = node->Next;
   }
+}
+
+void parse_complex_type(const tree_t* tree, xs_element_t* const element,
+                        context_t* context)
+{
+  complexType_t* complexType = tree->Data;
+  assert(complexType->attr.name.String);
+
+  element->Name.Length = strlen(complexType->attr.name.String);
+  element->Name.String = complexType->attr.name.String;
+
+  parse_complex_element(tree, element, context);
+  add_element_node(&context->ComplexType_List, element);
+}
+
+void parse_simple_element(const tree_t* tree, xs_element_t* element)
+{
+  const tree_t* node = tree->Descendant;
+  const restriction_t* const restriction = node->Data;
+  assert(restriction->Type == XS_RESTRICTION_TAG);
+
+  element->Content.Type = EN_NO_XML_DATA_TYPE;
+  const char* const type = restriction->attr.base.String;
+  size_t type_length = strlen(type);
+
+  for(uint32_t i = 0; i < TOTAL_XSD_DATA_TYPE; i++)
+  {
+    if((type_length == xs_data_type[i].Length) &&
+       (!memcmp(type, xs_data_type[i].String, type_length)))
+    {
+      convert_xsd_data_type(&element->Content, i);
+      return;
+    }
+  }
+    // TODO: support restriction facets
+
+  return;
+}
+
+void parse_simple_type(const tree_t* tree, xs_element_t* const element,
+                       const element_list_t* const simpleType_List)
+{
+  simpleType_t* simpleType = tree->Data;
+  const char* const name = simpleType->attr.name.String;
+  assert(name);
+
+  element->Name.Length = strlen(name);
+  element->Name.String = name;
+
+  parse_simple_element(tree, element);
+  add_element_node(simpleType_List, element);
 }
 
 static void parse_element(const tree_t* node, xs_element_t* const element, context_t* context)
@@ -246,39 +245,46 @@ static void parse_element(const tree_t* node, xs_element_t* const element, conte
 
   element->Name.Length = strlen(source->global.name.String);
   element->Name.String = source->global.name.String;
+  element->Target.Type = EN_RELATIVE;
 
-  if(source->global.type.String)
+  string_t* const type = &source->global.type;
+  if(type->String)
   {
-    element->Content.Type = TOTAL_XSD_DATA_TYPE;
-    size_t type_length = strlen(source->global.type.String);
+    type->Length = strlen(type->String);
+    element->Content.Type = EN_NO_XML_DATA_TYPE;
     for(uint32_t i = 0; i < TOTAL_XSD_DATA_TYPE; i++)
     {
-      if((type_length == strlen(xs_data_type[i])) &&
-         (!memcmp(source->global.type.String, xs_data_type[i], type_length)))
+      if((type->Length == xs_data_type[i].Length) &&
+         (!memcmp(type->String, xs_data_type[i].String, type->Length)))
       {
         convert_xsd_data_type(&element->Content, i);
-        element->Target.Type = EN_RELATIVE;
         break;
       }
     }
 
-    if(element->Content.Type == TOTAL_XSD_DATA_TYPE)
+    if(element->Content.Type == EN_NO_XML_DATA_TYPE)
     {
-//      const tree_t* const complexType = find_tag(node, &attr->type, XS_COMPLEX_TAG);
-//      if(complexType != NULL)
-//      {
-//        return element;
-//      }
-
-//      const tree_t* const simpleType = find_tag(node, &attr->type, XS_SIMPLE_TYPE_TAG);
-//      if(simpleType == NULL)
-//      {
-//       return NULL;
-//      }
+      element_list_t* list = search_element_node(&context->ComplexType_List, type);
+      if(list)
+      {
+        xs_element_t* complexType = list->Element;
+        element->Attribute = complexType->Attribute;
+        element->Attribute_Quantity = complexType->Attribute_Quantity;
+        element->Child = complexType->Child;
+        element->Child_Quantity = complexType->Child_Quantity;
+        element->Child_Type = complexType->Child_Type;
+      }
+      else
+      {
+        const element_list_t* simpleType_List = search_element_node(&context->SimpleType_List, type);
+        if(simpleType_List)
+        {
+          const xs_element_t* const simpleType = simpleType_List->Element;
+          memcpy(&element->Content, &simpleType->Content, sizeof(xml_content_t));
+        }
+      }
     }
   }
-
-//  parse_common_element_attr(node, element, &source->global);
 
   node = node->Descendant;
   if(node)
@@ -293,12 +299,44 @@ static void parse_element(const tree_t* node, xs_element_t* const element, conte
       return;
 
     case XS_SIMPLE_TYPE_TAG:
+      parse_simple_element(node, element);
       break;
 
     default:
       return;
     }
   }
+}
+
+static void parse_child_element(const tree_t* node, xs_element_t* const element, context_t* context)
+{
+  element_t* source = node->Data;
+
+  element->MinOccur = source->child.minOccurs;
+  uint32_t maxOccurs = 1;
+
+  if(source->child.maxOccurs.String)
+  {
+    if((source->child.maxOccurs.Length == (sizeof("unbounded") - 1)) &&
+       (!memcmp(source->child.maxOccurs.String, "unbounded", sizeof("unbounded") - 1)))
+    {
+      maxOccurs = UINT32_MAX;
+    }
+    else
+    {
+      maxOccurs = strtoul(source->child.maxOccurs.String, NULL, 10);
+    }
+  }
+  element->MaxOccur = maxOccurs;
+
+  if(source->child.ref.String)
+  {
+    source->child.ref.Length = strlen(source->child.ref.String);
+    add_reference_node(&context->Element_List, element, &source->child.ref);
+    return;
+  }
+  parse_element(node, element, context);
+
 }
 
 void resolve_element_references(element_list_t* const element_list,
@@ -321,7 +359,7 @@ void resolve_element_references(element_list_t* const element_list,
   }
 }
 
-xs_element_t* get_root(element_list_t* list)
+xs_element_t* get_root(const element_list_t* list)
 {
   xs_element_t* root = NULL;
   while(list)
@@ -339,9 +377,39 @@ xs_element_t* get_root(element_list_t* list)
   return root;
 }
 
-xs_element_t* parse_simple_type(const tree_t* node, xs_element_t* element)
+xs_element_t* create_root(const element_list_t* list)
 {
-  return NULL;
+  xs_element_t* root = calloc(sizeof(xs_element_t), 1);
+  root->Child_Quantity = 1;
+  root->Child_Type = EN_CHOICE;
+
+  const xs_element_t** child_element = malloc(sizeof(xs_element_t*));
+  root->Child = child_element;
+
+  xs_element_t* const first_element = get_root(list);
+  child_element[0] = first_element;
+  first_element->Target.Type = EN_STATIC;
+  first_element->MinOccur = 1;
+  first_element->MaxOccur = 1;
+
+  xs_attribute_t* const attributes = calloc(sizeof(xs_attribute_t), 2 + first_element->Attribute_Quantity);
+
+  attributes[0].Name.String = "xmlns:xsi";
+  attributes[0].Name.Length = sizeof("xmlns:xsi") - 1;
+
+  attributes[1].Name.String = "xsi:noNamespaceSchemaLocation";
+  attributes[1].Name.Length = sizeof("xsi:noNamespaceSchemaLocation") - 1;
+
+  if(first_element->Attribute_Quantity)
+  {
+    memcpy(&attributes[2], first_element->Attribute,
+              sizeof(xs_attribute_t) * first_element->Attribute_Quantity);
+  }
+  first_element->Attribute_Quantity += 2;
+  free(first_element->Attribute);
+  first_element->Attribute = attributes;
+
+  return root;
 }
 
 xs_element_t* compile_xsd(const tree_t* const tree)
@@ -362,17 +430,21 @@ xs_element_t* compile_xsd(const tree_t* const tree)
     {
     case XS_COMPLEX_TAG:
       printf("Name: %s\n", ((const complexType_t* const)tag)->attr.name.String);
+      xs_element_t* complexType = calloc(sizeof(xs_element_t), 1);
+      parse_complex_type(node, complexType, &context);
       break;
 
     case XS_ATTRIBUTE_TAG:
       printf("Name: %s\n", ((const attribute_t* const)tag)->attr.name.String);
       xs_attribute_t* attribute = calloc(sizeof(xs_attribute_t), 1);
-      parse_attribute(node, attribute, &context.Attribute_List);
+      parse_attribute(node, attribute, &context);
       add_attribute_node(&context.Attribute_List, attribute);
       break;
 
     case XS_SIMPLE_TYPE_TAG:
-      printf("Name: %s\n", ((const simple_type_t* const)tag)->attr.name.String);
+      printf("Name: %s\n", ((const simpleType_t* const)tag)->attr.name.String);
+      xs_element_t* simpleType = calloc(sizeof(xs_element_t), 1);
+      parse_simple_type(node, simpleType, &context.SimpleType_List);
       break;
 
     default:
@@ -409,10 +481,8 @@ xs_element_t* compile_xsd(const tree_t* const tree)
     resolve_element_references(&element_list, &context.Element_List);
   }
 
-  xs_element_t* root = get_root(&element_list);
-  return root;
+  return create_root(&element_list);
 }
-
 void print_xsd(const tree_t* const tree, uint32_t level)
 {
   for(uint32_t i = 0; i < level; i++)
@@ -442,7 +512,7 @@ void print_xsd(const tree_t* const tree, uint32_t level)
     break;
 
   case XS_SIMPLE_TYPE_TAG:
-    printf("Name: %s\n", ((const simple_type_t* const)tag)->attr.name.String);
+    printf("Name: %s\n", ((const simpleType_t* const)tag)->attr.name.String);
     break;
 
   default:
