@@ -71,7 +71,6 @@ extern const char* const XsdTag[TOTAL_XSD_TAGS];
  *  ---------------------------- EXPORTED FUNCTION ----------------------------
  */
 extern xs_element_t* compile_xsd(const tree_t* tree);
-extern void print_xsd(const tree_t* const tree, uint32_t level);
 
 #endif // XSD_H
 

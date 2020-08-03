@@ -28,20 +28,49 @@
  *	--------------------------- FORWARD DECLARATION ---------------------------
  */
 
-static void* allocate_simple_content(uint32_t occurrence, void** context);
-static void add_simple_content(uint32_t occurrence, void* content, void** context);
+void* allocate_simple_content(uint32_t occurrence, void** context);
+void add_simple_content(uint32_t occurrence, void* content, void** context);
 
 /*
  *  ---------------------------- GLOBAL VARIABLES -----------------------------
  */
 
-const xs_element_t* simpleContent_Descendant[] =
+const xs_element_t simpleContent_Descendant[TOTAL_SIMPLE_CONTENT_DESCENDANTS] =
 {
-  &xs_extension,
-  &xs_restriction,
+  [EN_simple_content_extension].Name.String  = "xs:extension",
+  [EN_simple_content_extension].Name.Length  = sizeof("xs:extension") - 1,
+  [EN_simple_content_extension].MinOccur     = 0,
+  [EN_simple_content_extension].MaxOccur     = 64,
+  [EN_simple_content_extension].Callback     = add_extension_tag,
+
+  [EN_simple_content_extension].Target.Type  	= EN_DYNAMIC,
+  [EN_simple_content_extension].Target.Allocate = allocate_extension,
+
+  [EN_simple_content_extension].Attribute_Quantity = ARRAY_LENGTH(extension_Attr),
+  [EN_simple_content_extension].Attribute 		   = extension_Attr,
+
+  [EN_simple_content_extension].Child_Quantity = ARRAY_LENGTH(extension_Descendant),
+  [EN_simple_content_extension].Child_Type     = EN_CHOICE,
+  [EN_simple_content_extension].Child = extension_Descendant,
+
+  [EN_simple_content_restriction].Name.String = "xs:restriction",
+  [EN_simple_content_restriction].Name.Length = sizeof("xs:restriction") - 1,
+  [EN_simple_content_restriction].MinOccur    = 0,
+  [EN_simple_content_restriction].MaxOccur    = 64,
+  [EN_simple_content_restriction].Callback    = add_restriction_tag,
+
+  [EN_simple_content_restriction].Target.Type     = EN_DYNAMIC,
+  [EN_simple_content_restriction].Target.Allocate = allocate_restriction,
+
+  [EN_simple_content_restriction].Attribute_Quantity = ARRAY_LENGTH(restriction_Attr),
+  [EN_simple_content_restriction].Attribute          = restriction_Attr,
+
+  [EN_simple_content_restriction].Child_Quantity = ARRAY_LENGTH(restriction_Descendant),
+  [EN_simple_content_restriction].Child_Type     = EN_CHOICE,
+  [EN_simple_content_restriction].Child          = restriction_Descendant,
 };
 
-static const xs_attribute_t simpleContent_Attr[] =
+const xs_attribute_t simpleContent_Attr[TOTAL_SIMPLE_CONTENT_ATTRIBUTES] =
 {
   [0].Name.String = "id",
   [0].Name.Length = sizeof("id") - 1,
@@ -67,18 +96,19 @@ const xs_element_t xs_simpleContent =
   .Target.Type  = EN_DYNAMIC,
   .Target.Allocate = allocate_simple_content,
 
-  .Child_Quantity = ARRAY_LENGTH(simpleContent_Descendant),
+  .Attribute_Quantity = TOTAL_SIMPLE_CONTENT_ATTRIBUTES,
+  .Attribute = simpleContent_Attr,
+
+  .Child_Quantity = TOTAL_SIMPLE_CONTENT_DESCENDANTS,
   .Child_Type     = EN_CHOICE,
   .Child = simpleContent_Descendant,
-  .Attribute_Quantity = ARRAY_LENGTH(simpleContent_Attr),
-  .Attribute = simpleContent_Attr,
 };
 
 /*
  *  ------------------------------ FUNCTION BODY ------------------------------
  */
 
-static void* allocate_simple_content(uint32_t occurrence, void** context)
+void* allocate_simple_content(uint32_t occurrence, void** context)
 {
   simpleContent_t* simpleContent = calloc(1, sizeof(simpleContent_t));
   simpleContent->Type = XS_SIMPLE_CONTENT_TAG;
@@ -88,7 +118,7 @@ static void* allocate_simple_content(uint32_t occurrence, void** context)
   return simpleContent;
 }
 
-static void add_simple_content(uint32_t occurrence, void* content, void** context)
+void add_simple_content(uint32_t occurrence, void* content, void** context)
 {
   tree_t* node = *context;
   *context = node->Parent;

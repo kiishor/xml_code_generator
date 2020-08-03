@@ -10,6 +10,11 @@
  */
 
 /*
+ *  ------------------------------- DEFINITION -------------------------------
+ */
+#define TOTAL_FACET_ATTRIBUTES 1
+
+/*
  *  -------------------------------- STRUCTURE --------------------------------
  */
 
@@ -27,6 +32,7 @@ typedef struct
 /*
  *  ------------------------ EXTERNAL GLOBAL VARIABLES ------------------------
  */
+extern const xs_attribute_t facet_Attr[TOTAL_FACET_ATTRIBUTES];
 
 extern const xs_element_t xs_minInclusive;
 extern const xs_element_t xs_maxInclusive;
@@ -35,6 +41,13 @@ extern const xs_element_t xs_enumeration;
 extern const xs_element_t xs_pattern;
 extern const xs_element_t xs_maxLength;
 extern const xs_element_t xs_minLength;
+
+/*
+ *  ---------------------------- EXPORTED FUNCTION ----------------------------
+ */
+extern void* allocate_facet(uint32_t occurrence, void** context);
+extern void add_facet_tag(uint32_t occurrence, void* content, void** context);
+
 
 #endif // XS_FACET_H
 

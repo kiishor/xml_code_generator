@@ -26,43 +26,48 @@
  *	--------------------------- FORWARD DECLARATION ---------------------------
  */
 
-static void* allocate_simple_type(uint32_t occurrence, void** context);
-static void add_simple_type_tag(uint32_t occurrence, void* content, void** context);
+void* allocate_simple_type(uint32_t occurrence, void** context);
+void add_simple_type_tag(uint32_t occurrence, void* content, void** context);
 
 /*
  *  ---------------------------- GLOBAL VARIABLES -----------------------------
  */
 
-const xs_element_t* simple_type_Descendant[] =
+const xs_element_t simple_type_Descendant[TOTAL_SIMPLE_TYPE_DESCENDANTS] =
 {
-  &xs_restriction,
+  [EN_simple_restriction].Name.String = "xs:restriction",
+  [EN_simple_restriction].Name.Length = sizeof("xs:restriction") - 1,
+  [EN_simple_restriction].MinOccur     = 0,
+  [EN_simple_restriction].MaxOccur     = 64,
+  [EN_simple_restriction].Callback      = add_restriction_tag,
+  [EN_simple_restriction].Target.Type  = EN_DYNAMIC,
+  [EN_simple_restriction].Target.Allocate = allocate_restriction,
+  [EN_simple_restriction].Attribute_Quantity = TOTAL_RESTRICTION_ATTRIBUTES,
+  [EN_simple_restriction].Attribute = restriction_Attr,
+  [EN_simple_restriction].Child_Quantity = TOTAL_RESTRICTION_DESCENDANT,
+  [EN_simple_restriction].Child_Type     = EN_CHOICE,
+  [EN_simple_restriction].Child = restriction_Descendant,
 };
 
-static const xs_attribute_t simple_type_Attr[] =
+const xs_attribute_t simple_type_Attr[TOTAL_TYPE_ATTRIBUTES] =
 {
-  [0].Name.String = "id",
-  [0].Name.Length = sizeof("id") - 1,
+  [EN_type_id].Name.String = "id",
+  [EN_type_id].Name.Length = sizeof("id") - 1,
+  [EN_type_id].Target.Type = EN_RELATIVE,
+  [EN_type_id].Target.Offset = offsetof(simpleType_t, attr.id),
+  [EN_type_id].Content.Type = EN_STRING_DYNAMIC,
+  [EN_type_id].Content.Facet.String.MinLength = DEFAULT_MIN_STRING_LENGTH,
+  [EN_type_id].Content.Facet.String.MaxLength = DEFAULT_MAX_STRING_LENGTH,
+  [EN_type_id].Use = EN_OPTIONAL,
 
-  [0].Target.Type = EN_RELATIVE,
-  [0].Target.Offset = offsetof(simpleType_t, attr.id),
-
-  [0].Content.Type = EN_STRING_DYNAMIC,
-  [0].Content.Facet.String.MinLength = DEFAULT_MIN_STRING_LENGTH,
-  [0].Content.Facet.String.MaxLength = DEFAULT_MAX_STRING_LENGTH,
-
-  [0].Use = EN_OPTIONAL,
-
-  [1].Name.String = "name",
-  [1].Name.Length = sizeof("name") - 1,
-
-  [1].Target.Type = EN_RELATIVE,
-  [1].Target.Offset = offsetof(simpleType_t, attr.name),
-
-  [1].Content.Type = EN_STRING_DYNAMIC,
-  [1].Content.Facet.String.MinLength = DEFAULT_MIN_STRING_LENGTH,
-  [1].Content.Facet.String.MaxLength = DEFAULT_MAX_STRING_LENGTH,
-
-  [1].Use = EN_OPTIONAL,
+  [EN_type_name].Name.String = "name",
+  [EN_type_name].Name.Length = sizeof("name") - 1,
+  [EN_type_name].Target.Type = EN_RELATIVE,
+  [EN_type_name].Target.Offset = offsetof(simpleType_t, attr.name),
+  [EN_type_name].Content.Type = EN_STRING_DYNAMIC,
+  [EN_type_name].Content.Facet.String.MinLength = DEFAULT_MIN_STRING_LENGTH,
+  [EN_type_name].Content.Facet.String.MaxLength = DEFAULT_MAX_STRING_LENGTH,
+  [EN_type_name].Use = EN_OPTIONAL,
 };
 
 const xs_element_t xs_simpleType =
@@ -76,10 +81,10 @@ const xs_element_t xs_simpleType =
   .Target.Type  = EN_DYNAMIC,
   .Target.Allocate = allocate_simple_type,
 
-  .Attribute_Quantity = ARRAY_LENGTH(simple_type_Attr),
+  .Attribute_Quantity = TOTAL_TYPE_ATTRIBUTES,
   .Attribute = simple_type_Attr,
 
-  .Child_Quantity = ARRAY_LENGTH(simple_type_Descendant),
+  .Child_Quantity = TOTAL_SIMPLE_TYPE_DESCENDANTS,
   .Child_Type     = EN_CHOICE,
   .Child = simple_type_Descendant,
 };
@@ -88,7 +93,7 @@ const xs_element_t xs_simpleType =
  *  ------------------------------ FUNCTION BODY ------------------------------
  */
 
-static void* allocate_simple_type(uint32_t occurrence, void** context)
+void* allocate_simple_type(uint32_t occurrence, void** context)
 {
   simpleType_t* simpleType = calloc(1, sizeof(simpleType_t));
   simpleType->Type = XS_SIMPLE_TYPE_TAG;
@@ -98,7 +103,7 @@ static void* allocate_simple_type(uint32_t occurrence, void** context)
   return simpleType;
 }
 
-static void add_simple_type_tag(uint32_t occurrence, void* content, void** context)
+void add_simple_type_tag(uint32_t occurrence, void* content, void** context)
 {
   tree_t* node = *context;
   *context = node->Parent;

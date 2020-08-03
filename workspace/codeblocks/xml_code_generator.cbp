@@ -77,6 +77,7 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../../src/apps/elements/xs_simple_type.h" />
+		<Unit filename="../../src/apps/elements/xs_type.h" />
 		<Unit filename="../../src/apps/list.c">
 			<Option compilerVar="CC" />
 		</Unit>

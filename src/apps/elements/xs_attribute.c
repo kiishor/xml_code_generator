@@ -27,103 +27,117 @@
  *  --------------------------- FORWARD DECLARATION ---------------------------
  */
 
-static void* allocate_attribute(uint32_t occurrence, void** context);
-static void add_attribute_tag(uint32_t occurrence, void* content, void** context);
+void* allocate_attribute(uint32_t occurrence, void** context);
+void add_attribute_tag(uint32_t occurrence, void* content, void** context);
 
 /*
  *  ---------------------------- GLOBAL VARIABLES -----------------------------
  */
 
-const xs_element_t* attribute_Descendant[] =
+const xs_element_t attribute_Descendant[TOTAL_ATTRIBUTE_DESCENDANTS] =
 {
-  &xs_simpleType,
+  [EN_attribute_simpleType].Name.String  = "xs:simpleType",
+  [EN_attribute_simpleType].Name.Length  = sizeof("xs:simpleType") - 1,
+  [EN_attribute_simpleType].MinOccur     = 0,
+  [EN_attribute_simpleType].MaxOccur     = 64,
+  [EN_attribute_simpleType].Callback      = add_simple_type_tag,
+
+  [EN_attribute_simpleType].Target.Type  = EN_DYNAMIC,
+  [EN_attribute_simpleType].Target.Allocate = allocate_simple_type,
+
+  [EN_attribute_simpleType].Attribute_Quantity = TOTAL_TYPE_ATTRIBUTES,
+  [EN_attribute_simpleType].Attribute = simple_type_Attr,
+
+  [EN_attribute_simpleType].Child_Quantity = TOTAL_SIMPLE_TYPE_DESCENDANTS,
+  [EN_attribute_simpleType].Child_Type     = EN_CHOICE,
+  [EN_attribute_simpleType].Child = simple_type_Descendant,
 };
 
-static const xs_attribute_t attribute_Attr[] =
+const xs_attribute_t attribute_Attr[TOTAL_ATTRIBUTE_ATTRIBUTES] =
 {
-  [0].Name.String = "id",
-  [0].Name.Length = sizeof("id") - 1,
+  [EN_attribute_id].Name.String = "id",
+  [EN_attribute_id].Name.Length = sizeof("id") - 1,
 
-  [0].Target.Type = EN_RELATIVE,
-  [0].Target.Offset = offsetof(attribute_t, attr.id),
+  [EN_attribute_id].Target.Type = EN_RELATIVE,
+  [EN_attribute_id].Target.Offset = offsetof(attribute_t, attr.id),
 
-  [0].Content.Type = EN_STRING_DYNAMIC,
-  [0].Content.Facet.String.MinLength = DEFAULT_MIN_STRING_LENGTH,
-  [0].Content.Facet.String.MaxLength = DEFAULT_MAX_STRING_LENGTH,
+  [EN_attribute_id].Content.Type = EN_STRING_DYNAMIC,
+  [EN_attribute_id].Content.Facet.String.MinLength = DEFAULT_MIN_STRING_LENGTH,
+  [EN_attribute_id].Content.Facet.String.MaxLength = DEFAULT_MAX_STRING_LENGTH,
 
-  [0].Use = EN_OPTIONAL,
+  [EN_attribute_id].Use = EN_OPTIONAL,
 
-  [1].Name.String = "name",
-  [1].Name.Length = sizeof("name") - 1,
+  [EN_attribute_name].Name.String = "name",
+  [EN_attribute_name].Name.Length = sizeof("name") - 1,
 
-  [1].Target.Type = EN_RELATIVE,
-  [1].Target.Offset = offsetof(attribute_t, attr.name),
+  [EN_attribute_name].Target.Type = EN_RELATIVE,
+  [EN_attribute_name].Target.Offset = offsetof(attribute_t, attr.name),
 
-  [1].Content.Type = EN_STRING_DYNAMIC,
-  [1].Content.Facet.String.MinLength = DEFAULT_MIN_STRING_LENGTH,
-  [1].Content.Facet.String.MaxLength = DEFAULT_MAX_STRING_LENGTH,
+  [EN_attribute_name].Content.Type = EN_STRING_DYNAMIC,
+  [EN_attribute_name].Content.Facet.String.MinLength = DEFAULT_MIN_STRING_LENGTH,
+  [EN_attribute_name].Content.Facet.String.MaxLength = DEFAULT_MAX_STRING_LENGTH,
 
-  [1].Use = EN_OPTIONAL,
+  [EN_attribute_name].Use = EN_OPTIONAL,
 
-  [2].Name.String = "type",
-  [2].Name.Length = sizeof("type") - 1,
+  [EN_attribute_type].Name.String = "type",
+  [EN_attribute_type].Name.Length = sizeof("type") - 1,
 
-  [2].Target.Type = EN_RELATIVE,
-  [2].Target.Offset = offsetof(attribute_t, attr.type),
+  [EN_attribute_type].Target.Type = EN_RELATIVE,
+  [EN_attribute_type].Target.Offset = offsetof(attribute_t, attr.type),
 
-  [2].Content.Type = EN_STRING_DYNAMIC,
-  [2].Content.Facet.String.MinLength = DEFAULT_MIN_STRING_LENGTH,
-  [2].Content.Facet.String.MaxLength = DEFAULT_MAX_STRING_LENGTH,
+  [EN_attribute_type].Content.Type = EN_STRING_DYNAMIC,
+  [EN_attribute_type].Content.Facet.String.MinLength = DEFAULT_MIN_STRING_LENGTH,
+  [EN_attribute_type].Content.Facet.String.MaxLength = DEFAULT_MAX_STRING_LENGTH,
 
-  [2].Use = EN_OPTIONAL,
+  [EN_attribute_type].Use = EN_OPTIONAL,
 
-  [3].Name.String = "ref",
-  [3].Name.Length = sizeof("ref") - 1,
+  [EN_attribute_ref].Name.String = "ref",
+  [EN_attribute_ref].Name.Length = sizeof("ref") - 1,
 
-  [3].Target.Type = EN_RELATIVE,
-  [3].Target.Offset = offsetof(attribute_t, attr.ref),
+  [EN_attribute_ref].Target.Type = EN_RELATIVE,
+  [EN_attribute_ref].Target.Offset = offsetof(attribute_t, attr.ref),
 
-  [3].Content.Type = EN_STRING_DYNAMIC,
-  [3].Content.Facet.String.MinLength = DEFAULT_MIN_STRING_LENGTH,
-  [3].Content.Facet.String.MaxLength = DEFAULT_MAX_STRING_LENGTH,
+  [EN_attribute_ref].Content.Type = EN_STRING_DYNAMIC,
+  [EN_attribute_ref].Content.Facet.String.MinLength = DEFAULT_MIN_STRING_LENGTH,
+  [EN_attribute_ref].Content.Facet.String.MaxLength = DEFAULT_MAX_STRING_LENGTH,
 
-  [3].Use = EN_OPTIONAL,
+  [EN_attribute_ref].Use = EN_OPTIONAL,
 
-  [4].Name.String = "use",
-  [4].Name.Length = sizeof("use") - 1,
+  [EN_attribute_use].Name.String = "use",
+  [EN_attribute_use].Name.Length = sizeof("use") - 1,
 
-  [4].Target.Type = EN_RELATIVE,
-  [4].Target.Offset = offsetof(attribute_t, attr.use),
+  [EN_attribute_use].Target.Type = EN_RELATIVE,
+  [EN_attribute_use].Target.Offset = offsetof(attribute_t, attr.use),
 
-  [4].Content.Type = EN_STRING_DYNAMIC,
-  [4].Content.Facet.String.MinLength = DEFAULT_MIN_STRING_LENGTH,
-  [4].Content.Facet.String.MaxLength = DEFAULT_MAX_STRING_LENGTH,
+  [EN_attribute_use].Content.Type = EN_STRING_DYNAMIC,
+  [EN_attribute_use].Content.Facet.String.MinLength = DEFAULT_MIN_STRING_LENGTH,
+  [EN_attribute_use].Content.Facet.String.MaxLength = DEFAULT_MAX_STRING_LENGTH,
 
-  [4].Use = EN_OPTIONAL,
+  [EN_attribute_use].Use = EN_OPTIONAL,
 
-  [5].Name.String = "default",
-  [5].Name.Length = sizeof("default") - 1,
+  [EN_attribute_Default].Name.String = "default",
+  [EN_attribute_Default].Name.Length = sizeof("default") - 1,
 
-  [5].Target.Type = EN_RELATIVE,
-  [5].Target.Offset = offsetof(attribute_t, attr.Default),
+  [EN_attribute_Default].Target.Type = EN_RELATIVE,
+  [EN_attribute_Default].Target.Offset = offsetof(attribute_t, attr.Default),
 
-  [5].Content.Type = EN_STRING_DYNAMIC,
-  [5].Content.Facet.String.MinLength = DEFAULT_MIN_STRING_LENGTH,
-  [5].Content.Facet.String.MaxLength = DEFAULT_MAX_STRING_LENGTH,
+  [EN_attribute_Default].Content.Type = EN_STRING_DYNAMIC,
+  [EN_attribute_Default].Content.Facet.String.MinLength = DEFAULT_MIN_STRING_LENGTH,
+  [EN_attribute_Default].Content.Facet.String.MaxLength = DEFAULT_MAX_STRING_LENGTH,
 
-  [5].Use = EN_OPTIONAL,
+  [EN_attribute_Default].Use = EN_OPTIONAL,
 
-  [6].Name.String = "fixed",
-  [6].Name.Length = sizeof("fixed") - 1,
+  [EN_attribute_fixed].Name.String = "fixed",
+  [EN_attribute_fixed].Name.Length = sizeof("fixed") - 1,
 
-  [6].Target.Type = EN_RELATIVE,
-  [6].Target.Offset = offsetof(attribute_t, attr.fixed),
+  [EN_attribute_fixed].Target.Type = EN_RELATIVE,
+  [EN_attribute_fixed].Target.Offset = offsetof(attribute_t, attr.fixed),
 
-  [6].Content.Type = EN_STRING_DYNAMIC,
-  [6].Content.Facet.String.MinLength = DEFAULT_MIN_STRING_LENGTH,
-  [6].Content.Facet.String.MaxLength = DEFAULT_MAX_STRING_LENGTH,
+  [EN_attribute_fixed].Content.Type = EN_STRING_DYNAMIC,
+  [EN_attribute_fixed].Content.Facet.String.MinLength = DEFAULT_MIN_STRING_LENGTH,
+  [EN_attribute_fixed].Content.Facet.String.MaxLength = DEFAULT_MAX_STRING_LENGTH,
 
-  [6].Use = EN_OPTIONAL,
+  [EN_attribute_fixed].Use = EN_OPTIONAL,
 };
 
 const xs_element_t xs_attribute =
@@ -140,10 +154,10 @@ const xs_element_t xs_attribute =
   .Target.Allocate = allocate_attribute,
   .Target.Size = sizeof(attribute_t),
 
-  .Attribute_Quantity = ARRAY_LENGTH(attribute_Attr),
+  .Attribute_Quantity = TOTAL_ATTRIBUTE_ATTRIBUTES,
   .Attribute = attribute_Attr,
 
-  .Child_Quantity = ARRAY_LENGTH(attribute_Descendant),
+  .Child_Quantity = TOTAL_ATTRIBUTE_DESCENDANTS,
   .Child_Type     = EN_CHOICE,
   .Child = attribute_Descendant,
 };
@@ -152,7 +166,7 @@ const xs_element_t xs_attribute =
  *  ------------------------------ FUNCTION BODY ------------------------------
  */
 
-static void* allocate_attribute(uint32_t occurrence, void** context)
+void* allocate_attribute(uint32_t occurrence, void** context)
 {
   attribute_t* attribute = calloc(1, sizeof(attribute_t));
   attribute->Type = XS_ATTRIBUTE_TAG;
@@ -162,7 +176,7 @@ static void* allocate_attribute(uint32_t occurrence, void** context)
   return attribute;
 }
 
-static void add_attribute_tag(uint32_t occurrence, void* content, void** context)
+void add_attribute_tag(uint32_t occurrence, void* content, void** context)
 {
   tree_t* node = *context;
   *context = node->Parent;

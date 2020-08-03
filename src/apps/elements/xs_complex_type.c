@@ -28,45 +28,89 @@
  *  --------------------------- FORWARD DECLARATION ---------------------------
  */
 
-static void* allocate_complex_type(uint32_t occurrence,void** context);
-static void add_complex_type(uint32_t occurrence, void* content, void** context);
+void* allocate_complex_type(uint32_t occurrence,void** context);
+void add_complex_type(uint32_t occurrence, void* content, void** context);
 
 /*
  *  ---------------------------- GLOBAL VARIABLES -----------------------------
  */
 
-const xs_element_t* ComplexType_Descendant[] =
+const xs_element_t ComplexType_Descendant[TOTAL_COMPLEX_TYPE_DESCENDANT] =
 {
-  &xs_sequence,
-  &xs_simpleContent,
-  &xs_attribute,
+  [EN_complex_sequence].Name.String  = "xs:sequence",
+  [EN_complex_sequence].Name.Length  = sizeof("xs:sequence") - 1,
+  [EN_complex_sequence].MinOccur     = 0,
+  [EN_complex_sequence].MaxOccur     = 64,
+  [EN_complex_sequence].Callback     = traverse_up,
+
+  [EN_complex_sequence].Target.Type  	  = EN_DYNAMIC,
+  [EN_complex_sequence].Target.Allocate = allocate_sequence,
+
+  [EN_complex_sequence].Attribute_Quantity = TOTAL_SEQUENCE_ATTRIBUTES,
+  [EN_complex_sequence].Attribute 		     = sequence_attr,
+
+  [EN_complex_sequence].Child_Quantity = TOTAL_SEQUENCE_DESCENDANTS,
+  [EN_complex_sequence].Child_Type     = EN_CHOICE,
+  [EN_complex_sequence].Child 		     = Sequence_Descendant,
+
+  [EN_complex_simpleContent].Name.String  = "xs:simpleContent",
+  [EN_complex_simpleContent].Name.Length  = sizeof("xs:simpleContent") - 1,
+  [EN_complex_simpleContent].MinOccur     = 0,
+  [EN_complex_simpleContent].MaxOccur     = 64,
+  [EN_complex_simpleContent].Callback     = add_simple_content,
+
+  [EN_complex_simpleContent].Target.Type  	 = EN_DYNAMIC,
+  [EN_complex_simpleContent].Target.Allocate = allocate_simple_content,
+
+  [EN_complex_simpleContent].Attribute_Quantity = TOTAL_SIMPLE_CONTENT_ATTRIBUTES,
+  [EN_complex_simpleContent].Attribute          = simpleContent_Attr,
+
+  [EN_complex_simpleContent].Child_Quantity = TOTAL_SIMPLE_CONTENT_DESCENDANTS,
+  [EN_complex_simpleContent].Child_Type     = EN_CHOICE,
+  [EN_complex_simpleContent].Child          = simpleContent_Descendant,
+
+  [EN_complex_attribute].Name.String = "xs:attribute",
+  [EN_complex_attribute].Name.Length = sizeof("xs:attribute") - 1,
+  [EN_complex_attribute].MinOccur    = 0,
+  [EN_complex_attribute].MaxOccur    = 64,
+  [EN_complex_attribute].Callback    = add_attribute_tag,
+
+  [EN_complex_attribute].Target.Type     = EN_DYNAMIC,
+  [EN_complex_attribute].Target.Allocate = allocate_attribute,
+
+  [EN_complex_attribute].Attribute_Quantity = TOTAL_ATTRIBUTE_ATTRIBUTES,
+  [EN_complex_attribute].Attribute          = attribute_Attr,
+
+  [EN_complex_attribute].Child_Quantity = TOTAL_ATTRIBUTE_DESCENDANTS,
+  [EN_complex_attribute].Child_Type     = EN_CHOICE,
+  [EN_complex_attribute].Child          = attribute_Descendant,
 };
 
-static const xs_attribute_t complexType_Attr[] =
+const xs_attribute_t complexType_Attr[] =
 {
-  [0].Name.String = "id",
-  [0].Name.Length = sizeof("id") - 1,
+  [EN_type_id].Name.String = "id",
+  [EN_type_id].Name.Length = sizeof("id") - 1,
 
-  [0].Target.Type   = EN_RELATIVE,
-  [0].Target.Offset = offsetof(complexType_t, attr.id),
+  [EN_type_id].Target.Type   = EN_RELATIVE,
+  [EN_type_id].Target.Offset = offsetof(complexType_t, attr.id),
 
-  [0].Content.Type = EN_STRING_DYNAMIC,
-  [0].Content.Facet.String.MinLength = DEFAULT_MIN_STRING_LENGTH,
-  [0].Content.Facet.String.MaxLength = DEFAULT_MAX_STRING_LENGTH,
+  [EN_type_id].Content.Type = EN_STRING_DYNAMIC,
+  [EN_type_id].Content.Facet.String.MinLength = DEFAULT_MIN_STRING_LENGTH,
+  [EN_type_id].Content.Facet.String.MaxLength = DEFAULT_MAX_STRING_LENGTH,
 
-  [0].Use = EN_OPTIONAL,
+  [EN_type_id].Use = EN_OPTIONAL,
 
-  [1].Name.String = "name",
-  [1].Name.Length = sizeof("name") - 1,
+  [EN_type_name].Name.String = "name",
+  [EN_type_name].Name.Length = sizeof("name") - 1,
 
-  [1].Target.Type = EN_RELATIVE,
-  [1].Target.Offset = offsetof(complexType_t, attr.name),
+  [EN_type_name].Target.Type = EN_RELATIVE,
+  [EN_type_name].Target.Offset = offsetof(complexType_t, attr.name),
 
-  [1].Content.Type = EN_STRING_DYNAMIC,
-  [1].Content.Facet.String.MinLength = DEFAULT_MIN_STRING_LENGTH,
-  [1].Content.Facet.String.MaxLength = DEFAULT_MAX_STRING_LENGTH,
+  [EN_type_name].Content.Type = EN_STRING_DYNAMIC,
+  [EN_type_name].Content.Facet.String.MinLength = DEFAULT_MIN_STRING_LENGTH,
+  [EN_type_name].Content.Facet.String.MaxLength = DEFAULT_MAX_STRING_LENGTH,
 
-  [1].Use = EN_OPTIONAL,
+  [EN_type_name].Use = EN_OPTIONAL,
 };
 
 const xs_element_t xs_complexType =
@@ -82,10 +126,10 @@ const xs_element_t xs_complexType =
   .Target.Allocate = allocate_complex_type,
   .Target.Size   = sizeof(complexType_t),
 
-  .Attribute_Quantity = ARRAY_LENGTH(complexType_Attr),
+  .Attribute_Quantity = TOTAL_TYPE_ATTRIBUTES,
   .Attribute = complexType_Attr,
 
-  .Child_Quantity = ARRAY_LENGTH(ComplexType_Descendant),
+  .Child_Quantity = TOTAL_COMPLEX_TYPE_DESCENDANT,
   .Child_Type     = EN_CHOICE,
   .Child = ComplexType_Descendant,
 };
@@ -94,7 +138,7 @@ const xs_element_t xs_complexType =
  *  ------------------------------ FUNCTION BODY ------------------------------
  */
 
-static void* allocate_complex_type(uint32_t occurrence, void** context)
+void* allocate_complex_type(uint32_t occurrence, void** context)
 {
   complexType_t* complexType = calloc(1, sizeof(complexType_t));
   complexType->Type = XS_COMPLEX_TAG;
@@ -104,7 +148,7 @@ static void* allocate_complex_type(uint32_t occurrence, void** context)
   return complexType;
 }
 
-static void add_complex_type(uint32_t occurrence, void* content, void** context)
+void add_complex_type(uint32_t occurrence, void* content, void** context)
 {
   tree_t* node = *context;
   *context = node->Parent;
