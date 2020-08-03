@@ -25,14 +25,14 @@
  *	--------------------------- FORWARD DECLARATION ---------------------------
  */
 
-static void* allocate_facet(uint32_t occurrence, void** context);
-static void add_facet_tag(uint32_t occurrence, void* content, void** context);
+void* allocate_facet(uint32_t occurrence, void** context);
+void add_facet_tag(uint32_t occurrence, void* content, void** context);
 
 /*
  *  ---------------------------- GLOBAL VARIABLES -----------------------------
  */
 
-static const xs_attribute_t facet_Attr[] =
+const xs_attribute_t facet_Attr[TOTAL_FACET_ATTRIBUTES] =
 {
   [0].Name.String = "value",
   [0].Name.Length = sizeof("value") - 1,
@@ -156,7 +156,7 @@ const xs_element_t xs_minLength =
  *  ------------------------------ FUNCTION BODY ------------------------------
  */
 
-static void* allocate_facet(uint32_t occurrence, void** context)
+void* allocate_facet(uint32_t occurrence, void** context)
 {
   xs_facet_t* facet = calloc(1, sizeof(xs_facet_t));
   facet->Type = XS_ENUMERATION_TAG;
@@ -166,7 +166,7 @@ static void* allocate_facet(uint32_t occurrence, void** context)
   return facet;
 }
 
-static void add_facet_tag(uint32_t occurrence, void* content, void** context)
+void add_facet_tag(uint32_t occurrence, void* content, void** context)
 {
   tree_t* node = *context;
   *context = node->Parent;

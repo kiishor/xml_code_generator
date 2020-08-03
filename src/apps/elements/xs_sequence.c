@@ -28,54 +28,68 @@
  *	--------------------------- FORWARD DECLARATION ---------------------------
  */
 
-static void* allocate_sequence(uint32_t occurrence, void** context);
+void* allocate_sequence(uint32_t occurrence, void** context);
 
 /*
  *  ---------------------------- GLOBAL VARIABLES -----------------------------
  */
 
-const xs_element_t* Sequence_Descendant[] =
+const xs_element_t Sequence_Descendant[TOTAL_SEQUENCE_DESCENDANTS] =
 {
-  &xs_child_element,
+  [EN_sequence_child_element].Name.String  = "xs:element",
+  [EN_sequence_child_element].Name.Length  = sizeof("xs:element") - 1,
+  [EN_sequence_child_element].MinOccur      = 0,
+  [EN_sequence_child_element].MaxOccur      = 64,
+  [EN_sequence_child_element].Callback      = add_child_element,
+
+  [EN_sequence_child_element].Target.Type  = EN_DYNAMIC,
+  [EN_sequence_child_element].Target.Allocate = allocate_child_schema_element,
+
+  [EN_sequence_child_element].Attribute_Quantity = ARRAY_LENGTH(child_element_attr),
+  [EN_sequence_child_element].Attribute = child_element_attr,
+
+  [EN_sequence_child_element].Child_Quantity = TOTAL_ELEMENT_DESCENDANTS,
+  [EN_sequence_child_element].Child_Type     = EN_CHOICE,
+  [EN_sequence_child_element].Child          = Element_Descendant,
 };
 
-static const xs_attribute_t sequence_attr[] =
+const xs_attribute_t sequence_attr[TOTAL_SEQUENCE_ATTRIBUTES] =
 {
-  [0].Name.String = "id",
-  [0].Name.Length = sizeof("id") - 1,
+  [EN_sequence_id].Name.String = "id",
+  [EN_sequence_id].Name.Length = sizeof("id") - 1,
 
-  [0].Target.Type = EN_RELATIVE,
-  [0].Target.Offset = offsetof(sequence_t, attr.id),
+  [EN_sequence_id].Target.Type = EN_RELATIVE,
+  [EN_sequence_id].Target.Offset = offsetof(sequence_t, attr.id),
 
-  [0].Content.Type = EN_STRING_DYNAMIC,
-  [0].Content.Facet.String.MinLength = DEFAULT_MIN_STRING_LENGTH,
-  [0].Content.Facet.String.MaxLength = DEFAULT_MAX_STRING_LENGTH,
+  [EN_sequence_id].Content.Type = EN_STRING_DYNAMIC,
+  [EN_sequence_id].Content.Facet.String.MinLength = DEFAULT_MIN_STRING_LENGTH,
+  [EN_sequence_id].Content.Facet.String.MaxLength = DEFAULT_MAX_STRING_LENGTH,
 
-  [0].Use = EN_OPTIONAL,
+  [EN_sequence_id].Use = EN_OPTIONAL,
 
-  [1].Name.String = "minOccurs",
-  [1].Name.Length = sizeof("minOccurs") - 1,
+  [EN_sequence_minOccurs].Name.String = "minOccurs",
+  [EN_sequence_minOccurs].Name.Length = sizeof("minOccurs") - 1,
 
-  [1].Target.Type = EN_RELATIVE,
-  [1].Target.Offset = offsetof(sequence_t, attr.minOccurs),
+  [EN_sequence_minOccurs].Target.Type = EN_RELATIVE,
+  [EN_sequence_minOccurs].Target.Offset = offsetof(sequence_t, attr.minOccurs),
 
-  [1].Content.Type = EN_UNSIGNED,
-  [1].Content.Facet.Uint.MinValue = 0,
-  [1].Content.Facet.Uint.MaxValue = UINT32_MAX,
+  [EN_sequence_minOccurs].Content.Type = EN_UNSIGNED,
+  [EN_sequence_minOccurs].Content.Facet.Uint.MinValue = 0,
+  [EN_sequence_minOccurs].Content.Facet.Uint.MaxValue = UINT32_MAX,
 
-  [1].Use = EN_OPTIONAL,
+  [EN_sequence_minOccurs].Use = EN_OPTIONAL,
 
-  [2].Name.String = "maxOccurs",
-  [2].Name.Length = sizeof("maxOccurs") - 1,
+  [EN_sequence_maxOccurs].Name.String = "maxOccurs",
+  [EN_sequence_maxOccurs].Name.Length = sizeof("maxOccurs") - 1,
 
-  [2].Target.Type = EN_RELATIVE,
-  [2].Target.Offset = offsetof(sequence_t, attr.maxOccurs),
+  [EN_sequence_maxOccurs].Target.Type = EN_RELATIVE,
+  [EN_sequence_maxOccurs].Target.Offset = offsetof(sequence_t, attr.maxOccurs),
 
-  [2].Content.Type = EN_UNSIGNED,
-  [2].Content.Facet.Uint.MinValue = 0,
-  [2].Content.Facet.Uint.MaxValue = UINT32_MAX,
+  [EN_sequence_maxOccurs].Content.Type = EN_UNSIGNED,
+  [EN_sequence_maxOccurs].Content.Facet.Uint.MinValue = 0,
+  [EN_sequence_maxOccurs].Content.Facet.Uint.MaxValue = UINT32_MAX,
 
-  [2].Use = EN_OPTIONAL,
+  [EN_sequence_maxOccurs].Use = EN_OPTIONAL,
 };
 
 const xs_element_t xs_sequence =
@@ -101,7 +115,7 @@ const xs_element_t xs_sequence =
  *  ------------------------------ FUNCTION BODY ------------------------------
  */
 
-static void* allocate_sequence(uint32_t occurrence, void** context)
+void* allocate_sequence(uint32_t occurrence, void** context)
 {
   sequence_t* sequence = calloc(1, sizeof(sequence_t));
   sequence->Type = XS_SEQUENCE_TAG;

@@ -8,161 +8,147 @@
 shiporder_t shiporder;
 
 
-static const xs_element_t title_element;
-static const xs_element_t note_element;
-static const xs_element_t quantity_element;
-static const xs_element_t price_element;
-
-static const xs_element_t* item_descendant[] =
+static const xs_element_t item_descendant[] =
 {
-    &title_element,
-    &note_element,
-    &quantity_element,
-    &price_element,
+    [0].Name.String = "title",
+    [0].Name.Length = 5,
+    [0].MinOccur    = 1,
+    [0].MaxOccur    = 1,
+    [0].Callback    = NULL,
+    [0].Target.Type    = EN_RELATIVE,
+    [0].Target.Offset  = offsetof(item_t, title),
+    [0].Target.Size    = sizeof(item_t),
+    [0].Content.Type   = EN_STRING_DYNAMIC,
+    [0].Content.Facet.String.MinLength = 0,
+    [0].Content.Facet.String.MaxLength = 4294967295,
+
+    [1].Name.String = "note",
+    [1].Name.Length = 4,
+    [1].MinOccur    = 0,
+    [1].MaxOccur    = 1,
+    [1].Callback    = NULL,
+    [1].Target.Type    = EN_RELATIVE,
+    [1].Target.Offset  = offsetof(item_t, note),
+    [1].Target.Size    = sizeof(item_t),
+    [1].Content.Type   = EN_STRING_DYNAMIC,
+    [1].Content.Facet.String.MinLength = 0,
+    [1].Content.Facet.String.MaxLength = 4294967295,
+
+    [2].Name.String = "quantity",
+    [2].Name.Length = 8,
+    [2].MinOccur    = 1,
+    [2].MaxOccur    = 1,
+    [2].Callback    = NULL,
+    [2].Target.Type    = EN_RELATIVE,
+    [2].Target.Offset  = offsetof(item_t, quantity),
+    [2].Target.Size    = sizeof(item_t),
+    [2].Content.Type   = EN_UNSIGNED,
+    [2].Content.Facet.Uint.MinValue = 1,
+    [2].Content.Facet.Uint.MaxValue = 4294967295,
+
+    [3].Name.String = "price",
+    [3].Name.Length = 5,
+    [3].MinOccur    = 1,
+    [3].MaxOccur    = 1,
+    [3].Callback    = NULL,
+    [3].Target.Type    = EN_RELATIVE,
+    [3].Target.Offset  = offsetof(item_t, price),
+    [3].Target.Size    = sizeof(item_t),
+    [3].Content.Type   = EN_DECIMAL,
+    [3].Content.Facet.Decimal.MinValue = -3.40282e+038,
+    [3].Content.Facet.Decimal.MaxValue = 3.40282e+038,
 };
 
-static const xs_element_t title_element =
+static const xs_element_t shipto_descendant[] =
 {
-    .Name.String = "title",
-    .Name.Length = 5,
-    .MinOccur    = 1,
-    .MaxOccur    = 1,
-    .Callback    = NULL,
-    .Target.Type    = EN_RELATIVE,
-    .Target.Offset  = offsetof(item_t, title),
-    .Target.Size    = sizeof(item_t),
-    .Content.Type   = EN_STRING_DYNAMIC,
-    .Content.Facet.String.MinLength = 0,
-    .Content.Facet.String.MaxLength = 4294967295,
+    [0].Name.String = "name",
+    [0].Name.Length = 4,
+    [0].MinOccur    = 1,
+    [0].MaxOccur    = 1,
+    [0].Callback    = NULL,
+    [0].Target.Type    = EN_RELATIVE,
+    [0].Target.Offset  = offsetof(shipto_t, name),
+    [0].Target.Size    = sizeof(shipto_t),
+    [0].Content.Type   = EN_STRING_DYNAMIC,
+    [0].Content.Facet.String.MinLength = 0,
+    [0].Content.Facet.String.MaxLength = 4294967295,
+
+    [1].Name.String = "address",
+    [1].Name.Length = 7,
+    [1].MinOccur    = 1,
+    [1].MaxOccur    = 1,
+    [1].Callback    = NULL,
+    [1].Target.Type    = EN_RELATIVE,
+    [1].Target.Offset  = offsetof(shipto_t, address),
+    [1].Target.Size    = sizeof(shipto_t),
+    [1].Content.Type   = EN_STRING_DYNAMIC,
+    [1].Content.Facet.String.MinLength = 0,
+    [1].Content.Facet.String.MaxLength = 4294967295,
+
+    [2].Name.String = "city",
+    [2].Name.Length = 4,
+    [2].MinOccur    = 1,
+    [2].MaxOccur    = 1,
+    [2].Callback    = NULL,
+    [2].Target.Type    = EN_RELATIVE,
+    [2].Target.Offset  = offsetof(shipto_t, city),
+    [2].Target.Size    = sizeof(shipto_t),
+    [2].Content.Type   = EN_STRING_DYNAMIC,
+    [2].Content.Facet.String.MinLength = 0,
+    [2].Content.Facet.String.MaxLength = 4294967295,
+
+    [3].Name.String = "country",
+    [3].Name.Length = 7,
+    [3].MinOccur    = 1,
+    [3].MaxOccur    = 1,
+    [3].Callback    = NULL,
+    [3].Target.Type    = EN_RELATIVE,
+    [3].Target.Offset  = offsetof(shipto_t, country),
+    [3].Target.Size    = sizeof(shipto_t),
+    [3].Content.Type   = EN_STRING_DYNAMIC,
+    [3].Content.Facet.String.MinLength = 0,
+    [3].Content.Facet.String.MaxLength = 4294967295,
 };
 
-static const xs_element_t note_element =
+static const xs_element_t shiporder_descendant[] =
 {
-    .Name.String = "note",
-    .Name.Length = 4,
-    .MinOccur    = 0,
-    .MaxOccur    = 1,
-    .Callback    = NULL,
-    .Target.Type    = EN_RELATIVE,
-    .Target.Offset  = offsetof(item_t, note),
-    .Target.Size    = sizeof(item_t),
-    .Content.Type   = EN_STRING_DYNAMIC,
-    .Content.Facet.String.MinLength = 0,
-    .Content.Facet.String.MaxLength = 4294967295,
-};
+    [0].Name.String = "orderperson",
+    [0].Name.Length = 11,
+    [0].MinOccur    = 1,
+    [0].MaxOccur    = 1,
+    [0].Callback    = NULL,
+    [0].Target.Type    = EN_RELATIVE,
+    [0].Target.Offset  = offsetof(shiporder_t, orderperson),
+    [0].Target.Size    = sizeof(shiporder_t),
+    [0].Content.Type   = EN_STRING_DYNAMIC,
+    [0].Content.Facet.String.MinLength = 0,
+    [0].Content.Facet.String.MaxLength = 4294967295,
 
-static const xs_element_t quantity_element =
-{
-    .Name.String = "quantity",
-    .Name.Length = 8,
-    .MinOccur    = 1,
-    .MaxOccur    = 1,
-    .Callback    = NULL,
-    .Target.Type    = EN_RELATIVE,
-    .Target.Offset  = offsetof(item_t, quantity),
-    .Target.Size    = sizeof(item_t),
-    .Content.Type   = EN_UNSIGNED,
-    .Content.Facet.Uint.MinValue = 1,
-    .Content.Facet.Uint.MaxValue = 4294967295,
-};
+    [1].Name.String = "shipto",
+    [1].Name.Length = 6,
+    [1].MinOccur    = 1,
+    [1].MaxOccur    = 1,
+    [1].Callback    = NULL,
+    [1].Target.Type    = EN_RELATIVE,
+    [1].Target.Offset  = offsetof(shiporder_t, shipto),
+    [1].Target.Size    = sizeof(shiporder_t),
+    [1].Content.Type   = EN_NO_XML_DATA_TYPE,
+    [1].Child_Quantity = 4,
+    [1].Child_Type     = EN_SEQUENCE,
+    [1].Child          = shipto_descendant,
 
-static const xs_element_t price_element =
-{
-    .Name.String = "price",
-    .Name.Length = 5,
-    .MinOccur    = 1,
-    .MaxOccur    = 1,
-    .Callback    = NULL,
-    .Target.Type    = EN_RELATIVE,
-    .Target.Offset  = offsetof(item_t, price),
-    .Target.Size    = sizeof(item_t),
-    .Content.Type   = EN_DECIMAL,
-    .Content.Facet.Decimal.MinValue = -3.40282e+038,
-    .Content.Facet.Decimal.MaxValue = 3.40282e+038,
-};
-
-static const xs_element_t name_element;
-static const xs_element_t address_element;
-static const xs_element_t city_element;
-static const xs_element_t country_element;
-
-static const xs_element_t* shipto_descendant[] =
-{
-    &name_element,
-    &address_element,
-    &city_element,
-    &country_element,
-};
-
-static const xs_element_t name_element =
-{
-    .Name.String = "name",
-    .Name.Length = 4,
-    .MinOccur    = 1,
-    .MaxOccur    = 1,
-    .Callback    = NULL,
-    .Target.Type    = EN_RELATIVE,
-    .Target.Offset  = offsetof(shipto_t, name),
-    .Target.Size    = sizeof(shipto_t),
-    .Content.Type   = EN_STRING_DYNAMIC,
-    .Content.Facet.String.MinLength = 0,
-    .Content.Facet.String.MaxLength = 4294967295,
-};
-
-static const xs_element_t address_element =
-{
-    .Name.String = "address",
-    .Name.Length = 7,
-    .MinOccur    = 1,
-    .MaxOccur    = 1,
-    .Callback    = NULL,
-    .Target.Type    = EN_RELATIVE,
-    .Target.Offset  = offsetof(shipto_t, address),
-    .Target.Size    = sizeof(shipto_t),
-    .Content.Type   = EN_STRING_DYNAMIC,
-    .Content.Facet.String.MinLength = 0,
-    .Content.Facet.String.MaxLength = 4294967295,
-};
-
-static const xs_element_t city_element =
-{
-    .Name.String = "city",
-    .Name.Length = 4,
-    .MinOccur    = 1,
-    .MaxOccur    = 1,
-    .Callback    = NULL,
-    .Target.Type    = EN_RELATIVE,
-    .Target.Offset  = offsetof(shipto_t, city),
-    .Target.Size    = sizeof(shipto_t),
-    .Content.Type   = EN_STRING_DYNAMIC,
-    .Content.Facet.String.MinLength = 0,
-    .Content.Facet.String.MaxLength = 4294967295,
-};
-
-static const xs_element_t country_element =
-{
-    .Name.String = "country",
-    .Name.Length = 7,
-    .MinOccur    = 1,
-    .MaxOccur    = 1,
-    .Callback    = NULL,
-    .Target.Type    = EN_RELATIVE,
-    .Target.Offset  = offsetof(shipto_t, country),
-    .Target.Size    = sizeof(shipto_t),
-    .Content.Type   = EN_STRING_DYNAMIC,
-    .Content.Facet.String.MinLength = 0,
-    .Content.Facet.String.MaxLength = 4294967295,
-};
-
-static const xs_element_t orderperson_element;
-static const xs_element_t shipto_element;
-static const xs_element_t item_element;
-
-static const xs_element_t* shiporder_descendant[] =
-{
-    &orderperson_element,
-    &shipto_element,
-    &item_element,
+    [2].Name.String = "item",
+    [2].Name.Length = 4,
+    [2].MinOccur    = 1,
+    [2].MaxOccur    = 4294967295,
+    [2].Callback    = NULL,
+    [2].Target.Type    = EN_RELATIVE,
+    [2].Target.Offset  = offsetof(shiporder_t, item),
+    [2].Target.Size    = sizeof(shiporder_t),
+    [2].Content.Type   = EN_NO_XML_DATA_TYPE,
+    [2].Child_Quantity = 4,
+    [2].Child_Type     = EN_SEQUENCE,
+    [2].Child          = item_descendant,
 };
 
 static const xs_attribute_t shiporder_attribute[] =
@@ -170,9 +156,11 @@ static const xs_attribute_t shiporder_attribute[] =
     [0].Name.String = "xmlns:xsi",
     [0].Name.Length = 9,
     [0].Use         = EN_OPTIONAL,
+
     [1].Name.String = "xsi:noNamespaceSchemaLocation",
     [1].Name.Length = 29,
     [1].Use         = EN_OPTIONAL,
+
     [2].Name.String = "orderid",
     [2].Name.Length = 7,
     [2].Target.Type    = EN_RELATIVE,
@@ -185,75 +173,21 @@ static const xs_attribute_t shiporder_attribute[] =
 };
 
 
-static const xs_element_t orderperson_element =
+const xs_element_t root_descendant[] =
 {
-    .Name.String = "orderperson",
-    .Name.Length = 11,
-    .MinOccur    = 1,
-    .MaxOccur    = 1,
-    .Callback    = NULL,
-    .Target.Type    = EN_RELATIVE,
-    .Target.Offset  = offsetof(shiporder_t, orderperson),
-    .Target.Size    = sizeof(shiporder_t),
-    .Content.Type   = EN_STRING_DYNAMIC,
-    .Content.Facet.String.MinLength = 0,
-    .Content.Facet.String.MaxLength = 4294967295,
-};
-
-static const xs_element_t shipto_element =
-{
-    .Name.String = "shipto",
-    .Name.Length = 6,
-    .MinOccur    = 1,
-    .MaxOccur    = 1,
-    .Callback    = NULL,
-    .Target.Type    = EN_RELATIVE,
-    .Target.Offset  = offsetof(shiporder_t, shipto),
-    .Target.Size    = sizeof(shiporder_t),
-    .Content.Type   = EN_NO_XML_DATA_TYPE,
-    .Child_Quantity = 4,
-    .Child_Type     = EN_SEQUENCE,
-    .Child          = shipto_descendant,
-};
-
-static const xs_element_t item_element =
-{
-    .Name.String = "item",
-    .Name.Length = 4,
-    .MinOccur    = 1,
-    .MaxOccur    = 4294967295,
-    .Callback    = NULL,
-    .Target.Type    = EN_RELATIVE,
-    .Target.Offset  = offsetof(shiporder_t, item),
-    .Target.Size    = sizeof(shiporder_t),
-    .Content.Type   = EN_NO_XML_DATA_TYPE,
-    .Child_Quantity = 4,
-    .Child_Type     = EN_SEQUENCE,
-    .Child          = item_descendant,
-};
-
-static const xs_element_t shiporder_element;
-
-const xs_element_t* root_descendant[] =
-{
-    &shiporder_element,
-};
-
-static const xs_element_t shiporder_element =
-{
-    .Name.String = "shiporder",
-    .Name.Length = 9,
-    .MinOccur    = 1,
-    .MaxOccur    = 1,
-    .Callback    = NULL,
-    .Target.Type    = EN_STATIC,
-    .Target.Address = &shiporder,
-    .Content.Type   = EN_NO_XML_DATA_TYPE,
-    .Attribute_Quantity = 3,
-    .Attribute = shiporder_attribute,
-    .Child_Quantity = 3,
-    .Child_Type     = EN_SEQUENCE,
-    .Child          = shiporder_descendant,
+    [0].Name.String = "shiporder",
+    [0].Name.Length = 9,
+    [0].MinOccur    = 1,
+    [0].MaxOccur    = 1,
+    [0].Callback    = NULL,
+    [0].Target.Type    = EN_STATIC,
+    [0].Target.Address = &shiporder,
+    [0].Content.Type   = EN_NO_XML_DATA_TYPE,
+    [0].Attribute_Quantity = 3,
+    [0].Attribute          = shiporder_attribute,
+    [0].Child_Quantity = 3,
+    [0].Child_Type     = EN_SEQUENCE,
+    [0].Child          = shiporder_descendant,
 };
 const xs_element_t xml_root =
 {

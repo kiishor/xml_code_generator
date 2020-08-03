@@ -26,43 +26,49 @@
  *	--------------------------- FORWARD DECLARATION ---------------------------
  */
 
-static void* allocate_extension(uint32_t occurrence, void** context);
-static void add_extension_tag(uint32_t occurrence, void* content, void** context);
+void* allocate_extension(uint32_t occurrence, void** context);
+void add_extension_tag(uint32_t occurrence, void* content, void** context);
 
 /*
  *  ---------------------------- GLOBAL VARIABLES -----------------------------
  */
 
-const xs_element_t* extension_Descendant[] =
+const xs_element_t extension_Descendant[TOTAL_EXTENSION_DESCENDANTS] =
 {
-  &xs_attribute,
+  [EN_extension_attribute].Name.String = "xs:attribute",
+  [EN_extension_attribute].Name.Length    = sizeof("xs:attribute") - 1,
+  [EN_extension_attribute].MinOccur    = 0,
+  [EN_extension_attribute].MaxOccur    = 64,
+  [EN_extension_attribute].Callback      = add_attribute_tag,
+  [EN_extension_attribute].Target.Type  = EN_DYNAMIC,
+  [EN_extension_attribute].Target.Allocate = allocate_attribute,
+  [EN_extension_attribute].Target.Size = sizeof(attribute_t),
+  [EN_extension_attribute].Attribute_Quantity = TOTAL_ATTRIBUTE_ATTRIBUTES,
+  [EN_extension_attribute].Attribute = attribute_Attr,
+  [EN_extension_attribute].Child_Quantity = TOTAL_ATTRIBUTE_DESCENDANTS,
+  [EN_extension_attribute].Child_Type     = EN_CHOICE,
+  [EN_extension_attribute].Child = attribute_Descendant,
 };
 
-static const xs_attribute_t extension_Attr[] =
+const xs_attribute_t extension_Attr[] =
 {
-  [0].Name.String = "id",
-  [0].Name.Length = sizeof("id") - 1,
+  [EN_extension_id].Name.String = "id",
+  [EN_extension_id].Name.Length = sizeof("id") - 1,
+  [EN_extension_id].Target.Type = EN_RELATIVE,
+  [EN_extension_id].Target.Offset = offsetof(extension_t, attr.id),
+  [EN_extension_id].Content.Type = EN_STRING_DYNAMIC,
+  [EN_extension_id].Content.Facet.String.MinLength = DEFAULT_MIN_STRING_LENGTH,
+  [EN_extension_id].Content.Facet.String.MaxLength = DEFAULT_MAX_STRING_LENGTH,
+  [EN_extension_id].Use = EN_OPTIONAL,
 
-  [0].Target.Type = EN_RELATIVE,
-  [0].Target.Offset = offsetof(extension_t, attr.id),
-
-  [0].Content.Type = EN_STRING_DYNAMIC,
-  [0].Content.Facet.String.MinLength = DEFAULT_MIN_STRING_LENGTH,
-  [0].Content.Facet.String.MaxLength = DEFAULT_MAX_STRING_LENGTH,
-
-  [0].Use = EN_OPTIONAL,
-
-  [1].Name.String = "base",
-  [1].Name.Length = sizeof("base") - 1,
-
-  [1].Target.Type = EN_RELATIVE,
-  [1].Target.Offset = offsetof(extension_t, attr.base),
-
-  [1].Content.Type = EN_STRING_DYNAMIC,
-  [1].Content.Facet.String.MinLength = DEFAULT_MIN_STRING_LENGTH,
-  [1].Content.Facet.String.MaxLength = DEFAULT_MAX_STRING_LENGTH,
-
-  [1].Use = EN_REQUIRED,
+  [EN_extension_base].Name.String = "base",
+  [EN_extension_base].Name.Length = sizeof("base") - 1,
+  [EN_extension_base].Target.Type = EN_RELATIVE,
+  [EN_extension_base].Target.Offset = offsetof(extension_t, attr.base),
+  [EN_extension_base].Content.Type = EN_STRING_DYNAMIC,
+  [EN_extension_base].Content.Facet.String.MinLength = DEFAULT_MIN_STRING_LENGTH,
+  [EN_extension_base].Content.Facet.String.MaxLength = DEFAULT_MAX_STRING_LENGTH,
+  [EN_extension_base].Use = EN_REQUIRED,
 };
 
 const xs_element_t xs_extension =
@@ -89,7 +95,7 @@ const xs_element_t xs_extension =
  *  ------------------------------ FUNCTION BODY ------------------------------
  */
 
-static void* allocate_extension(uint32_t occurrence, void** context)
+void* allocate_extension(uint32_t occurrence, void** context)
 {
   extension_t* extension = calloc(1, sizeof(extension_t));
   extension->Type = XS_EXTENSION_TAG;
@@ -99,7 +105,7 @@ static void* allocate_extension(uint32_t occurrence, void** context)
   return extension;
 }
 
-static void add_extension_tag(uint32_t occurrence, void* content, void** context)
+void add_extension_tag(uint32_t occurrence, void* content, void** context)
 {
   tree_t* node = *context;
   *context = node->Parent;

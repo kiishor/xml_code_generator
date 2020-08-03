@@ -38,122 +38,153 @@ void* allocate_child_schema_element(uint32_t, void**);
  *  ---------------------------- GLOBAL VARIABLES -----------------------------
  */
 
-const xs_element_t* Element_Descendant[] =
+const xs_element_t Element_Descendant[TOTAL_ELEMENT_DESCENDANTS] =
 {
-  &xs_complexType,
-  &xs_simpleType,
+  [EN_element_complexType].Name.String  = "xs:complexType",
+  [EN_element_complexType].Name.Length  = sizeof("xs:complexType") - 1,
+  [EN_element_complexType].MinOccur      = 0,
+  [EN_element_complexType].MaxOccur      = 64,
+
+  [EN_element_complexType].Callback      = add_complex_type,
+
+  [EN_element_complexType].Target.Type  = EN_DYNAMIC,
+  [EN_element_complexType].Target.Allocate = allocate_complex_type,
+  [EN_element_complexType].Target.Size   = sizeof(complexType_t),
+
+  [EN_element_complexType].Attribute_Quantity = TOTAL_TYPE_ATTRIBUTES,
+  [EN_element_complexType].Attribute = complexType_Attr,
+
+  [EN_element_complexType].Child_Quantity = TOTAL_COMPLEX_TYPE_DESCENDANT,
+  [EN_element_complexType].Child_Type     = EN_CHOICE,
+  [EN_element_complexType].Child = ComplexType_Descendant,
+
+  [EN_element_simpleType].Name.String  = "xs:simpleType",
+  [EN_element_simpleType].Name.Length  = sizeof("xs:simpleType") - 1,
+  [EN_element_simpleType].MinOccur     = 0,
+  [EN_element_simpleType].MaxOccur     = 64,
+  [EN_element_simpleType].Callback      = add_simple_type_tag,
+
+  [EN_element_simpleType].Target.Type  = EN_DYNAMIC,
+  [EN_element_simpleType].Target.Allocate = allocate_simple_type,
+
+  [EN_element_simpleType].Attribute_Quantity = TOTAL_TYPE_ATTRIBUTES,
+  [EN_element_simpleType].Attribute = simple_type_Attr,
+
+  [EN_element_simpleType].Child_Quantity = TOTAL_SIMPLE_TYPE_DESCENDANTS,
+  [EN_element_simpleType].Child_Type     = EN_CHOICE,
+  [EN_element_simpleType].Child = simple_type_Descendant,
 };
 
-static const xs_attribute_t child_element_attr[] =
+const xs_attribute_t child_element_attr[TOTAL_CHILD_ELEMENT_ATTRIBUTES] =
 {
-  [0].Name.String = "id",
-  [0].Name.Length = sizeof("id") - 1,
+  [EN_child_id].Name.String = "id",
+  [EN_child_id].Name.Length = sizeof("id") - 1,
 
-  [0].Target.Type = EN_RELATIVE,
-  [0].Target.Offset = offsetof(element_t, child.id),
+  [EN_child_id].Target.Type = EN_RELATIVE,
+  [EN_child_id].Target.Offset = offsetof(element_t, child.id),
 
-  [0].Content.Type = EN_STRING_DYNAMIC,
-  [0].Content.Facet.String.MinLength = DEFAULT_MIN_STRING_LENGTH,
-  [0].Content.Facet.String.MaxLength = DEFAULT_MAX_STRING_LENGTH,
+  [EN_child_id].Content.Type = EN_STRING_DYNAMIC,
+  [EN_child_id].Content.Facet.String.MinLength = DEFAULT_MIN_STRING_LENGTH,
+  [EN_child_id].Content.Facet.String.MaxLength = DEFAULT_MAX_STRING_LENGTH,
 
-  [0].Use = EN_OPTIONAL,
+  [EN_child_id].Use = EN_OPTIONAL,
 
-  [1].Name.String = "name",
-  [1].Name.Length = sizeof("name") - 1,
+  [EN_child_name].Name.String = "name",
+  [EN_child_name].Name.Length = sizeof("name") - 1,
 
-  [1].Target.Type = EN_RELATIVE,
-  [1].Target.Offset = offsetof(element_t, child.name),
+  [EN_child_name].Target.Type = EN_RELATIVE,
+  [EN_child_name].Target.Offset = offsetof(element_t, child.name),
 
-  [1].Content.Type = EN_STRING_DYNAMIC,
-  [1].Content.Facet.String.MinLength = DEFAULT_MIN_STRING_LENGTH,
-  [1].Content.Facet.String.MaxLength = DEFAULT_MAX_STRING_LENGTH,
+  [EN_child_name].Content.Type = EN_STRING_DYNAMIC,
+  [EN_child_name].Content.Facet.String.MinLength = DEFAULT_MIN_STRING_LENGTH,
+  [EN_child_name].Content.Facet.String.MaxLength = DEFAULT_MAX_STRING_LENGTH,
 
-  [1].Use = EN_OPTIONAL,
+  [EN_child_name].Use = EN_OPTIONAL,
 
-  [2].Name.String = "type",
-  [2].Name.Length = sizeof("type") - 1,
+  [EN_child_type].Name.String = "type",
+  [EN_child_type].Name.Length = sizeof("type") - 1,
 
-  [2].Target.Type = EN_RELATIVE,
-  [2].Target.Offset = offsetof(element_t, child.type),
+  [EN_child_type].Target.Type = EN_RELATIVE,
+  [EN_child_type].Target.Offset = offsetof(element_t, child.type),
 
-  [2].Content.Type = EN_STRING_DYNAMIC,
-  [2].Content.Facet.String.MinLength = DEFAULT_MIN_STRING_LENGTH,
-  [2].Content.Facet.String.MaxLength = DEFAULT_MAX_STRING_LENGTH,
+  [EN_child_type].Content.Type = EN_STRING_DYNAMIC,
+  [EN_child_type].Content.Facet.String.MinLength = DEFAULT_MIN_STRING_LENGTH,
+  [EN_child_type].Content.Facet.String.MaxLength = DEFAULT_MAX_STRING_LENGTH,
 
-  [2].Use = EN_OPTIONAL,
+  [EN_child_type].Use = EN_OPTIONAL,
 
-  [3].Name.String = "ref",
-  [3].Name.Length = sizeof("ref") - 1,
+  [EN_child_ref].Name.String = "ref",
+  [EN_child_ref].Name.Length = sizeof("ref") - 1,
 
-  [3].Target.Type = EN_RELATIVE,
-  [3].Target.Offset = offsetof(element_t, child.ref),
+  [EN_child_ref].Target.Type = EN_RELATIVE,
+  [EN_child_ref].Target.Offset = offsetof(element_t, child.ref),
 
-  [3].Content.Type = EN_STRING_DYNAMIC,
-  [3].Content.Facet.String.MinLength = DEFAULT_MIN_STRING_LENGTH,
-  [3].Content.Facet.String.MaxLength = DEFAULT_MAX_STRING_LENGTH,
+  [EN_child_ref].Content.Type = EN_STRING_DYNAMIC,
+  [EN_child_ref].Content.Facet.String.MinLength = DEFAULT_MIN_STRING_LENGTH,
+  [EN_child_ref].Content.Facet.String.MaxLength = DEFAULT_MAX_STRING_LENGTH,
 
-  [3].Use = EN_OPTIONAL,
+  [EN_child_ref].Use = EN_OPTIONAL,
 
-  [4].Name.String = "minOccurs",
-  [4].Name.Length = sizeof("minOccurs") - 1,
+  [EN_child_minOccurs].Name.String = "minOccurs",
+  [EN_child_minOccurs].Name.Length = sizeof("minOccurs") - 1,
 
-  [4].Target.Type = EN_RELATIVE,
-  [4].Target.Offset = offsetof(element_t, child.minOccurs),
+  [EN_child_minOccurs].Target.Type = EN_RELATIVE,
+  [EN_child_minOccurs].Target.Offset = offsetof(element_t, child.minOccurs),
 
-  [4].Content.Type = EN_UNSIGNED,
-  [4].Content.Facet.Uint.MinValue = 0,
-  [4].Content.Facet.Uint.MaxValue = UINT32_MAX,
+  [EN_child_minOccurs].Content.Type = EN_UNSIGNED,
+  [EN_child_minOccurs].Content.Facet.Uint.MinValue = 0,
+  [EN_child_minOccurs].Content.Facet.Uint.MaxValue = UINT32_MAX,
 
-  [4].Use = EN_OPTIONAL,
+  [EN_child_minOccurs].Use = EN_OPTIONAL,
 
-  [5].Name.String = "maxOccurs",
-  [5].Name.Length = sizeof("maxOccurs") - 1,
+  [EN_child_maxOccurs].Name.String = "maxOccurs",
+  [EN_child_maxOccurs].Name.Length = sizeof("maxOccurs") - 1,
 
-  [5].Target.Type = EN_RELATIVE,
-  [5].Target.Offset = offsetof(element_t, child.maxOccurs),
+  [EN_child_maxOccurs].Target.Type = EN_RELATIVE,
+  [EN_child_maxOccurs].Target.Offset = offsetof(element_t, child.maxOccurs),
 
-  [5].Content.Type = EN_STRING,
+  [EN_child_maxOccurs].Content.Type = EN_STRING,
 
-  [5].Use = EN_OPTIONAL,
+  [EN_child_maxOccurs].Use = EN_OPTIONAL,
 };
 
-static const xs_attribute_t global_element_attr[] =
+const xs_attribute_t global_element_attr[] =
 {
-  [0].Name.String = "id",
-  [0].Name.Length = sizeof("id") - 1,
+  [EN_global_id].Name.String = "id",
+  [EN_global_id].Name.Length = sizeof("id") - 1,
 
-  [0].Target.Type = EN_RELATIVE,
-  [0].Target.Offset = offsetof(element_t, global.id),
+  [EN_global_id].Target.Type = EN_RELATIVE,
+  [EN_global_id].Target.Offset = offsetof(element_t, global.id),
 
-  [0].Content.Type = EN_STRING_DYNAMIC,
-  [0].Content.Facet.String.MinLength = DEFAULT_MIN_STRING_LENGTH,
-  [0].Content.Facet.String.MaxLength = DEFAULT_MAX_STRING_LENGTH,
+  [EN_global_id].Content.Type = EN_STRING_DYNAMIC,
+  [EN_global_id].Content.Facet.String.MinLength = DEFAULT_MIN_STRING_LENGTH,
+  [EN_global_id].Content.Facet.String.MaxLength = DEFAULT_MAX_STRING_LENGTH,
 
-  [0].Use = EN_OPTIONAL,
+  [EN_global_id].Use = EN_OPTIONAL,
 
-  [1].Name.String = "name",
-  [1].Name.Length = sizeof("name") - 1,
+  [EN_global_name].Name.String = "name",
+  [EN_global_name].Name.Length = sizeof("name") - 1,
 
-  [1].Target.Type = EN_RELATIVE,
-  [1].Target.Offset = offsetof(element_t, global.name),
+  [EN_global_name].Target.Type = EN_RELATIVE,
+  [EN_global_name].Target.Offset = offsetof(element_t, global.name),
 
-  [1].Content.Type = EN_STRING_DYNAMIC,
-  [1].Content.Facet.String.MinLength = DEFAULT_MIN_STRING_LENGTH,
-  [1].Content.Facet.String.MaxLength = DEFAULT_MAX_STRING_LENGTH,
+  [EN_global_name].Content.Type = EN_STRING_DYNAMIC,
+  [EN_global_name].Content.Facet.String.MinLength = DEFAULT_MIN_STRING_LENGTH,
+  [EN_global_name].Content.Facet.String.MaxLength = DEFAULT_MAX_STRING_LENGTH,
 
-  [1].Use = EN_REQUIRED,
+  [EN_global_name].Use = EN_REQUIRED,
 
-  [2].Name.String = "type",
-  [2].Name.Length = sizeof("type") - 1,
+  [EN_global_type].Name.String = "type",
+  [EN_global_type].Name.Length = sizeof("type") - 1,
 
-  [2].Target.Type = EN_RELATIVE,
-  [2].Target.Offset = offsetof(element_t, global.type),
+  [EN_global_type].Target.Type = EN_RELATIVE,
+  [EN_global_type].Target.Offset = offsetof(element_t, global.type),
 
-  [2].Content.Type = EN_STRING_DYNAMIC,
-  [2].Content.Facet.String.MinLength = DEFAULT_MIN_STRING_LENGTH,
-  [2].Content.Facet.String.MaxLength = DEFAULT_MAX_STRING_LENGTH,
+  [EN_global_type].Content.Type = EN_STRING_DYNAMIC,
+  [EN_global_type].Content.Facet.String.MinLength = DEFAULT_MIN_STRING_LENGTH,
+  [EN_global_type].Content.Facet.String.MaxLength = DEFAULT_MAX_STRING_LENGTH,
 
-  [2].Use = EN_OPTIONAL,
+  [EN_global_type].Use = EN_OPTIONAL,
 };
 
 const xs_element_t xs_global_element =
@@ -168,12 +199,12 @@ const xs_element_t xs_global_element =
   .Target.Type  = EN_DYNAMIC,
   .Target.Allocate = allocate_global_schema_element,
 
-  .Attribute_Quantity = ARRAY_LENGTH(global_element_attr),
+  .Attribute_Quantity = TOTAL_GLOBAL_ELEMENT_ATTRIBUTES,
   .Attribute = global_element_attr,
 
-  .Child_Quantity = ARRAY_LENGTH(Element_Descendant),
+  .Child_Quantity = TOTAL_ELEMENT_DESCENDANTS,
   .Child_Type     = EN_CHOICE,
-  .Child = Element_Descendant,
+  .Child          = Element_Descendant,
 };
 
 const xs_element_t xs_child_element =
@@ -188,12 +219,12 @@ const xs_element_t xs_child_element =
   .Target.Type  = EN_DYNAMIC,
   .Target.Allocate = allocate_child_schema_element,
 
-  .Attribute_Quantity = ARRAY_LENGTH(child_element_attr),
+  .Attribute_Quantity = TOTAL_CHILD_ELEMENT_ATTRIBUTES,
   .Attribute = child_element_attr,
 
-  .Child_Quantity = ARRAY_LENGTH(Element_Descendant),
+  .Child_Quantity = TOTAL_ELEMENT_DESCENDANTS,
   .Child_Type     = EN_CHOICE,
-  .Child = Element_Descendant,
+  .Child          = Element_Descendant,
 };
 
 /*

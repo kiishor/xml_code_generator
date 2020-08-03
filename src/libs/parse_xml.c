@@ -155,7 +155,7 @@ static inline xml_parse_result_t validate_empty_element(const xs_element_t* cons
 {
   for(uint32_t i = 0; i < element->Child_Quantity; i++)
   {
-    if(element->Child[i]->MinOccur > 0)
+    if(element->Child[i].MinOccur > 0)
     {
       return XML_ELEMENT_MAX_OCCURRENCE_ERR;
     }
@@ -301,7 +301,7 @@ static inline const char* parse_parent_element(const xs_element_t* const parent,
     case '/':
       for(uint32_t i = 0; i < parent->Child_Quantity; i++)
       {
-        ASSERT1(occurrence[i] >= parent->Child[i]->MinOccur, *result, XML_ELEMENT_MIN_OCCURRENCE_ERR)
+        ASSERT1(occurrence[i] >= parent->Child[i].MinOccur, *result, XML_ELEMENT_MIN_OCCURRENCE_ERR)
       }
       *result = XML_PARSE_SUCCESS;
       return ++source;
@@ -318,8 +318,8 @@ static inline const char* parse_parent_element(const xs_element_t* const parent,
       element_index = 0;
       while(1)
       {
-        if((length == parent->Child[element_index]->Name.Length) &&
-          (strncmp(tag, parent->Child[element_index]->Name.String, length) == 0))
+        if((length == parent->Child[element_index].Name.Length) &&
+          (strncmp(tag, parent->Child[element_index].Name.String, length) == 0))
         {
           break;
         }
@@ -331,20 +331,20 @@ static inline const char* parse_parent_element(const xs_element_t* const parent,
     case EN_SEQUENCE:
       while(1)
       {
-        if((length == parent->Child[element_index]->Name.Length) &&
-          (strncmp(tag, parent->Child[element_index]->Name.String, length) == 0))
+        if((length == parent->Child[element_index].Name.Length) &&
+          (strncmp(tag, parent->Child[element_index].Name.String, length) == 0))
         {
           break;
         }
 
-        ASSERT1(occurrence[element_index] >= parent->Child[element_index]->MinOccur,
+        ASSERT1(occurrence[element_index] >= parent->Child[element_index].MinOccur,
                 *result, XML_ELEMENT_MIN_OCCURRENCE_ERR);
         ASSERT1(++element_index < parent->Child_Quantity, *result, XML_ELEMENT_NOT_FOUND_ERR);
       }
       break;
     }
 
-    const xs_element_t* const element = parent->Child[element_index];
+    const xs_element_t* const element = &parent->Child[element_index];
     void* target = get_target_address(&element->Target, parent_target,
                                       occurrence[element_index], context);
 

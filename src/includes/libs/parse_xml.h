@@ -116,7 +116,7 @@ struct xs_element_t
 
   uint32_t Child_Quantity;
   element_descendant_type_t Child_Type;
-  const xs_element_t* const* Child;
+  const xs_element_t* Child;
 };
 
 /*
