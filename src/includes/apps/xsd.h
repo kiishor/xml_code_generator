@@ -76,17 +76,25 @@ typedef enum
   DYNAMIC
 }en_occurrence_t;
 
+
+// List of parents of extension
+typedef enum
+{
+  SIMPLE_CONTENT_PARENT,
+  COMPLEX_CONTENT_PARENT
+}en_extension_parent;
+
+
+/*
+ *  -------------------------------- STRUCTURE --------------------------------
+ */
+
 // Global options received from command line
 typedef struct
 {
   en_occurrence_t Occurrence;
   bool content_callback;  // Every content element shall have a callback to print the content.
 }options_t;
-
-
-/*
- *  -------------------------------- STRUCTURE --------------------------------
- */
 
 typedef struct
 {

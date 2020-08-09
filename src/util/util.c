@@ -64,7 +64,7 @@ void add_reference_node(reference_list_t* list, void* element,
   list->Reference.String = reference->String;
 }
 
-attribute_list_t* search_attribute_node(attribute_list_t* list, const string_t* const reference)
+const attribute_list_t* search_attribute_node(const attribute_list_t* list, const string_t* const reference)
 {
   while(list)
   {
@@ -79,7 +79,7 @@ attribute_list_t* search_attribute_node(attribute_list_t* list, const string_t* 
   return NULL;
 }
 
-element_list_t* search_element_node(element_list_t* list, const string_t* const reference)
+const element_list_t* search_element_node(const element_list_t* list, const string_t* const reference)
 {
   while(list)
   {

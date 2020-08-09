@@ -24,15 +24,18 @@
 #include "elements/xs_attribute.h"
 #include "elements/xs_simple_type.h"
 #include "elements/xs_restriction.h"
+#include "elements/xs_extension.h"
+#include "elements/xs_simple_content.h"
 #include "apps/xs_data_type.h"
 
 /*
  *  ------------------------------ FUNCTION BODY ------------------------------
  */
-static inline void parse_child_element(const tree_t* node, xs_element_t* const element, context_t* context);
+static inline void parse_child_element(const tree_t* node, xs_element_t* const element,
+                                       context_t* const context);
 
-static inline xs_element_t* parse_sequence(const tree_t* sequence, xs_element_t* const element,
-                             context_t* context)
+static inline xs_element_t* parse_sequence(const tree_t* const sequence, xs_element_t* const element,
+                                           context_t* const context)
 {
   const tree_t* node = sequence->Descendant;
 
@@ -48,7 +51,7 @@ static inline xs_element_t* parse_sequence(const tree_t* sequence, xs_element_t*
     node = node->Next;
   }
   element->Child_Quantity = quantity;
-  const xs_element_t* child_elements = calloc(sizeof(xsd_element_t), quantity);
+  xs_element_t* child_elements = calloc(sizeof(xsd_element_t), quantity);
   element->Child = child_elements;
   node = sequence->Descendant;
   uint32_t index = 0;
@@ -60,7 +63,7 @@ static inline xs_element_t* parse_sequence(const tree_t* sequence, xs_element_t*
   return element;
 }
 
-static inline xs_attribute_use_t parse_attribute_use(const string_t* use)
+static inline xs_attribute_use_t parse_attribute_use(const string_t* const use)
 {
   for(uint32_t i = 0; i < TOTAL_XSD_ATTRIBUTE_USE_VALUES; i++)
   {
@@ -73,23 +76,56 @@ static inline xs_attribute_use_t parse_attribute_use(const string_t* use)
   return TOTAL_XSD_ATTRIBUTE_USE_VALUES;
 }
 
-static inline void get_xml_type(const string_t* const type,
-                                xml_content_t* const content)
+static inline void parse_base_type(xml_content_t* const content,
+                                   const string_t* const type,
+                                   const context_t* const context)
 {
-    content->Type = EN_NO_XML_DATA_TYPE;
-    for(uint32_t i = 0; i < TOTAL_XSD_DATA_TYPE; i++)
+  content->Type = EN_NO_XML_DATA_TYPE;
+  for(uint32_t i = 0; i < TOTAL_XSD_DATA_TYPE; i++)
+  {
+    if((type->Length == xs_data_type[i].Length) &&
+       (!memcmp(type->String, xs_data_type[i].String, type->Length)))
     {
-      if((type->Length == xs_data_type[i].Length) &&
-         (!memcmp(type->String, xs_data_type[i].String, type->Length)))
-      {
-        convert_xsd_data_type(content, i);
-        return;
-      }
+      convert_xsd_data_type(content, i);
+      return;
     }
+  }
+
+  const element_list_t* simpleType_List = search_element_node(&context->SimpleType_List, type);
+  if(simpleType_List)
+  {
+    const xs_element_t* const simpleType = simpleType_List->Element;
+    memcpy(content, &simpleType->Content, sizeof(xml_content_t));
+  }
+}
+
+static inline void parse_extended_type(xs_element_t* const element,
+                              const string_t* const type,
+                              const context_t* const context,
+                              bool complex_type)
+{
+
+  parse_base_type(&element->Content, type, context);
+
+  if((element->Content.Type != EN_NO_XML_DATA_TYPE) || (!complex_type))
+  {
+    return;
+  }
+
+  const element_list_t* const list = search_element_node(&context->ComplexType_List, type);
+  if(list)
+  {
+    const xs_element_t* const complexType = list->Element;
+    element->Attribute = complexType->Attribute;
+    element->Attribute_Quantity = complexType->Attribute_Quantity;
+    element->Child = complexType->Child;
+    element->Child_Quantity = complexType->Child_Quantity;
+    element->Child_Type = complexType->Child_Type;
+  }
 }
 
 static inline void parse_attribute(const tree_t* node, xs_attribute_t* const attribute,
-                     context_t* context)
+                                   const context_t* const context)
 {
   attribute_t* source = node->Data;
   xs_attribute_use_t use = EN_OPTIONAL;
@@ -119,25 +155,13 @@ static inline void parse_attribute(const tree_t* node, xs_attribute_t* const att
   if(type->String)
   {
     type->Length = strlen(type->String);
-    get_xml_type(type, &attribute->Content);
-
-    if(attribute->Content.Type == EN_NO_XML_DATA_TYPE)
-    {
-      const element_list_t* simpleType_List = search_element_node(&context->SimpleType_List, type);
-      if(simpleType_List)
-      {
-        const xs_element_t* const element = simpleType_List->Element;
-        memcpy(&attribute->Content, &element->Content, sizeof(xml_content_t));
-      }
-    }
+    parse_base_type(&attribute->Content, type, context);
   }
 }
 
-static inline void parse_complex_element(const tree_t* complexType,
-                                    xs_element_t* const element,
-                                    context_t* context)
+static inline void set_attribute(const tree_t* node,
+                                 xs_element_t* const element)
 {
-  const tree_t* node = complexType->Descendant;
   // Look for attributes
   uint32_t quantity = 0;
   while(node)
@@ -156,10 +180,75 @@ static inline void parse_complex_element(const tree_t* complexType,
     attributes = calloc(sizeof(xs_attribute_t), quantity);
     element->Attribute = attributes;
   }
+}
+
+static inline void parse_extension(const tree_t* tree,
+                                   xs_element_t* const element,
+                                   context_t* const context,
+                                   en_extension_parent parent)
+{
+  const extension_t* const extension = tree->Data;
+  string_t* const type = &extension->attr.base;
+  type->Length = strlen(type->String);
+
+  bool complex_type = (parent == COMPLEX_CONTENT_PARENT);
+  parse_extended_type(element, type, context, complex_type);
+
+  set_attribute(tree->Descendant, element);
 
   uint32_t attr_index = 0;
+  const tree_t* node = tree->Descendant;
+  while(node)
+  {
+    const xsd_tag_t* const tag = node->Data;
+    switch(*tag)
+    {
+    case XS_SEQUENCE_TAG:
+      assert(parent == COMPLEX_CONTENT_PARENT);
+      element->Child_Type = EN_SEQUENCE;
+      parse_sequence(node, element, context);
+      break;
 
-  node = complexType->Descendant;
+    case XS_ATTRIBUTE_TAG:
+       parse_attribute(node, &element->Attribute[attr_index++], context);
+      break;
+
+    default:
+      assert(false);
+      return;
+    }
+    node = node->Next;
+  }
+}
+
+static inline void parse_simple_content(const tree_t* tree,
+                                        xs_element_t* const element,
+                                        const context_t* const context)
+{
+  const simpleContent_t* const simpleContent = tree->Data;
+  const tree_t* const node = tree->Descendant;
+  const xsd_tag_t* const tag = node->Data;
+  switch(*tag)
+  {
+  case XS_RESTRICTION_TAG:
+
+    break;
+
+  case XS_EXTENSION_TAG:
+    parse_extension(node, element, context, SIMPLE_CONTENT_PARENT);
+    break;
+  }
+}
+
+static inline void parse_complex_element(const tree_t* tree,
+                                    xs_element_t* const element,
+                                    const context_t* const context)
+{
+  set_attribute(tree->Descendant, element);
+
+  const tree_t* node = tree->Descendant;
+  uint32_t attr_index = 0;
+
   while(node)
   {
     const xsd_tag_t* const tag = node->Data;
@@ -167,14 +256,15 @@ static inline void parse_complex_element(const tree_t* complexType,
     {
     case XS_SEQUENCE_TAG:
       element->Child_Type = EN_SEQUENCE;
-      parse_sequence(complexType->Descendant, element, context);
+      parse_sequence(node, element, context);
       break;
 
     case XS_SIMPLE_CONTENT_TAG:
+      parse_simple_content(node, element, context);
       break;
 
     case XS_ATTRIBUTE_TAG:
-       parse_attribute(node, &attributes[attr_index++], context);
+       parse_attribute(node, &element->Attribute[attr_index++], context);
       break;
 
     default:
@@ -186,7 +276,7 @@ static inline void parse_complex_element(const tree_t* complexType,
 }
 
 static inline void parse_complex_type(const tree_t* tree, xs_element_t* const element,
-                        context_t* context)
+                                      context_t* const context)
 {
   complexType_t* complexType = tree->Data;
   assert(complexType->attr.name.String);
@@ -198,7 +288,8 @@ static inline void parse_complex_type(const tree_t* tree, xs_element_t* const el
   add_element_node(&context->ComplexType_List, element);
 }
 
-static inline void parse_simple_element(const tree_t* tree, xs_element_t* element)
+static inline void parse_simple_element(const tree_t* const tree,
+                                        xs_element_t* const element)
 {
   const tree_t* node = tree->Descendant;
   const restriction_t* const restriction = node->Data;
@@ -223,7 +314,7 @@ static inline void parse_simple_element(const tree_t* tree, xs_element_t* elemen
 }
 
 static inline void parse_simple_type(const tree_t* tree, xs_element_t* const element,
-                       const element_list_t* const simpleType_List)
+                                     element_list_t* const simpleType_List)
 {
   simpleType_t* simpleType = tree->Data;
   const char* const name = simpleType->attr.name.String;
@@ -237,7 +328,7 @@ static inline void parse_simple_type(const tree_t* tree, xs_element_t* const ele
 }
 
 static inline void parse_element(const tree_t* node, xs_element_t* const element,
-                                 context_t* context)
+                                 const context_t* const context)
 {
   const element_t* source = node->Data;
 
@@ -248,30 +339,7 @@ static inline void parse_element(const tree_t* node, xs_element_t* const element
   if(type->String)
   {
     type->Length = strlen(type->String);
-    get_xml_type(type, &element->Content);
-
-    if(element->Content.Type == EN_NO_XML_DATA_TYPE)
-    {
-      element_list_t* list = search_element_node(&context->ComplexType_List, type);
-      if(list)
-      {
-        xs_element_t* complexType = list->Element;
-        element->Attribute = complexType->Attribute;
-        element->Attribute_Quantity = complexType->Attribute_Quantity;
-        element->Child = complexType->Child;
-        element->Child_Quantity = complexType->Child_Quantity;
-        element->Child_Type = complexType->Child_Type;
-      }
-      else
-      {
-        const element_list_t* simpleType_List = search_element_node(&context->SimpleType_List, type);
-        if(simpleType_List)
-        {
-          const xs_element_t* const simpleType = simpleType_List->Element;
-          memcpy(&element->Content, &simpleType->Content, sizeof(xml_content_t));
-        }
-      }
-    }
+    parse_extended_type(element, type, context, true);
   }
 
   node = node->Descendant;
@@ -334,7 +402,9 @@ static inline void set_target_type(xsd_element_t* const element,
   }
 }
 
-static inline void parse_child_element(const tree_t* node, xs_element_t* const element, context_t* context)
+static inline void parse_child_element(const tree_t* const node,
+                                       xs_element_t* const element,
+                                       context_t* const context)
 {
   element_t* source = node->Data;
 
@@ -355,8 +425,7 @@ static inline void parse_child_element(const tree_t* node, xs_element_t* const e
   }
 
   element->MaxOccur = maxOccurs;
-  xsd_element_t* const xsd_element = (xsd_element_t*)element;
-  set_target_type(xsd_element, context->Options->Occurrence);
+  set_target_type((xsd_element_t*)element, context->Options->Occurrence);
 
   if(source->child.ref.String)
   {
@@ -367,8 +436,8 @@ static inline void parse_child_element(const tree_t* node, xs_element_t* const e
   parse_element(node, element, context);
 }
 
-static inline void resolve_element_references(element_list_t* const element_list,
-                                reference_list_t* reference_list)
+static inline void resolve_element_references(const element_list_t* const element_list,
+                                const reference_list_t* reference_list)
 {
   while(reference_list)
   {
@@ -405,7 +474,7 @@ static inline xs_element_t* get_root(const element_list_t* list)
   return root;
 }
 
-static inline xsd_element_t* create_root(const element_list_t* list)
+static inline xsd_element_t* create_root(const element_list_t* const list)
 {
   xs_element_t* root = calloc(sizeof(xsd_element_t), 1);
   root->Child_Quantity = 1;

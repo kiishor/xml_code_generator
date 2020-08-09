@@ -67,7 +67,9 @@ static inline FILE* create_source_file(const char* const name)
 static inline void write_target(const target_address_t* const target,
                                 uint32_t index,
                                 const char* const parent,
-                                const char* const element, FILE* const source)
+                                const char* const element,
+                                bool target_size,
+                                FILE* const source)
 {
   fprintf(source, "    [%u].Target.Type    = %s,\n", index, xs_target_address_type[target->Type]);
   switch(target->Type)
@@ -76,6 +78,10 @@ static inline void write_target(const target_address_t* const target,
     if(parent)
     {
       fprintf(source, "    [%u].Target.Address = &%s.%s,\n", index, parent, element);
+      if(target_size)
+      {
+        fprintf(source, "    [%u].Target.Size    = sizeof(%s_t),\n", index, element);
+      }
     }
     else
     {
@@ -89,7 +95,10 @@ static inline void write_target(const target_address_t* const target,
 
   case EN_RELATIVE:
     fprintf(source, "    [%u].Target.Offset  = offsetof(%s_t, %s),\n", index, parent, element);
-    fprintf(source, "    [%u].Target.Size    = sizeof(%s_t),\n", index, parent);
+    if(target_size)
+    {
+      fprintf(source, "    [%u].Target.Size    = sizeof(%s_t),\n", index, element);
+    }
     break;
 
   default:
@@ -135,59 +144,6 @@ static inline void write_content(const xml_content_t* const content,
   }
 }
 
-//static inline void handle_max_occur(xs_element_t* const element,
-//                                    en_occurrence_t occurrence,
-//                                    char* pointer, char* array)
-//{
-//  uint32_t maxOccur = element->MaxOccur;
-//  if(maxOccur == UINT32_MAX)
-//  {
-//    if((occurrence == UNSPECIFIED) || (occurrence == ARRAY))
-//    {
-//      occurrence = LINKED_LIST;
-//    }
-//  }
-//
-//  switch(occurrence)
-//  {
-//  case UNSPECIFIED:
-//  case ARRAY:
-//    sprintf(array, "[%u]", maxOccur);
-//    element->Target.Type = EN_RELATIVE;
-//    break;
-//
-//  case LINKED_LIST:
-//  case DYNAMIC:
-//    sprintf(pointer, "*");
-//    element->Target.Type = EN_DYNAMIC;
-//    break;
-//  }
-//}
-
-//static inline bool is_linked_list(uint32_t maxOccur, en_occurrence_t occurrence)
-//{
-//  if(maxOccur > 1)
-//  {
-//    switch(occurrence)
-//    {
-//    case UNSPECIFIED:
-//    case ARRAY:
-//      if(maxOccur == UINT32_MAX)
-//      {
-//        return true;
-//      }
-//      break;
-//
-//    case LINKED_LIST:
-//      return true;
-//
-//    default:
-//      break;
-//    }
-//  }
-//  return false;
-//}
-
 void handle_occurrences(address_type_t type, uint32_t maxOccur, char* pointer, char* array)
 {
   switch(type)
@@ -217,6 +173,12 @@ static inline void write_header(xs_element_t* const element,
   else
   {
     fprintf(header, "\ntypedef struct\n{\n");
+  }
+
+  if(element->Content.Type != EN_NO_XML_DATA_TYPE)
+  {
+    fprintf(header, "    %s %s;\n", xml_data_type[element->Content.Type],
+                                     element->Name.String);
   }
 
   for(uint32_t i = 0; i < element->Child_Quantity; i++)
@@ -310,7 +272,9 @@ static inline void write_source(xs_element_t* const element, FILE* const header,
       fprintf(source, "    [%u].MinOccur    = %u,\n", i, child[i].MinOccur);
       fprintf(source, "    [%u].MaxOccur    = %u,\n", i, child[i].MaxOccur);
       fprintf(source, "    [%u].Callback    = NULL,\n", i);
-      write_target(&child[i].Target, i, element->Name.String, child[i].Name.String, source);
+      bool target_size = (child[i].MaxOccur > 1);
+      write_target(&child[i].Target, i, element->Name.String, child[i].Name.String,
+                   target_size, source);
       write_content(&child[i].Content, i, source);
 
       if(child[i].Attribute_Quantity)
@@ -349,7 +313,8 @@ static inline void write_source(xs_element_t* const element, FILE* const header,
 
       if(attribute[i].Content.Type != EN_NO_XML_DATA_TYPE)
       {
-        write_target(&attribute[i].Target, i, element->Name.String, attribute[i].Name.String, source);
+        write_target(&attribute[i].Target, i, element->Name.String,
+                     attribute[i].Name.String, false, source);
         write_content(&attribute[i].Content, i, source);
       }
       fprintf(source, "    [%u].Use         = %s,\n", i, xml_attribute_use_type[attribute[i].Use]);
@@ -361,7 +326,7 @@ static inline void write_source(xs_element_t* const element, FILE* const header,
       fprintf(source, "\n");
     }while(1);
 
-    fprintf(source, "};\n\n");
+    fprintf(source, "};\n");
   }
 }
 
@@ -427,11 +392,12 @@ void generate_xml_source(xs_element_t* const root)
   fclose(source_file);
 }
 
-static inline void get_contnt_format(const xml_content_t* const content, char* format)
+static inline void get_content_format(const xml_content_t* const content, char* format)
 {
   switch(content->Type)
   {
   case EN_STRING_DYNAMIC:
+  case EN_ENUM_STRING:
     strcpy(format, "%s");
     break;
 
@@ -439,20 +405,18 @@ static inline void get_contnt_format(const xml_content_t* const content, char* f
     sprintf(format, "%%%us", content->Facet.String.MaxLength);
     break;
 
-  case EN_ENUM_STRING:
-  case EN_ENUM_UINT:
-  case EN_ENUM_INT:
-  break;
-
   case EN_DECIMAL:
     strcpy(format, "%f");
     break;
 
   case EN_UNSIGNED:
+  case EN_ENUM_UINT:
     strcpy(format, "%u");
     break;
 
   case EN_INTEGER:
+  case EN_ENUM_INT:
+  case EN_BOOL:
     strcpy(format, "%d");
     break;
   }
@@ -493,13 +457,30 @@ static inline void write_print_function(const xs_element_t* const element, FILE*
     strcat(variable, ".");
   }
 
+  if(element->Content.Type != EN_NO_XML_DATA_TYPE)
+  {
+    const char* const name = element->Name.String;
+    char content[4] = {'\0'};
+    get_content_format(&element->Content, content);
+
+    if(use_linked_list)
+    {
+      fprintf(file, "%sprintf(\"%s: %s\\n\", %s->%s);\n",
+              space, name, content, name, name);
+    }
+    else
+    {
+      fprintf(file, "%sprintf(\"%s: %s\\n\", %s%s);\n", space, name, content, variable, name);
+    }
+  }
+
   for(uint32_t i = 0; i < element->Attribute_Quantity; i++)
   {
-    if(element->Attribute[i].Target.Address)
+    if(element->Attribute[i].Content.Type != EN_NO_XML_DATA_TYPE)
     {
       const char* const name = element->Attribute[i].Name.String;
-      char content[4];
-      get_contnt_format(&element->Attribute[i].Content, content);
+      char content[4] = {'\0'};
+      get_content_format(&element->Attribute[i].Content, content);
 
       if(use_linked_list)
       {
@@ -517,11 +498,15 @@ static inline void write_print_function(const xs_element_t* const element, FILE*
   const xs_element_t* const child = element->Child;
   for(uint32_t i = 0; i < element->Child_Quantity; i++)
   {
-    if(child[i].Content.Type != EN_NO_XML_DATA_TYPE)
+    if(child[i].Attribute_Quantity || child[i].Child_Quantity)
+    {
+      write_print_function(&child[i], file, space, variable);
+    }
+    else if(child[i].Content.Type != EN_NO_XML_DATA_TYPE)
     {
       const char* const name = child[i].Name.String;
       char content[4];
-      get_contnt_format(&child[i].Content, content);
+      get_content_format(&child[i].Content, content);
 
       if(use_linked_list)
       {
@@ -534,10 +519,6 @@ static inline void write_print_function(const xs_element_t* const element, FILE*
         fprintf(file, "%sprintf(\"%s: %s\\n\", %s%s);\n", space, name, content, variable, name);
       }
     }
-    else if(child[i].Attribute_Quantity || child[i].Child_Quantity)
-    {
-      write_print_function(&child[i], file, space, variable);
-    }
   }
 
   if(element->MaxOccur > 1)
@@ -548,7 +529,7 @@ static inline void write_print_function(const xs_element_t* const element, FILE*
     }
     uint32_t i = strlen(space) - 4;
     space[i] = '\0';
-    fprintf(file, "%s}", space);
+    fprintf(file, "%s}\n\n", space);
   }
   variable[waterMark] = '\0';
 }
