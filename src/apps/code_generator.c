@@ -21,10 +21,13 @@
 #include "apps/tree.h"
 #include "apps/xsd.h"
 
+#include "code_generator.h"
+
 /*
  *  ------------------------------ FUNCTION BODY ------------------------------
  */
-FILE* create_header_file(const char* const name)
+
+static inline FILE* create_header_file(const char* const name)
 {
   char file_name[strlen(name) + 2];
   strcpy(file_name, name);
@@ -34,13 +37,13 @@ FILE* create_header_file(const char* const name)
 
 
   fprintf(header, "#ifndef %s_H_INCLUDED\n#define %s_H_INCLUDED\n", name, name);
-  fprintf(header, "\n#include<stdint.h>\n#include<stdbool.h>\n");
-  fprintf(header, "\n\n#include\"libs/parse_xml.h\"\n");
+  fprintf(header, "\n#include <stdint.h>\n#include <stdbool.h>\n");
+  fprintf(header, "\n#include \"libs/parse_xml.h\"\n");
 
   return header;
 }
 
-void close_header_file(FILE* const header, const char* const name)
+static inline void close_header_file(FILE* const header, const char* const name)
 {
   fprintf(header, "\nextern %s_t %s;\n", name, name);
   fprintf(header, "\nextern const xs_element_t xml_root;\n");
@@ -48,7 +51,7 @@ void close_header_file(FILE* const header, const char* const name)
   fclose(header);
 }
 
-FILE* create_source_file(const char* const name)
+static inline FILE* create_source_file(const char* const name)
 {
   char file_name[strlen(name) + 2];
   strcpy(file_name, name);
@@ -56,20 +59,9 @@ FILE* create_source_file(const char* const name)
 
   FILE* source = fopen( file_name, "w");
 
-  fprintf(source, "#include<stdint.h>\n#include<stdbool.h>\n#include<float.h>\n\n#include \"%s.h\"\n\n", name);
+  fprintf(source, "#include <stdlib.h>\n#include <stdbool.h>\n#include <float.h>\n\n#include \"%s.h\"\n\n", name);
   fprintf(source, "\n%s_t %s;\n\n", name, name);
-
   return source;
-}
-
-void close_source_file(FILE* const source, const char* const name)
-{
-  fprintf(source, "const xs_element_t xml_root =\n{\n");
-  fprintf(source, "    .Child_Quantity = 1,\n");
-  fprintf(source, "    .Child_Type     = EN_CHOICE,\n");
-  fprintf(source, "    .Child = root_descendant,\n");
-  fprintf(source, "};\n");
-  fclose(source);
 }
 
 static inline void write_target(const target_address_t* const target,
@@ -92,6 +84,7 @@ static inline void write_target(const target_address_t* const target,
     break;
 
   case EN_DYNAMIC:
+    fprintf(source, "    [%u].Target.Allocate = allocate_%s,\n", index, element);
     break;
 
   case EN_RELATIVE:
@@ -142,51 +135,164 @@ static inline void write_content(const xml_content_t* const content,
   }
 }
 
+//static inline void handle_max_occur(xs_element_t* const element,
+//                                    en_occurrence_t occurrence,
+//                                    char* pointer, char* array)
+//{
+//  uint32_t maxOccur = element->MaxOccur;
+//  if(maxOccur == UINT32_MAX)
+//  {
+//    if((occurrence == UNSPECIFIED) || (occurrence == ARRAY))
+//    {
+//      occurrence = LINKED_LIST;
+//    }
+//  }
+//
+//  switch(occurrence)
+//  {
+//  case UNSPECIFIED:
+//  case ARRAY:
+//    sprintf(array, "[%u]", maxOccur);
+//    element->Target.Type = EN_RELATIVE;
+//    break;
+//
+//  case LINKED_LIST:
+//  case DYNAMIC:
+//    sprintf(pointer, "*");
+//    element->Target.Type = EN_DYNAMIC;
+//    break;
+//  }
+//}
+
+//static inline bool is_linked_list(uint32_t maxOccur, en_occurrence_t occurrence)
+//{
+//  if(maxOccur > 1)
+//  {
+//    switch(occurrence)
+//    {
+//    case UNSPECIFIED:
+//    case ARRAY:
+//      if(maxOccur == UINT32_MAX)
+//      {
+//        return true;
+//      }
+//      break;
+//
+//    case LINKED_LIST:
+//      return true;
+//
+//    default:
+//      break;
+//    }
+//  }
+//  return false;
+//}
+
+void handle_occurrences(address_type_t type, uint32_t maxOccur, char* pointer, char* array)
+{
+  switch(type)
+  {
+  case EN_RELATIVE:
+  case EN_STATIC:
+    sprintf(array, "[%u]", maxOccur);
+    break;
+
+  case EN_DYNAMIC:
+    sprintf(pointer, "*");
+    break;
+  }
+}
+
+static inline void write_header(xs_element_t* const element,
+                                FILE* const header)
+{
+  xs_element_t* const child = element->Child;
+
+  bool use_linked_list = (((xsd_element_t*)element)->Allocate == LINKED_LIST_ALLOCATE);
+  if(use_linked_list)
+  {
+    fprintf(header, "\ntypedef struct %s_t %s_t;\n", element->Name.String, element->Name.String);
+    fprintf(header, "\nstruct %s_t\n{\n", element->Name.String);
+  }
+  else
+  {
+    fprintf(header, "\ntypedef struct\n{\n");
+  }
+
+  for(uint32_t i = 0; i < element->Child_Quantity; i++)
+  {
+    char pointer[4] = "";
+    char array[16] = "";
+
+    if(child[i].MaxOccur > 1)
+    {
+      handle_occurrences(child[i].Target.Type, child[i].MaxOccur, pointer, array);
+    }
+
+    if(child[i].Child_Quantity || child[i].Attribute_Quantity)
+    {
+      fprintf(header, "    %s_t%s %s%s;\n", child[i].Name.String,
+                                         pointer, child[i].Name.String, array);
+    }
+    else
+    {
+      fprintf(header, "    %s%s %s%s;\n", xml_data_type[child[i].Content.Type],
+                                       pointer, child[i].Name.String, array);
+    }
+  }
+
+  const xs_attribute_t* const attributes = element->Attribute;
+  for(uint32_t i = 0; i < element->Attribute_Quantity; i++)
+  {
+    if(attributes[i].Content.Type == EN_NO_XML_DATA_TYPE)
+    {
+      continue;
+    }
+    fprintf(header, "    %s %s;\n", xml_data_type[attributes[i].Content.Type],
+                                    attributes[i].Name.String);
+  }
+
+  if(use_linked_list)
+  {
+    fprintf(header, "    %s_t* Next;\n", element->Name.String);
+    fprintf(header, "};\n");
+  }
+  else
+  {
+    fprintf(header, "}%s_t;\n", element->Name.String);
+  }
+}
+
 // Reorder all the complex xs_element_t
-void generate_xml_source(const xs_element_t* const element, FILE* const header,
+static inline void write_source(xs_element_t* const element, FILE* const header,
                          FILE* const source)
 {
   uint32_t quantity = element->Child_Quantity;
-  const xs_element_t* child = element->Child;
+  xs_element_t* const child = element->Child;
   while(quantity)
   {
     quantity--;
     if(child[quantity].Child_Quantity || child[quantity].Attribute_Quantity)
     {
-      generate_xml_source(&child[quantity], header, source);
+      write_source(&child[quantity], header, source);
     }
   }
 
   if(element->Name.String)
   {
-    fprintf(header, "\ntypedef struct \n{\n");
-    for(uint32_t i = 0; i < element->Child_Quantity; i++)
-    {
-      if(child[i].Child_Quantity || child[i].Attribute_Quantity)
-      {
-        fprintf(header, "    %s_t %s;\n", child[i].Name.String, child[i].Name.String);
-      }
-      else
-      {
-        fprintf(header, "    %s %s;\n", xml_data_type[child[i].Content.Type], child[i].Name.String);
-      }
-    }
-
-    const xs_attribute_t* const attributes = element->Attribute;
-    for(uint32_t i = 0; i < element->Attribute_Quantity; i++)
-    {
-      if(attributes[i].Content.Type == EN_NO_XML_DATA_TYPE)
-      {
-        continue;
-      }
-      fprintf(header, "    %s %s;\n", xml_data_type[attributes[i].Content.Type],
-                                      attributes[i].Name.String);
-    }
-    fprintf(header, "}%s_t;\n", element->Name.String);
+    write_header(element, header);
   }
 
   if(element->Child_Quantity)
   {
+    for(uint32_t i = 0; i < element->Child_Quantity; i++)
+    {
+      if(child[i].Target.Type == EN_DYNAMIC)
+      {
+        fprintf(source, "\nstatic void* allocate_%s(uint32_t occurrence, void** context);\n", child[i].Name.String);
+      }
+    }
+
     if(element->Name.String)
     {
       fprintf(source, "\nstatic const xs_element_t %s_descendant[] =\n{\n", element->Name.String);
@@ -257,13 +363,215 @@ void generate_xml_source(const xs_element_t* const element, FILE* const header,
 
     fprintf(source, "};\n\n");
   }
+}
 
+static inline void write_xml_root(FILE* const source)
+{
+  fprintf(source, "\nconst xs_element_t xml_root =\n{\n");
+  fprintf(source, "    .Child_Quantity = 1,\n");
+  fprintf(source, "    .Child_Type     = EN_CHOICE,\n");
+  fprintf(source, "    .Child = root_descendant,\n");
+  fprintf(source, "};\n");
+}
 
+static inline void write_functions(xs_element_t* const element, FILE* const source)
+{
+  uint32_t quantity = element->Child_Quantity;
+  xs_element_t* const child = element->Child;
+  while(quantity)
+  {
+    quantity--;
+    if(child[quantity].Child_Quantity || child[quantity].Attribute_Quantity)
+    {
+      write_functions(&child[quantity], source);
+    }
+  }
+
+  for(uint32_t i = 0; i < element->Child_Quantity; i++)
+  {
+    if(child[i].Target.Type == EN_DYNAMIC)
+    {
+      const char* const element_name = element->Name.String;
+      const char* const child_name = child[i].Name.String;
+
+      bool use_linked_list = (((xsd_element_t*)&child[i])->Allocate == LINKED_LIST_ALLOCATE);
+      fprintf(source, "\nstatic void* allocate_%s(uint32_t occurrence, void** context)\n{\n", child[i].Name.String);
+      if(use_linked_list)
+      {
+        fprintf(source, "    void* const target = calloc(sizeof(%s_t), 1);\n", child_name);
+        fprintf(source, "    if(%s.%s == NULL)\n    {\n", element_name, child_name);
+        fprintf(source, "        %s.%s = target;\n", element_name, child_name);
+        fprintf(source, "        return target;\n");
+        fprintf(source, "    }\n\n");
+        fprintf(source, "    %s_t* node = %s.%s;\n", child_name, element_name, child_name);
+        fprintf(source, "    while(node->Next)\n    {\n");
+        fprintf(source, "        node = node->Next;\n");
+        fprintf(source, "    }\n\n");
+        fprintf(source, "    node->Next = target;\n");
+        fprintf(source, "    return target;\n");
+      }
+      fprintf(source, "}\n");
+    }
+  }
+}
+
+void generate_xml_source(xs_element_t* const root)
+{
+  const char* const name = root->Child[0].Name.String;
+  FILE* header_file = create_header_file(name);
+  FILE* source_file = create_source_file(name);
+  write_source(root, header_file, source_file);
+  write_xml_root(source_file);
+  write_functions(root, source_file);
+  close_header_file(header_file, name);
+  fclose(source_file);
+}
+
+static inline void get_contnt_format(const xml_content_t* const content, char* format)
+{
+  switch(content->Type)
+  {
+  case EN_STRING_DYNAMIC:
+    strcpy(format, "%s");
+    break;
+
+  case EN_CHAR_ARRAY:
+    sprintf(format, "%%%us", content->Facet.String.MaxLength);
+    break;
+
+  case EN_ENUM_STRING:
+  case EN_ENUM_UINT:
+  case EN_ENUM_INT:
+  break;
+
+  case EN_DECIMAL:
+    strcpy(format, "%f");
+    break;
+
+  case EN_UNSIGNED:
+    strcpy(format, "%u");
+    break;
+
+  case EN_INTEGER:
+    strcpy(format, "%d");
+    break;
+  }
+}
+
+static inline void write_print_function(const xs_element_t* const element, FILE* const file,
+                             char* space, char* variable)
+{
+  size_t waterMark = strlen(variable);
+  if(element->Name.String)
+  {
+    strcat(variable, element->Name.String);
+  }
+
+  bool use_linked_list = false;
+  if(element->MaxOccur > 1)
+  {
+    use_linked_list = (((xsd_element_t*)element)->Allocate == LINKED_LIST_ALLOCATE);
+
+    if(use_linked_list)
+    {
+      fprintf(file, "\n%sconst %s_t* %s = %s;\n", space, element->Name.String,
+                                                element->Name.String, variable);
+      fprintf(file, "%swhile(%s != NULL)\n%s{\n", space, element->Name.String, space);
+      strcat(variable, "->");
+    }
+    else
+    {
+      fprintf(file, "\n%sfor(uint32_t i = 0; i < %u; i++)\n%s{\n", space,
+                                                      element->MaxOccur, space);
+      strcat(variable, "[i].");
+    }
+
+    strcat(space, "    ");
+  }
+  else if(strlen(variable))
+  {
+    strcat(variable, ".");
+  }
+
+  for(uint32_t i = 0; i < element->Attribute_Quantity; i++)
+  {
+    if(element->Attribute[i].Target.Address)
+    {
+      const char* const name = element->Attribute[i].Name.String;
+      char content[4];
+      get_contnt_format(&element->Attribute[i].Content, content);
+
+      if(use_linked_list)
+      {
+        const char* const element_name = element->Name.String;
+        fprintf(file, "%sprintf(\"%s: %s\\n\", %s->%s);\n",
+                space, name, content, element_name, name);
+      }
+      else
+      {
+        fprintf(file, "%sprintf(\"%s: %s\\n\", %s%s);\n", space, name, content, variable, name);
+      }
+    }
+  }
+
+  const xs_element_t* const child = element->Child;
+  for(uint32_t i = 0; i < element->Child_Quantity; i++)
+  {
+    if(child[i].Content.Type != EN_NO_XML_DATA_TYPE)
+    {
+      const char* const name = child[i].Name.String;
+      char content[4];
+      get_contnt_format(&child[i].Content, content);
+
+      if(use_linked_list)
+      {
+        const char* const element_name = element->Name.String;
+        fprintf(file, "%sprintf(\"%s: %s\\n\", %s->%s);\n",
+                space, name, content, element_name, name);
+      }
+      else
+      {
+        fprintf(file, "%sprintf(\"%s: %s\\n\", %s%s);\n", space, name, content, variable, name);
+      }
+    }
+    else if(child[i].Attribute_Quantity || child[i].Child_Quantity)
+    {
+      write_print_function(&child[i], file, space, variable);
+    }
+  }
+
+  if(element->MaxOccur > 1)
+  {
+    if(use_linked_list)
+    {
+      fprintf(file, "\n%s%s = %s->Next;\n", space, element->Name.String, element->Name.String);
+    }
+    uint32_t i = strlen(space) - 4;
+    space[i] = '\0';
+    fprintf(file, "%s}", space);
+  }
+  variable[waterMark] = '\0';
+}
+
+void generate_print_file(const xs_element_t* const root)
+{
+  const char* const name = root->Child[0].Name.String;
+  char file_name[strlen(name) + sizeof("_print.c")] ;
+  strcpy(file_name, name);
+  strcat(file_name, "_print.c");
+  FILE* file = fopen(file_name, "w");
+
+  fprintf(file, "#include <stdlib.h>\n#include <stdbool.h>\n#include <stdio.h>\n\n#include \"%s.h\"\n\n", name);
+  fprintf(file, "void print_%s(void)\n{\n", name);
+  char space[512] = "    ";
+  char sourceName[512] = "";
+
+  write_print_function(root, file, space, sourceName);
+
+  fprintf(file, "\n}\n");
+  fclose(file);
 }
 
 /*
  *  ------------------------------ FUNCTION BODY ------------------------------
  */
-
-
-

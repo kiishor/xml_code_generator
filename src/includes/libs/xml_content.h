@@ -31,7 +31,7 @@ ADD_DATA_TYPE(XS_NON_POSITIVE_INTEGER, xs:nonPositiveInteger, int32_t,  An integ
 ADD_DATA_TYPE(XS_POSITIVE_INTEGER,     xs:positiveInteger,    uint32_t, An integer containing only positive values (1,2,..))         \
 ADD_DATA_TYPE(XS_SHORT,                xs:short,              int16_t,  A signed 16-bit integer)     \
 ADD_DATA_TYPE(EN_UNSIGNED_LONG,        xs:unsignedLong,       uint64_t, An unsigned 64-bit integer)  \
-ADD_DATA_TYPE(XS_UNSIGNED_INT,         xs:unsignedint,        uint32_t, An unsigned 32-bit integer)  \
+ADD_DATA_TYPE(XS_UNSIGNED_INT,         xs:unsignedInt,        uint32_t, An unsigned 32-bit integer)  \
 ADD_DATA_TYPE(EN_UNSIGNED_SHORT,       xs:unsignedShort,      uint16_t, An unsigned 16-bit integer)  \
 ADD_DATA_TYPE(EN_UNSIGNED_BYTE,        xs:unsignedByte,       uint8_t,  An unsigned 8-bit integer)   \
 ADD_DATA_TYPE(XS_BOOLEAN,              xs:boolean,            bool,     boolean)  \
