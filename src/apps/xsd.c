@@ -48,7 +48,7 @@ static inline xs_element_t* parse_sequence(const tree_t* sequence, xs_element_t*
     node = node->Next;
   }
   element->Child_Quantity = quantity;
-  const xs_element_t* child_elements = calloc(sizeof(xs_element_t), quantity);
+  const xs_element_t* child_elements = calloc(sizeof(xsd_element_t), quantity);
   element->Child = child_elements;
   node = sequence->Descendant;
   uint32_t index = 0;
@@ -243,7 +243,6 @@ static inline void parse_element(const tree_t* node, xs_element_t* const element
 
   element->Name.Length = strlen(source->global.name.String);
   element->Name.String = source->global.name.String;
-  element->Target.Type = EN_RELATIVE;
 
   string_t* const type = &source->global.type;
   if(type->String)
@@ -295,6 +294,46 @@ static inline void parse_element(const tree_t* node, xs_element_t* const element
   }
 }
 
+static inline void set_target_type(xsd_element_t* const element,
+                                   en_occurrence_t occurrence)
+{
+  switch(element->Element.MaxOccur)
+  {
+  case 1:
+    element->Element.Target.Type = EN_RELATIVE;
+    return;
+
+  case UINT32_MAX:
+    switch(occurrence)
+    {
+    case UNSPECIFIED:
+    case ARRAY:
+      element->Element.Target.Type = EN_DYNAMIC;
+      element->Allocate = LINKED_LIST_ALLOCATE;
+      return;
+    }
+  }
+
+  switch(occurrence)
+  {
+  case UNSPECIFIED:
+  case ARRAY:
+    element->Element.Target.Type = EN_RELATIVE;
+    return;
+  }
+  element->Element.Target.Type = EN_DYNAMIC;
+
+  if(occurrence == LINKED_LIST)
+  {
+    element->Allocate = LINKED_LIST_ALLOCATE;
+  }
+  else if(occurrence == DYNAMIC)
+  {
+    element->Allocate = SIMPLE_ALLOCATE;
+    element->Callback = PRINT_CALLBACK;
+  }
+}
+
 static inline void parse_child_element(const tree_t* node, xs_element_t* const element, context_t* context)
 {
   element_t* source = node->Data;
@@ -314,7 +353,10 @@ static inline void parse_child_element(const tree_t* node, xs_element_t* const e
       maxOccurs = strtoul(source->child.maxOccurs.String, NULL, 10);
     }
   }
+
   element->MaxOccur = maxOccurs;
+  xsd_element_t* const xsd_element = (xsd_element_t*)element;
+  set_target_type(xsd_element, context->Options->Occurrence);
 
   if(source->child.ref.String)
   {
@@ -323,7 +365,6 @@ static inline void parse_child_element(const tree_t* node, xs_element_t* const e
     return;
   }
   parse_element(node, element, context);
-
 }
 
 static inline void resolve_element_references(element_list_t* const element_list,
@@ -364,9 +405,9 @@ static inline xs_element_t* get_root(const element_list_t* list)
   return root;
 }
 
-static inline xs_element_t* create_root(const element_list_t* list)
+static inline xsd_element_t* create_root(const element_list_t* list)
 {
-  xs_element_t* root = calloc(sizeof(xs_element_t), 1);
+  xs_element_t* root = calloc(sizeof(xsd_element_t), 1);
   root->Child_Quantity = 1;
   root->Child_Type = EN_CHOICE;
 
@@ -393,16 +434,17 @@ static inline xs_element_t* create_root(const element_list_t* list)
   free(element->Attribute);
   element->Attribute = attributes;
 
-  return root;
+  return (xsd_element_t*)root;
 }
 
-xs_element_t* compile_xsd(const tree_t* const tree)
+xsd_element_t* compile_xsd(const tree_t* const tree, const options_t* const options)
 {
   element_list_t element_list;
   context_t context;
 
   memset(&element_list, 0, sizeof(element_list_t));
   memset(&context, 0, sizeof(context_t));
+  context.Options = options;
 
   const tree_t* node = tree;
   while(node)
@@ -412,7 +454,7 @@ xs_element_t* compile_xsd(const tree_t* const tree)
     {
     case XS_COMPLEX_TAG:
     {
-      xs_element_t* complexType = calloc(sizeof(xs_element_t), 1);
+      xs_element_t* complexType = calloc(sizeof(xsd_element_t), 1);
       parse_complex_type(node, complexType, &context);
       break;
     }
@@ -427,7 +469,7 @@ xs_element_t* compile_xsd(const tree_t* const tree)
 
     case XS_SIMPLE_TYPE_TAG:
     {
-      xs_element_t* simpleType = calloc(sizeof(xs_element_t), 1);
+      xs_element_t* simpleType = calloc(sizeof(xsd_element_t), 1);
       parse_simple_type(node, simpleType, &context.SimpleType_List);
       break;
     }
@@ -444,7 +486,7 @@ xs_element_t* compile_xsd(const tree_t* const tree)
     const xsd_tag_t* const tag = node->Data;
     if(*tag == XS_GLOBAL_ELEMENT_TAG)
     {
-      xs_element_t* element = calloc(sizeof(xs_element_t), 1);
+      xs_element_t* element = calloc(sizeof(xsd_element_t), 1);
       parse_element(node, element, &context);
       add_element_node(&element_list, element);
     }

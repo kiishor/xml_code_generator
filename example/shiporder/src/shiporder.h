@@ -1,21 +1,24 @@
 #ifndef shiporder_H_INCLUDED
 #define shiporder_H_INCLUDED
 
-#include<stdint.h>
-#include<stdbool.h>
+#include <stdint.h>
+#include <stdbool.h>
 
 
-#include"libs/parse_xml.h"
+#include "libs/parse_xml.h"
 
-typedef struct 
+typedef struct item_t item_t;
+
+struct item_t
 {
     char* title;
     char* note;
     uint32_t quantity;
     float price;
-}item_t;
+    item_t* Next;
+};
 
-typedef struct 
+typedef struct
 {
     char* name;
     char* address;
@@ -23,11 +26,11 @@ typedef struct
     char* country;
 }shipto_t;
 
-typedef struct 
+typedef struct
 {
     char* orderperson;
     shipto_t shipto;
-    item_t item;
+    item_t* item;
     char* orderid;
 }shiporder_t;
 

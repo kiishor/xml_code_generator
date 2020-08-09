@@ -53,13 +53,10 @@ int main(int argc, char *argv[])
   if(result == XML_PARSE_SUCCESS)
   {
     printf("Parsing completed successfully\n");
-    const xs_element_t* root = compile_xsd(pXsdData->Descendant);
-    const xs_element_t* first_element = &root->Child[0];
-    FILE* header_file = create_header_file(first_element->Name.String);
-    FILE* source_file = create_source_file(first_element->Name.String);
-    generate_xml_source(root, header_file, source_file);
-    close_header_file(header_file, first_element->Name.String);
-    close_source_file(source_file, first_element->Name.String);
+    options_t options = {.Occurrence = UNSPECIFIED};
+    const xsd_element_t* root = compile_xsd(pXsdData->Descendant, &options);
+    generate_xml_source((xs_element_t*)root);
+    generate_print_file((xs_element_t*)root);
   }
   else
   {

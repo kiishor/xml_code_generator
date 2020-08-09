@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1596370313 source:c:\project\xml_code_generator\src\apps\elements\xs_attribute.c
+1596473924 source:c:\project\xml_code_generator\src\apps\elements\xs_attribute.c
 	<stdint.h>
 	<stdbool.h>
 	<stdlib.h>
@@ -12,25 +12,25 @@
 
 1583670340 c:\project\xml_code_generator\src\includes\common.h
 
-1596363605 c:\project\xml_code_generator\src\includes\libs\parse_xml.h
+1596473924 c:\project\xml_code_generator\src\includes\libs\parse_xml.h
 	"xml_content.h"
 
-1596282805 c:\project\xml_code_generator\src\includes\libs\xml_content.h
+1596639426 c:\project\xml_code_generator\src\includes\libs\xml_content.h
 	<stdbool.h>
 
-1596470309 c:\project\xml_code_generator\src\includes\apps\xsd.h
+1596948459 c:\project\xml_code_generator\src\includes\apps\xsd.h
 	"apps/tree.h"
 	"apps/list.h"
 	"util/util.h"
 
 1596028746 c:\project\xml_code_generator\src\includes\apps\tree.h
 
-1596363573 c:\project\xml_code_generator\src\apps\elements\xs_simple_type.h
+1596473924 c:\project\xml_code_generator\src\apps\elements\xs_simple_type.h
 	"xs_type.h"
 
-1596370075 c:\project\xml_code_generator\src\apps\elements\xs_attribute.h
+1596473924 c:\project\xml_code_generator\src\apps\elements\xs_attribute.h
 
-1596370682 source:c:\project\xml_code_generator\src\apps\elements\xs_complex_type.c
+1596473924 source:c:\project\xml_code_generator\src\apps\elements\xs_complex_type.c
 	<stdint.h>
 	<stdbool.h>
 	<stdlib.h>
@@ -43,14 +43,14 @@
 	"xs_simple_content.h"
 	"xs_attribute.h"
 
-1596363543 c:\project\xml_code_generator\src\apps\elements\xs_complex_type.h
+1596473924 c:\project\xml_code_generator\src\apps\elements\xs_complex_type.h
 	"xs_type.h"
 
-1596367185 c:\project\xml_code_generator\src\apps\elements\xs_sequence.h
+1596473924 c:\project\xml_code_generator\src\apps\elements\xs_sequence.h
 
-1596368286 c:\project\xml_code_generator\src\apps\elements\xs_simple_content.h
+1596473924 c:\project\xml_code_generator\src\apps\elements\xs_simple_content.h
 
-1596470315 source:c:\project\xml_code_generator\src\apps\main.c
+1596951407 source:c:\project\xml_code_generator\src\apps\main.c
 	<stdio.h>
 	<stdlib.h>
 	<stdint.h>
@@ -62,14 +62,14 @@
 	"apps/xsd.h"
 	"code_generator.h"
 
-1596390076 c:\project\xml_code_generator\src\apps\elements\xs_schema.h
+1596473924 c:\project\xml_code_generator\src\apps\elements\xs_schema.h
 
 1596028746 source:c:\project\xml_code_generator\src\apps\tree.c
 	<stdint.h>
 	<stdlib.h>
 	"apps/tree.h"
 
-1596390287 source:c:\project\xml_code_generator\src\libs\parse_xml.c
+1596473924 source:c:\project\xml_code_generator\src\libs\parse_xml.c
 	<stdint.h>
 	<string.h>
 	<stdbool.h>
@@ -85,7 +85,7 @@
 	"apps/list.h"
 	"util/util.h"
 
-1596370960 source:c:\project\xml_code_generator\src\apps\elements\xs_element.c
+1596473924 source:c:\project\xml_code_generator\src\apps\elements\xs_element.c
 	<stdint.h>
 	<stdbool.h>
 	<stdlib.h>
@@ -98,9 +98,9 @@
 	"xs_complex_type.h"
 	"xs_simple_type.h"
 
-1596371366 c:\project\xml_code_generator\src\apps\elements\xs_element.h
+1596473924 c:\project\xml_code_generator\src\apps\elements\xs_element.h
 
-1596388538 source:c:\project\xml_code_generator\src\apps\elements\xs_extension.c
+1596473924 source:c:\project\xml_code_generator\src\apps\elements\xs_extension.c
 	<stdint.h>
 	<stdbool.h>
 	<stdlib.h>
@@ -111,9 +111,9 @@
 	"xs_attribute.h"
 	"xs_extension.h"
 
-1596388605 c:\project\xml_code_generator\src\apps\elements\xs_extension.h
+1596473924 c:\project\xml_code_generator\src\apps\elements\xs_extension.h
 
-1596387785 source:c:\project\xml_code_generator\src\apps\elements\xs_facet.c
+1596473924 source:c:\project\xml_code_generator\src\apps\elements\xs_facet.c
 	<stdint.h>
 	<stdbool.h>
 	<stdlib.h>
@@ -123,9 +123,9 @@
 	"apps/tree.h"
 	"xs_facet.h"
 
-1596387769 c:\project\xml_code_generator\src\apps\elements\xs_facet.h
+1596473924 c:\project\xml_code_generator\src\apps\elements\xs_facet.h
 
-1596387894 source:c:\project\xml_code_generator\src\apps\elements\xs_restriction.c
+1596473924 source:c:\project\xml_code_generator\src\apps\elements\xs_restriction.c
 	<stdint.h>
 	<stdbool.h>
 	<stdlib.h>
@@ -138,9 +138,9 @@
 	"xs_facet.h"
 	"xs_restriction.h"
 
-1596388792 c:\project\xml_code_generator\src\apps\elements\xs_restriction.h
+1596473924 c:\project\xml_code_generator\src\apps\elements\xs_restriction.h
 
-1596390200 source:c:\project\xml_code_generator\src\apps\elements\xs_schema.c
+1596473924 source:c:\project\xml_code_generator\src\apps\elements\xs_schema.c
 	<stdint.h>
 	<stdbool.h>
 	<stdlib.h>
@@ -157,7 +157,7 @@
 	"xs_attribute.h"
 	"xs_simple_type.h"
 
-1596367223 source:c:\project\xml_code_generator\src\apps\elements\xs_sequence.c
+1596473924 source:c:\project\xml_code_generator\src\apps\elements\xs_sequence.c
 	<stdint.h>
 	<stdbool.h>
 	<stdlib.h>
@@ -171,7 +171,7 @@
 
 1596133129 c:\project\xml_code_generator\src\includes\util\util.h
 
-1596368365 source:c:\project\xml_code_generator\src\apps\elements\xs_simple_content.c
+1596473924 source:c:\project\xml_code_generator\src\apps\elements\xs_simple_content.c
 	<stdint.h>
 	<stdbool.h>
 	<stdlib.h>
@@ -183,7 +183,7 @@
 	"xs_restriction.h"
 	"xs_simple_content.h"
 
-1596389011 source:c:\project\xml_code_generator\src\apps\elements\xs_simple_type.c
+1596473924 source:c:\project\xml_code_generator\src\apps\elements\xs_simple_type.c
 	<stdint.h>
 	<stdbool.h>
 	<stdlib.h>
@@ -201,7 +201,7 @@
 	<stdlib.h>
 	"apps/list.h"
 
-1596470599 source:c:\project\xml_code_generator\src\apps\xsd.c
+1596958442 source:c:\project\xml_code_generator\src\apps\xsd.c
 	<stdint.h>
 	<stdio.h>
 	<stdlib.h>
@@ -235,7 +235,7 @@
 	<stdlib.h>
 	"libs/xml_content.h"
 
-1596473208 source:c:\project\xml_code_generator\src\apps\code_generator.c
+1596958830 source:c:\project\xml_code_generator\src\apps\code_generator.c
 	<stdint.h>
 	<stdio.h>
 	<stdlib.h>
@@ -244,10 +244,11 @@
 	"apps/xs_data_type.h"
 	"apps/tree.h"
 	"apps/xsd.h"
+	"code_generator.h"
 
 1596262839 c:\project\xml_code_generator\src\includes\apps\xs_data_type.h
 
-1596028746 c:\project\xml_code_generator\src\apps\code_generator.h
+1596951380 c:\project\xml_code_generator\src\apps\code_generator.h
 
 1596039179 source:c:\project\xml_code_generator\src\apps\util.c
 	<stdint.h>
@@ -258,5 +259,5 @@
 
 1596039059 c:\project\xml_code_generator\src\includes\apps\util.h
 
-1596370602 c:\project\xml_code_generator\src\apps\elements\xs_type.h
+1596473924 c:\project\xml_code_generator\src\apps\elements\xs_type.h
 

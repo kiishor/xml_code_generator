@@ -21,6 +21,7 @@
 /*
  *  ------------------------------ FUNCTION BODY ------------------------------
  */
+extern void print_shiporder();
 
 int main(int argc, char *argv[])
 {
@@ -50,6 +51,7 @@ int main(int argc, char *argv[])
   if(result == XML_PARSE_SUCCESS)
   {
     printf("Parsing completed successfully\n");
+    print_shiporder();
   }
   else
   {

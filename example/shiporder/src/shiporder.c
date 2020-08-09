@@ -1,6 +1,6 @@
-#include<stdint.h>
-#include<stdbool.h>
-#include<float.h>
+#include <stdlib.h>
+#include <stdbool.h>
+#include <float.h>
 
 #include "shiporder.h"
 
@@ -110,6 +110,8 @@ static const xs_element_t shipto_descendant[] =
     [3].Content.Facet.String.MaxLength = 4294967295,
 };
 
+static void* allocate_item(uint32_t occurrence, void** context);
+
 static const xs_element_t shiporder_descendant[] =
 {
     [0].Name.String = "orderperson",
@@ -142,9 +144,8 @@ static const xs_element_t shiporder_descendant[] =
     [2].MinOccur    = 1,
     [2].MaxOccur    = 4294967295,
     [2].Callback    = NULL,
-    [2].Target.Type    = EN_RELATIVE,
-    [2].Target.Offset  = offsetof(shiporder_t, item),
-    [2].Target.Size    = sizeof(shiporder_t),
+    [2].Target.Type    = EN_DYNAMIC,
+    [2].Target.Allocate = allocate_item,
     [2].Content.Type   = EN_NO_XML_DATA_TYPE,
     [2].Child_Quantity = 4,
     [2].Child_Type     = EN_SEQUENCE,
@@ -172,7 +173,6 @@ static const xs_attribute_t shiporder_attribute[] =
     [2].Use         = EN_REQUIRED,
 };
 
-
 const xs_element_t root_descendant[] =
 {
     [0].Name.String = "shiporder",
@@ -189,9 +189,29 @@ const xs_element_t root_descendant[] =
     [0].Child_Type     = EN_SEQUENCE,
     [0].Child          = shiporder_descendant,
 };
+
 const xs_element_t xml_root =
 {
     .Child_Quantity = 1,
     .Child_Type     = EN_CHOICE,
     .Child = root_descendant,
 };
+
+static void* allocate_item(uint32_t occurrence, void** context)
+{
+    void* const target = calloc(sizeof(item_t), 1);
+    if(shiporder.item == NULL)
+    {
+        shiporder.item = target;
+        return target;
+    }
+
+    item_t* node = shiporder.item;
+    while(node->Next)
+    {
+        node = node->Next;
+    }
+
+    node->Next = target;
+    return target;
+}
