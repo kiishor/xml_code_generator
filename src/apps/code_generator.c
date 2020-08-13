@@ -159,10 +159,10 @@ void handle_occurrences(address_type_t type, uint32_t maxOccur, char* pointer, c
   }
 }
 
-static inline void write_header(xs_element_t* const element,
+static inline void write_header(const xs_element_t* const element,
                                 FILE* const header)
 {
-  xs_element_t* const child = element->Child;
+  const xs_element_t* const child = element->Child;
 
   bool use_linked_list = (((xsd_element_t*)element)->Allocate == LINKED_LIST_ALLOCATE);
   if(use_linked_list)
@@ -226,11 +226,11 @@ static inline void write_header(xs_element_t* const element,
 }
 
 // Reorder all the complex xs_element_t
-static inline void write_source(xs_element_t* const element, FILE* const header,
+static inline void write_source(const xs_element_t* const element, FILE* const header,
                          FILE* const source)
 {
   uint32_t quantity = element->Child_Quantity;
-  xs_element_t* const child = element->Child;
+  const xs_element_t* const child = element->Child;
   while(quantity)
   {
     quantity--;
@@ -339,10 +339,10 @@ static inline void write_xml_root(FILE* const source)
   fprintf(source, "};\n");
 }
 
-static inline void write_functions(xs_element_t* const element, FILE* const source)
+static inline void write_functions(const xs_element_t* const element, FILE* const source)
 {
   uint32_t quantity = element->Child_Quantity;
-  xs_element_t* const child = element->Child;
+  const xs_element_t* const child = element->Child;
   while(quantity)
   {
     quantity--;
@@ -380,7 +380,7 @@ static inline void write_functions(xs_element_t* const element, FILE* const sour
   }
 }
 
-void generate_xml_source(xs_element_t* const root)
+void generate_xml_source(const xs_element_t* const root)
 {
   const char* const name = root->Child[0].Name.String;
   FILE* header_file = create_header_file(name);

@@ -76,14 +76,13 @@ typedef enum
   DYNAMIC
 }en_occurrence_t;
 
-
-// List of parents of extension
+// List of parents of restriction or extension
 typedef enum
 {
+  SIMPLE_TYPE_PARENT,
   SIMPLE_CONTENT_PARENT,
   COMPLEX_CONTENT_PARENT
-}en_extension_parent;
-
+}en_restriction_parent;
 
 /*
  *  -------------------------------- STRUCTURE --------------------------------

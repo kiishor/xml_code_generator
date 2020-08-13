@@ -182,19 +182,27 @@ static inline void set_attribute(const tree_t* node,
   }
 }
 
-static inline void parse_extension(const tree_t* tree,
-                                   xs_element_t* const element,
-                                   context_t* const context,
-                                   en_extension_parent parent)
+// This function is also used for parsing extension also.
+// restriction and extension are quite similar except restriction has more
+// descendant present than extension.
+// This program assumes the schema is valid and extension does not contains
+// the descendants that are not supposed to be part of it.
+static inline void parse_restriction(const tree_t* const tree,
+                                     xs_element_t* const element,
+                                     context_t* const context,
+                                     en_restriction_parent parent)
 {
-  const extension_t* const extension = tree->Data;
-  string_t* const type = &extension->attr.base;
+  const restriction_t* const restriction = tree->Data;
+  string_t* const type = &restriction->attr.base;
   type->Length = strlen(type->String);
 
   bool complex_type = (parent == COMPLEX_CONTENT_PARENT);
   parse_extended_type(element, type, context, complex_type);
 
-  set_attribute(tree->Descendant, element);
+  if((parent == SIMPLE_CONTENT_PARENT) || (parent == COMPLEX_CONTENT_PARENT))
+  {
+    set_attribute(tree->Descendant, element);
+  }
 
   uint32_t attr_index = 0;
   const tree_t* node = tree->Descendant;
@@ -213,9 +221,11 @@ static inline void parse_extension(const tree_t* tree,
        parse_attribute(node, &element->Attribute[attr_index++], context);
       break;
 
-    default:
-      assert(false);
-      return;
+    // TODO: support restriction facets
+
+//    default:
+//      assert(false);
+//      return;
     }
     node = node->Next;
   }
@@ -225,17 +235,13 @@ static inline void parse_simple_content(const tree_t* tree,
                                         xs_element_t* const element,
                                         const context_t* const context)
 {
-  const simpleContent_t* const simpleContent = tree->Data;
   const tree_t* const node = tree->Descendant;
   const xsd_tag_t* const tag = node->Data;
   switch(*tag)
   {
   case XS_RESTRICTION_TAG:
-
-    break;
-
   case XS_EXTENSION_TAG:
-    parse_extension(node, element, context, SIMPLE_CONTENT_PARENT);
+    parse_restriction(node, element, context, SIMPLE_CONTENT_PARENT);
     break;
   }
 }
@@ -288,33 +294,21 @@ static inline void parse_complex_type(const tree_t* tree, xs_element_t* const el
   add_element_node(&context->ComplexType_List, element);
 }
 
+// xs:simpleType
 static inline void parse_simple_element(const tree_t* const tree,
-                                        xs_element_t* const element)
+                                        xs_element_t* const element,
+                                        const context_t* const context)
 {
   const tree_t* node = tree->Descendant;
   const restriction_t* const restriction = node->Data;
-  assert(restriction->Type == XS_RESTRICTION_TAG);
+  assert((*(xsd_tag_t*)node->Data) == XS_RESTRICTION_TAG);
 
-  element->Content.Type = EN_NO_XML_DATA_TYPE;
-  const char* const type = restriction->attr.base.String;
-  size_t type_length = strlen(type);
-
-  for(uint32_t i = 0; i < TOTAL_XSD_DATA_TYPE; i++)
-  {
-    if((type_length == xs_data_type[i].Length) &&
-       (!memcmp(type, xs_data_type[i].String, type_length)))
-    {
-      convert_xsd_data_type(&element->Content, i);
-      return;
-    }
-  }
-    // TODO: support restriction facets
-
+  parse_restriction(node, element, context, SIMPLE_TYPE_PARENT);
   return;
 }
 
 static inline void parse_simple_type(const tree_t* tree, xs_element_t* const element,
-                                     element_list_t* const simpleType_List)
+                                     context_t* const context)
 {
   simpleType_t* simpleType = tree->Data;
   const char* const name = simpleType->attr.name.String;
@@ -323,8 +317,8 @@ static inline void parse_simple_type(const tree_t* tree, xs_element_t* const ele
   element->Name.Length = strlen(name);
   element->Name.String = name;
 
-  parse_simple_element(tree, element);
-  add_element_node(simpleType_List, element);
+  parse_simple_element(tree, element, context);
+  add_element_node(&context->SimpleType_List, element);
 }
 
 static inline void parse_element(const tree_t* node, xs_element_t* const element,
@@ -353,7 +347,7 @@ static inline void parse_element(const tree_t* node, xs_element_t* const element
       return;
 
     case XS_SIMPLE_TYPE_TAG:
-      parse_simple_element(node, element);
+      parse_simple_element(node, element, context);
       break;
 
     default:
@@ -539,7 +533,7 @@ xsd_element_t* compile_xsd(const tree_t* const tree, const options_t* const opti
     case XS_SIMPLE_TYPE_TAG:
     {
       xs_element_t* simpleType = calloc(sizeof(xsd_element_t), 1);
-      parse_simple_type(node, simpleType, &context.SimpleType_List);
+      parse_simple_type(node, simpleType, &context);
       break;
     }
 
