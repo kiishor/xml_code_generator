@@ -4,7 +4,6 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-
 #include "libs/parse_xml.h"
 
 typedef struct item_t item_t;
