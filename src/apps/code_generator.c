@@ -14,6 +14,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <assert.h>
 
 #include "libs/parse_xml.h"
 #include "apps/xs_data_type.h"
@@ -225,26 +226,10 @@ static inline void write_header(const xs_element_t* const element,
   }
 }
 
-// Reorder all the complex xs_element_t
-static inline void write_source(const xs_element_t* const element, FILE* const header,
-                         FILE* const source)
+static inline void write_source(const xs_element_t* const element,
+                                FILE* const source)
 {
-  uint32_t quantity = element->Child_Quantity;
   const xs_element_t* const child = element->Child;
-  while(quantity)
-  {
-    quantity--;
-    if(child[quantity].Child_Quantity || child[quantity].Attribute_Quantity)
-    {
-      write_source(&child[quantity], header, source);
-    }
-  }
-
-  if(element->Name.String)
-  {
-    write_header(element, header);
-  }
-
   if(element->Child_Quantity)
   {
     for(uint32_t i = 0; i < element->Child_Quantity; i++)
@@ -298,7 +283,7 @@ static inline void write_source(const xs_element_t* const element, FILE* const h
 
     }while(1);
 
-  fprintf(source, "};\n");
+    fprintf(source, "};\n");
   }
 
   if(element->Attribute_Quantity)
@@ -328,6 +313,29 @@ static inline void write_source(const xs_element_t* const element, FILE* const h
 
     fprintf(source, "};\n");
   }
+}
+
+// Reorder all the complex xs_element_t
+static inline void write_source_code(const xs_element_t* const element, FILE* const header,
+                         FILE* const source)
+{
+  uint32_t quantity = element->Child_Quantity;
+  const xs_element_t* const child = element->Child;
+  while(quantity)
+  {
+    quantity--;
+    if(child[quantity].Child_Quantity || child[quantity].Attribute_Quantity)
+    {
+      write_source_code(&child[quantity], header, source);
+    }
+  }
+
+  if(element->Name.String)
+  {
+    write_header(element, header);
+  }
+
+  write_source(element, source);
 }
 
 static inline void write_xml_root(FILE* const source)
@@ -385,7 +393,7 @@ void generate_xml_source(const xs_element_t* const root)
   const char* const name = root->Child[0].Name.String;
   FILE* header_file = create_header_file(name);
   FILE* source_file = create_source_file(name);
-  write_source(root, header_file, source_file);
+  write_source_code(root, header_file, source_file);
   write_xml_root(source_file);
   write_functions(root, source_file);
   close_header_file(header_file, name);
