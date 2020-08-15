@@ -16,7 +16,7 @@
 #include <string.h>
 #include <assert.h>
 
-#include "libs/parse_xml.h"
+#include "parse_xml.h"
 
 #include "apps/xsd.h"
 #include "elements/xs_element.h"

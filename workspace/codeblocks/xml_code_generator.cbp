@@ -36,6 +36,7 @@
 		<Compiler>
 			<Add option="-Wall" />
 			<Add directory="../../src/includes" />
+			<Add directory="../../src/xml_parser/src" />
 		</Compiler>
 		<Unit filename="../../src/apps/code_generator.c">
 			<Option compilerVar="CC" />
@@ -102,22 +103,18 @@
 		<Unit filename="../../src/includes/apps/xs_data_type.h" />
 		<Unit filename="../../src/includes/apps/xsd.h" />
 		<Unit filename="../../src/includes/common.h" />
-		<Unit filename="../../src/includes/libs/parse_xml.h" />
-		<Unit filename="../../src/includes/libs/xml_content.h" />
 		<Unit filename="../../src/includes/util/util.h" />
-		<Unit filename="../../src/libs/parse_xml.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="../../src/libs/xml_content.c">
-			<Option compilerVar="CC" />
-		</Unit>
 		<Unit filename="../../src/util/util.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="../../xsd/shiporder.xml" />
-		<Unit filename="../../xsd/shiporder1.xsd" />
-		<Unit filename="../../xsd/shiporder2.xsd" />
-		<Unit filename="../../xsd/shiporder3.xsd" />
+		<Unit filename="../../src/xml_parser/src/parse_xml.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../src/xml_parser/src/parse_xml.h" />
+		<Unit filename="../../src/xml_parser/src/xml_content.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../src/xml_parser/src/xml_content.h" />
 		<Extensions>
 			<lib_finder disable_auto="1" />
 		</Extensions>

@@ -17,7 +17,7 @@
 #include <string.h>
 
 #include "apps/tree.h"
-#include "libs/parse_xml.h"
+#include "parse_xml.h"
 #include "elements/xs_schema.h"
 #include "apps/xsd.h"
 #include "code_generator.h"
