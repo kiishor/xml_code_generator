@@ -22,9 +22,13 @@
 				<Option type="1" />
 				<Option compiler="gcc" />
 				<Compiler>
-					<Add option="-O2" />
+					<Add option="-flto" />
+					<Add option="-O3" />
+					<Add option="-std=c17" />
 				</Compiler>
 				<Linker>
+					<Add option="-O3" />
+					<Add option="-flto" />
 					<Add option="-s" />
 				</Linker>
 			</Target>

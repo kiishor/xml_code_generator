@@ -1,0 +1,3 @@
+[submodule "src/xml_parser"]
+	path = src/xml_parser
+	url = https://github.com/kiishor/xml_parser_in_c.git
