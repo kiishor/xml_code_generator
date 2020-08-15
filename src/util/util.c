@@ -14,7 +14,7 @@
 #include <stdbool.h>
 #include <string.h>
 
-#include "libs/parse_xml.h"
+#include "parse_xml.h"
 
 #include "apps/tree.h"
 #include "apps/list.h"

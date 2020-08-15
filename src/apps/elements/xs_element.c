@@ -16,7 +16,7 @@
 #include <stdio.h>
 
 #include "common.h"
-#include "libs/parse_xml.h"
+#include "parse_xml.h"
 #include "apps/xsd.h"
 #include "apps/tree.h"
 

@@ -12,7 +12,7 @@
 #include <stdint.h>
 #include <float.h>
 
-#include "libs/parse_xml.h"
+#include "parse_xml.h"
 #include "apps/xs_data_type.h"
 
 /*

@@ -21,7 +21,7 @@
 
 #include "common.h"
 
-#include "libs/parse_xml.h"
+#include "parse_xml.h"
 #include "xs_schema.h"
 
 #include "apps/xsd.h"
