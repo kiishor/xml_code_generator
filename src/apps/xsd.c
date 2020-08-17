@@ -120,7 +120,7 @@ static inline void parse_extended_type(xs_element_t* const element,
     element->Attribute_Quantity = complexType->Attribute_Quantity;
     element->Child = complexType->Child;
     element->Child_Quantity = complexType->Child_Quantity;
-    element->Child_Type = complexType->Child_Type;
+    element->Child_Order = complexType->Child_Order;
   }
 }
 
@@ -213,7 +213,7 @@ static inline void parse_restriction(const tree_t* const tree,
     {
     case XS_SEQUENCE_TAG:
       assert(parent == COMPLEX_CONTENT_PARENT);
-      element->Child_Type = EN_SEQUENCE;
+      element->Child_Order = EN_SEQUENCE;
       parse_sequence(node, element, context);
       break;
 
@@ -261,7 +261,7 @@ static inline void parse_complex_element(const tree_t* tree,
     switch(*tag)
     {
     case XS_SEQUENCE_TAG:
-      element->Child_Type = EN_SEQUENCE;
+      element->Child_Order = EN_SEQUENCE;
       parse_sequence(node, element, context);
       break;
 
@@ -442,10 +442,14 @@ static inline void resolve_element_references(const element_list_t* const elemen
 
     uint32_t minOccurs = target->MinOccur;
     uint32_t maxOccurs = target->MaxOccur;
+    target_address_t target_address;
+    memcpy(&target_address, &target->Target, sizeof(target_address_t));
 
     memcpy(target, node->Element, sizeof(xs_element_t));
+
     target->MinOccur = minOccurs;
     target->MaxOccur = maxOccurs;
+    memcpy(&target->Target, &target_address, sizeof(target_address_t));
     reference_list = (reference_list_t*)reference_list->List.Next;
   }
 }
@@ -472,7 +476,7 @@ static inline xsd_element_t* create_root(const element_list_t* const list)
 {
   xs_element_t* root = calloc(sizeof(xsd_element_t), 1);
   root->Child_Quantity = 1;
-  root->Child_Type = EN_CHOICE;
+  root->Child_Order = EN_CHOICE;
 
   xs_element_t* const element = get_root(list);
   root->Child = element;

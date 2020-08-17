@@ -49,7 +49,7 @@ const xs_element_t Sequence_Descendant[TOTAL_SEQUENCE_DESCENDANTS] =
   [EN_sequence_child_element].Attribute = child_element_attr,
 
   [EN_sequence_child_element].Child_Quantity = TOTAL_ELEMENT_DESCENDANTS,
-  [EN_sequence_child_element].Child_Type     = EN_CHOICE,
+  [EN_sequence_child_element].Child_Order     = EN_CHOICE,
   [EN_sequence_child_element].Child          = Element_Descendant,
 };
 
@@ -107,7 +107,7 @@ const xs_element_t xs_sequence =
   .Attribute = sequence_attr,
 
   .Child_Quantity = ARRAY_LENGTH(Sequence_Descendant),
-  .Child_Type     = EN_CHOICE,
+  .Child_Order     = EN_CHOICE,
   .Child = Sequence_Descendant,
 };
 

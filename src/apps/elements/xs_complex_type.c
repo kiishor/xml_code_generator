@@ -50,7 +50,7 @@ const xs_element_t ComplexType_Descendant[TOTAL_COMPLEX_TYPE_DESCENDANT] =
   [EN_complex_sequence].Attribute 		     = sequence_attr,
 
   [EN_complex_sequence].Child_Quantity = TOTAL_SEQUENCE_DESCENDANTS,
-  [EN_complex_sequence].Child_Type     = EN_CHOICE,
+  [EN_complex_sequence].Child_Order    = EN_CHOICE,
   [EN_complex_sequence].Child 		     = Sequence_Descendant,
 
   [EN_complex_simpleContent].Name.String  = "xs:simpleContent",
@@ -66,7 +66,7 @@ const xs_element_t ComplexType_Descendant[TOTAL_COMPLEX_TYPE_DESCENDANT] =
   [EN_complex_simpleContent].Attribute          = simpleContent_Attr,
 
   [EN_complex_simpleContent].Child_Quantity = TOTAL_SIMPLE_CONTENT_DESCENDANTS,
-  [EN_complex_simpleContent].Child_Type     = EN_CHOICE,
+  [EN_complex_simpleContent].Child_Order    = EN_CHOICE,
   [EN_complex_simpleContent].Child          = simpleContent_Descendant,
 
   [EN_complex_attribute].Name.String = "xs:attribute",
@@ -82,7 +82,7 @@ const xs_element_t ComplexType_Descendant[TOTAL_COMPLEX_TYPE_DESCENDANT] =
   [EN_complex_attribute].Attribute          = attribute_Attr,
 
   [EN_complex_attribute].Child_Quantity = TOTAL_ATTRIBUTE_DESCENDANTS,
-  [EN_complex_attribute].Child_Type     = EN_CHOICE,
+  [EN_complex_attribute].Child_Order    = EN_CHOICE,
   [EN_complex_attribute].Child          = attribute_Descendant,
 };
 
@@ -130,8 +130,8 @@ const xs_element_t xs_complexType =
   .Attribute = complexType_Attr,
 
   .Child_Quantity = TOTAL_COMPLEX_TYPE_DESCENDANT,
-  .Child_Type     = EN_CHOICE,
-  .Child = ComplexType_Descendant,
+  .Child_Order    = EN_ALL,
+  .Child          = ComplexType_Descendant,
 };
 
 /*

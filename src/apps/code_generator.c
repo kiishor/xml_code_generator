@@ -39,7 +39,7 @@ static inline FILE* create_header_file(const char* const name)
 
   fprintf(header, "#ifndef %s_H_INCLUDED\n#define %s_H_INCLUDED\n", name, name);
   fprintf(header, "\n#include <stdint.h>\n#include <stdbool.h>\n");
-  fprintf(header, "\n#include \"libs/parse_xml.h\"\n");
+  fprintf(header, "\n#include \"parse_xml.h\"\n");
 
   return header;
 }
@@ -271,7 +271,7 @@ static inline void write_source(const xs_element_t* const element,
       if(child[i].Child_Quantity)
       {
         fprintf(source, "    [%u].Child_Quantity = %u,\n", i, child[i].Child_Quantity);
-        fprintf(source, "    [%u].Child_Type     = %s,\n", i, xml_child_order[child[i].Child_Type]);
+        fprintf(source, "    [%u].Child_Order    = %s,\n", i, xml_child_order[child[i].Child_Order]);
         fprintf(source, "    [%u].Child          = %s_descendant,\n", i, child[i].Name.String);
       }
 
@@ -342,8 +342,8 @@ static inline void write_xml_root(FILE* const source)
 {
   fprintf(source, "\nconst xs_element_t xml_root =\n{\n");
   fprintf(source, "    .Child_Quantity = 1,\n");
-  fprintf(source, "    .Child_Type     = EN_CHOICE,\n");
-  fprintf(source, "    .Child = root_descendant,\n");
+  fprintf(source, "    .Child_Order    = EN_CHOICE,\n");
+  fprintf(source, "    .Child          = root_descendant,\n");
   fprintf(source, "};\n");
 }
 
@@ -537,7 +537,7 @@ static inline void write_print_function(const xs_element_t* const element, FILE*
     }
     uint32_t i = strlen(space) - 4;
     space[i] = '\0';
-    fprintf(file, "%s}\n\n", space);
+    fprintf(file, "%s}\n", space);
   }
   variable[waterMark] = '\0';
 }
@@ -557,7 +557,7 @@ void generate_print_file(const xs_element_t* const root)
 
   write_print_function(root, file, space, sourceName);
 
-  fprintf(file, "\n}\n");
+  fprintf(file, "}\n");
   fclose(file);
 }
 

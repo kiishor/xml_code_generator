@@ -48,7 +48,7 @@ const xs_element_t restriction_Descendant[TOTAL_RESTRICTION_DESCENDANT] =
   [EN_restriction_attribute].Attribute_Quantity = TOTAL_ATTRIBUTE_ATTRIBUTES,
   [EN_restriction_attribute].Attribute = attribute_Attr,
   [EN_restriction_attribute].Child_Quantity = TOTAL_ATTRIBUTE_DESCENDANTS,
-  [EN_restriction_attribute].Child_Type     = EN_CHOICE,
+  [EN_restriction_attribute].Child_Order     = EN_CHOICE,
   [EN_restriction_attribute].Child = attribute_Descendant,
 
   [EN_restriction_simpleType].Name.String  = "xs:simpleType",
@@ -61,7 +61,7 @@ const xs_element_t restriction_Descendant[TOTAL_RESTRICTION_DESCENDANT] =
   [EN_restriction_simpleType].Attribute_Quantity = TOTAL_TYPE_ATTRIBUTES,
   [EN_restriction_simpleType].Attribute = simple_type_Attr,
   [EN_restriction_simpleType].Child_Quantity = TOTAL_SIMPLE_TYPE_DESCENDANTS,
-  [EN_restriction_simpleType].Child_Type     = EN_CHOICE,
+  [EN_restriction_simpleType].Child_Order     = EN_CHOICE,
   [EN_restriction_simpleType].Child = simple_type_Descendant,
 
   [EN_restriction_enumeration].Name.String  = "xs:enumeration",
@@ -177,7 +177,7 @@ const xs_element_t xs_restriction =
   .Attribute = restriction_Attr,
 
   .Child_Quantity = TOTAL_RESTRICTION_DESCENDANT,
-  .Child_Type     = EN_CHOICE,
+  .Child_Order     = EN_ALL,
   .Child = restriction_Descendant,
 };
 

@@ -10,6 +10,22 @@
  */
 
 /*
+ *  ------------------------------- DEFINITION -------------------------------
+ */
+
+//! List of values of "use" specified in the XML schema.
+#define ALL_XSD_ATTRIBUTE_USE_VALUE   \
+  ADD_USE_TYPE(EN_OPTIONAL, optional)   \
+  ADD_USE_TYPE(EN_REQUIRED, required)   \
+  ADD_USE_TYPE(EN_PROHIBITED, prohibited)
+
+//! List of target type to store the XML content.
+#define ALL_TARGET_ADDRESS_TYPE \
+  ADD_TYPE(EN_STATIC)   \
+  ADD_TYPE(EN_DYNAMIC)  \
+  ADD_TYPE(EN_RELATIVE)
+
+/*
  *  ------------------------------- ENUMERATION -------------------------------
  */
 
@@ -20,7 +36,6 @@ typedef enum
   TOTAL_XSD_DATA_TYPE
 }xs_data_type_t;
 #undef ADD_DATA_TYPE
-
 
 /*
  *  ------------------------ EXTERNAL GLOBAL VARIABLES ------------------------
@@ -34,5 +49,6 @@ extern const char* const xs_target_address_type[TOTAL_TARGET_ADDRESS_TYPE];
 extern const char* const xml_content_type[TOTAL_XML_CONTENT_TYPES];
 extern void convert_xsd_data_type(xml_content_t* const content, xs_data_type_t type);
 extern const char* const xml_child_order[];
+
 #endif // XS_DATA_TYPE_H
 

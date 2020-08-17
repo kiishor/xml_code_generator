@@ -49,8 +49,8 @@ const xs_element_t attribute_Descendant[TOTAL_ATTRIBUTE_DESCENDANTS] =
   [EN_attribute_simpleType].Attribute = simple_type_Attr,
 
   [EN_attribute_simpleType].Child_Quantity = TOTAL_SIMPLE_TYPE_DESCENDANTS,
-  [EN_attribute_simpleType].Child_Type     = EN_CHOICE,
-  [EN_attribute_simpleType].Child = simple_type_Descendant,
+  [EN_attribute_simpleType].Child_Order    = EN_CHOICE,
+  [EN_attribute_simpleType].Child          = simple_type_Descendant,
 };
 
 const xs_attribute_t attribute_Attr[TOTAL_ATTRIBUTE_ATTRIBUTES] =
@@ -148,18 +148,18 @@ const xs_element_t xs_attribute =
   .MinOccur    = 0,
   .MaxOccur    = 64,
 
-  .Callback      = add_attribute_tag,
+  .Callback    = add_attribute_tag,
 
-  .Target.Type  = EN_DYNAMIC,
+  .Target.Type     = EN_DYNAMIC,
   .Target.Allocate = allocate_attribute,
-  .Target.Size = sizeof(attribute_t),
+  .Target.Size     = sizeof(attribute_t),
 
   .Attribute_Quantity = TOTAL_ATTRIBUTE_ATTRIBUTES,
-  .Attribute = attribute_Attr,
+  .Attribute          = attribute_Attr,
 
   .Child_Quantity = TOTAL_ATTRIBUTE_DESCENDANTS,
-  .Child_Type     = EN_CHOICE,
-  .Child = attribute_Descendant,
+  .Child_Order    = EN_CHOICE,
+  .Child          = attribute_Descendant,
 };
 
 /*

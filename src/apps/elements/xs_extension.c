@@ -46,8 +46,8 @@ const xs_element_t extension_Descendant[TOTAL_EXTENSION_DESCENDANTS] =
   [EN_extension_attribute].Attribute_Quantity = TOTAL_ATTRIBUTE_ATTRIBUTES,
   [EN_extension_attribute].Attribute = attribute_Attr,
   [EN_extension_attribute].Child_Quantity = TOTAL_ATTRIBUTE_DESCENDANTS,
-  [EN_extension_attribute].Child_Type     = EN_CHOICE,
-  [EN_extension_attribute].Child = attribute_Descendant,
+  [EN_extension_attribute].Child_Order    = EN_CHOICE,
+  [EN_extension_attribute].Child          = attribute_Descendant,
 };
 
 const xs_attribute_t extension_Attr[] =
@@ -87,8 +87,8 @@ const xs_element_t xs_extension =
   .Attribute = extension_Attr,
 
   .Child_Quantity = ARRAY_LENGTH(extension_Descendant),
-  .Child_Type     = EN_CHOICE,
-  .Child = extension_Descendant,
+  .Child_Order    = EN_CHOICE,
+  .Child          = extension_Descendant,
 };
 
 /*

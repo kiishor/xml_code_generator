@@ -50,7 +50,7 @@ const xs_element_t simpleContent_Descendant[TOTAL_SIMPLE_CONTENT_DESCENDANTS] =
   [EN_simple_content_extension].Attribute 		   = extension_Attr,
 
   [EN_simple_content_extension].Child_Quantity = ARRAY_LENGTH(extension_Descendant),
-  [EN_simple_content_extension].Child_Type     = EN_CHOICE,
+  [EN_simple_content_extension].Child_Order     = EN_CHOICE,
   [EN_simple_content_extension].Child = extension_Descendant,
 
   [EN_simple_content_restriction].Name.String = "xs:restriction",
@@ -66,7 +66,7 @@ const xs_element_t simpleContent_Descendant[TOTAL_SIMPLE_CONTENT_DESCENDANTS] =
   [EN_simple_content_restriction].Attribute          = restriction_Attr,
 
   [EN_simple_content_restriction].Child_Quantity = ARRAY_LENGTH(restriction_Descendant),
-  [EN_simple_content_restriction].Child_Type     = EN_CHOICE,
+  [EN_simple_content_restriction].Child_Order     = EN_ALL,
   [EN_simple_content_restriction].Child          = restriction_Descendant,
 };
 
@@ -100,7 +100,7 @@ const xs_element_t xs_simpleContent =
   .Attribute = simpleContent_Attr,
 
   .Child_Quantity = TOTAL_SIMPLE_CONTENT_DESCENDANTS,
-  .Child_Type     = EN_CHOICE,
+  .Child_Order     = EN_CHOICE,
   .Child = simpleContent_Descendant,
 };
 

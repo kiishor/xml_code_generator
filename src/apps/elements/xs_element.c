@@ -55,14 +55,14 @@ const xs_element_t Element_Descendant[TOTAL_ELEMENT_DESCENDANTS] =
   [EN_element_complexType].Attribute = complexType_Attr,
 
   [EN_element_complexType].Child_Quantity = TOTAL_COMPLEX_TYPE_DESCENDANT,
-  [EN_element_complexType].Child_Type     = EN_CHOICE,
-  [EN_element_complexType].Child = ComplexType_Descendant,
+  [EN_element_complexType].Child_Order    = EN_ALL,
+  [EN_element_complexType].Child          = ComplexType_Descendant,
 
   [EN_element_simpleType].Name.String  = "xs:simpleType",
   [EN_element_simpleType].Name.Length  = sizeof("xs:simpleType") - 1,
   [EN_element_simpleType].MinOccur     = 0,
   [EN_element_simpleType].MaxOccur     = 64,
-  [EN_element_simpleType].Callback      = add_simple_type_tag,
+  [EN_element_simpleType].Callback     = add_simple_type_tag,
 
   [EN_element_simpleType].Target.Type  = EN_DYNAMIC,
   [EN_element_simpleType].Target.Allocate = allocate_simple_type,
@@ -71,8 +71,8 @@ const xs_element_t Element_Descendant[TOTAL_ELEMENT_DESCENDANTS] =
   [EN_element_simpleType].Attribute = simple_type_Attr,
 
   [EN_element_simpleType].Child_Quantity = TOTAL_SIMPLE_TYPE_DESCENDANTS,
-  [EN_element_simpleType].Child_Type     = EN_CHOICE,
-  [EN_element_simpleType].Child = simple_type_Descendant,
+  [EN_element_simpleType].Child_Order    = EN_CHOICE,
+  [EN_element_simpleType].Child          = simple_type_Descendant,
 };
 
 const xs_attribute_t child_element_attr[TOTAL_CHILD_ELEMENT_ATTRIBUTES] =
@@ -203,7 +203,7 @@ const xs_element_t xs_global_element =
   .Attribute = global_element_attr,
 
   .Child_Quantity = TOTAL_ELEMENT_DESCENDANTS,
-  .Child_Type     = EN_CHOICE,
+  .Child_Order    = EN_CHOICE,
   .Child          = Element_Descendant,
 };
 
@@ -223,7 +223,7 @@ const xs_element_t xs_child_element =
   .Attribute = child_element_attr,
 
   .Child_Quantity = TOTAL_ELEMENT_DESCENDANTS,
-  .Child_Type     = EN_CHOICE,
+  .Child_Order    = EN_CHOICE,
   .Child          = Element_Descendant,
 };
 
