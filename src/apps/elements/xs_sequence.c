@@ -14,7 +14,6 @@
 #include <stdbool.h>
 #include <stdlib.h>
 
-#include "common.h"
 #include "parse_xml.h"
 #include "apps/xsd.h"
 #include "apps/tree.h"
@@ -45,7 +44,7 @@ const xs_element_t Sequence_Descendant[TOTAL_SEQUENCE_DESCENDANTS] =
   [EN_sequence_child_element].Target.Type  = EN_DYNAMIC,
   [EN_sequence_child_element].Target.Allocate = allocate_child_schema_element,
 
-  [EN_sequence_child_element].Attribute_Quantity = ARRAY_LENGTH(child_element_attr),
+  [EN_sequence_child_element].Attribute_Quantity = TOTAL_CHILD_ELEMENT_ATTRIBUTES,
   [EN_sequence_child_element].Attribute = child_element_attr,
 
   [EN_sequence_child_element].Child_Quantity = TOTAL_ELEMENT_DESCENDANTS,
@@ -103,10 +102,10 @@ const xs_element_t xs_sequence =
   .Target.Type  = EN_DYNAMIC,
   .Target.Allocate = allocate_sequence,
 
-  .Attribute_Quantity = ARRAY_LENGTH(sequence_attr),
+  .Attribute_Quantity = TOTAL_SEQUENCE_ATTRIBUTES,
   .Attribute = sequence_attr,
 
-  .Child_Quantity = ARRAY_LENGTH(Sequence_Descendant),
+  .Child_Quantity = TOTAL_SEQUENCE_DESCENDANTS,
   .Child_Order     = EN_CHOICE,
   .Child = Sequence_Descendant,
 };

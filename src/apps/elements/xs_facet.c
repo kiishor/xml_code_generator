@@ -15,7 +15,6 @@
 #include <stdbool.h>
 #include <stdlib.h>
 
-#include "common.h"
 #include "parse_xml.h"
 #include "apps/xsd.h"
 #include "apps/tree.h"
@@ -58,7 +57,7 @@ const xs_element_t xs_enumeration =
   .Target.Type  = EN_DYNAMIC,
   .Target.Allocate = allocate_facet,
 
-  .Attribute_Quantity = ARRAY_LENGTH(facet_Attr),
+  .Attribute_Quantity = TOTAL_FACET_ATTRIBUTES,
   .Attribute = facet_Attr,
 };
 
@@ -73,7 +72,7 @@ const xs_element_t xs_length =
   .Target.Type  = EN_DYNAMIC,
   .Target.Allocate = allocate_facet,
 
-  .Attribute_Quantity = ARRAY_LENGTH(facet_Attr),
+  .Attribute_Quantity = TOTAL_FACET_ATTRIBUTES,
   .Attribute = facet_Attr,
 };
 
@@ -88,7 +87,7 @@ const xs_element_t xs_maxInclusive =
   .Target.Type  = EN_DYNAMIC,
   .Target.Allocate = allocate_facet,
 
-  .Attribute_Quantity = ARRAY_LENGTH(facet_Attr),
+  .Attribute_Quantity = TOTAL_FACET_ATTRIBUTES,
   .Attribute = facet_Attr,
 };
 
@@ -103,7 +102,7 @@ const xs_element_t xs_minInclusive =
   .Target.Type  = EN_DYNAMIC,
   .Target.Allocate = allocate_facet,
 
-  .Attribute_Quantity = ARRAY_LENGTH(facet_Attr),
+  .Attribute_Quantity = TOTAL_FACET_ATTRIBUTES,
   .Attribute = facet_Attr,
 };
 
@@ -118,7 +117,7 @@ const xs_element_t xs_pattern =
   .Target.Type  = EN_DYNAMIC,
   .Target.Allocate = allocate_facet,
 
-  .Attribute_Quantity = ARRAY_LENGTH(facet_Attr),
+  .Attribute_Quantity = TOTAL_FACET_ATTRIBUTES,
   .Attribute = facet_Attr,
 };
 
@@ -133,7 +132,7 @@ const xs_element_t xs_maxLength =
   .Target.Type  = EN_DYNAMIC,
   .Target.Allocate = allocate_facet,
 
-  .Attribute_Quantity = ARRAY_LENGTH(facet_Attr),
+  .Attribute_Quantity = TOTAL_FACET_ATTRIBUTES,
   .Attribute = facet_Attr,
 };
 
@@ -148,7 +147,7 @@ const xs_element_t xs_minLength =
   .Target.Type  = EN_DYNAMIC,
   .Target.Allocate = allocate_facet,
 
-  .Attribute_Quantity = ARRAY_LENGTH(facet_Attr),
+  .Attribute_Quantity = TOTAL_FACET_ATTRIBUTES,
   .Attribute = facet_Attr,
 };
 

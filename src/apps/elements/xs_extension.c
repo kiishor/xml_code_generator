@@ -14,7 +14,6 @@
 #include <stdbool.h>
 #include <stdlib.h>
 
-#include "common.h"
 #include "parse_xml.h"
 #include "apps/xsd.h"
 #include "apps/tree.h"
@@ -83,10 +82,10 @@ const xs_element_t xs_extension =
   .Target.Type  = EN_DYNAMIC,
   .Target.Allocate = allocate_extension,
 
-  .Attribute_Quantity = ARRAY_LENGTH(extension_Attr),
+  .Attribute_Quantity = TOTAL_EXTENSION_ATTRIBUTES,
   .Attribute = extension_Attr,
 
-  .Child_Quantity = ARRAY_LENGTH(extension_Descendant),
+  .Child_Quantity = TOTAL_EXTENSION_DESCENDANTS,
   .Child_Order    = EN_CHOICE,
   .Child          = extension_Descendant,
 };

@@ -1,9 +1,8 @@
 # depslib dependency file v1.0
-1597599506 source:c:\project\xml_code_generator\src\apps\elements\xs_attribute.c
+1597760807 source:c:\project\xml_code_generator\src\apps\elements\xs_attribute.c
 	<stdint.h>
 	<stdbool.h>
 	<stdlib.h>
-	"common.h"
 	"parse_xml.h"
 	"apps/tree.h"
 	"apps/xsd.h"
@@ -30,11 +29,10 @@
 
 1596473924 c:\project\xml_code_generator\src\apps\elements\xs_attribute.h
 
-1597638953 source:c:\project\xml_code_generator\src\apps\elements\xs_complex_type.c
+1597760803 source:c:\project\xml_code_generator\src\apps\elements\xs_complex_type.c
 	<stdint.h>
 	<stdbool.h>
 	<stdlib.h>
-	"common.h"
 	"parse_xml.h"
 	"apps/tree.h"
 	"apps/xsd.h"
@@ -85,12 +83,11 @@
 	"apps/list.h"
 	"util/util.h"
 
-1597639066 source:c:\project\xml_code_generator\src\apps\elements\xs_element.c
+1597760817 source:c:\project\xml_code_generator\src\apps\elements\xs_element.c
 	<stdint.h>
 	<stdbool.h>
 	<stdlib.h>
 	<stdio.h>
-	"common.h"
 	"parse_xml.h"
 	"apps/xsd.h"
 	"apps/tree.h"
@@ -100,11 +97,10 @@
 
 1596473924 c:\project\xml_code_generator\src\apps\elements\xs_element.h
 
-1597599626 source:c:\project\xml_code_generator\src\apps\elements\xs_extension.c
+1597760926 source:c:\project\xml_code_generator\src\apps\elements\xs_extension.c
 	<stdint.h>
 	<stdbool.h>
 	<stdlib.h>
-	"common.h"
 	"parse_xml.h"
 	"apps/xsd.h"
 	"apps/tree.h"
@@ -113,11 +109,10 @@
 
 1597498608 c:\project\xml_code_generator\src\apps\elements\xs_extension.h
 
-1597511525 source:c:\project\xml_code_generator\src\apps\elements\xs_facet.c
+1597761270 source:c:\project\xml_code_generator\src\apps\elements\xs_facet.c
 	<stdint.h>
 	<stdbool.h>
 	<stdlib.h>
-	"common.h"
 	"parse_xml.h"
 	"apps/xsd.h"
 	"apps/tree.h"
@@ -125,11 +120,10 @@
 
 1596473924 c:\project\xml_code_generator\src\apps\elements\xs_facet.h
 
-1597638755 source:c:\project\xml_code_generator\src\apps\elements\xs_restriction.c
+1597761168 source:c:\project\xml_code_generator\src\apps\elements\xs_restriction.c
 	<stdint.h>
 	<stdbool.h>
 	<stdlib.h>
-	"common.h"
 	"parse_xml.h"
 	"apps/xsd.h"
 	"apps/tree.h"
@@ -138,9 +132,9 @@
 	"xs_facet.h"
 	"xs_restriction.h"
 
-1597498608 c:\project\xml_code_generator\src\apps\elements\xs_restriction.h
+1597761150 c:\project\xml_code_generator\src\apps\elements\xs_restriction.h
 
-1597639081 source:c:\project\xml_code_generator\src\apps\elements\xs_schema.c
+1597761580 source:c:\project\xml_code_generator\src\apps\elements\xs_schema.c
 	<stdint.h>
 	<stdbool.h>
 	<stdlib.h>
@@ -148,7 +142,6 @@
 	<string.h>
 	<stdio.h>
 	"apps/tree.h"
-	"common.h"
 	"parse_xml.h"
 	"xs_schema.h"
 	"apps/xsd.h"
@@ -157,11 +150,10 @@
 	"xs_attribute.h"
 	"xs_simple_type.h"
 
-1597599414 source:c:\project\xml_code_generator\src\apps\elements\xs_sequence.c
+1597761519 source:c:\project\xml_code_generator\src\apps\elements\xs_sequence.c
 	<stdint.h>
 	<stdbool.h>
 	<stdlib.h>
-	"common.h"
 	"parse_xml.h"
 	"apps/xsd.h"
 	"apps/tree.h"
@@ -171,11 +163,10 @@
 
 1597331348 c:\project\xml_code_generator\src\includes\util\util.h
 
-1597639022 source:c:\project\xml_code_generator\src\apps\elements\xs_simple_content.c
+1597761107 source:c:\project\xml_code_generator\src\apps\elements\xs_simple_content.c
 	<stdint.h>
 	<stdbool.h>
 	<stdlib.h>
-	"common.h"
 	"parse_xml.h"
 	"apps/xsd.h"
 	"apps/tree.h"
@@ -183,11 +174,10 @@
 	"xs_restriction.h"
 	"xs_simple_content.h"
 
-1597639035 source:c:\project\xml_code_generator\src\apps\elements\xs_simple_type.c
+1597761187 source:c:\project\xml_code_generator\src\apps\elements\xs_simple_type.c
 	<stdint.h>
 	<stdbool.h>
 	<stdlib.h>
-	"common.h"
 	"parse_xml.h"
 	"apps/xsd.h"
 	"apps/tree.h"
@@ -264,10 +254,10 @@
 
 1596473924 c:\project\xml_code_generator\src\apps\elements\xs_type.h
 
-1597599413 c:\project\xml_code_generator\src\xml_parser\src\parse_xml.h
+1597760452 c:\project\xml_code_generator\src\xml_parser\src\parse_xml.h
 	"xml_content.h"
 
-1597570147 c:\project\xml_code_generator\src\xml_parser\src\xml_content.h
+1597760452 c:\project\xml_code_generator\src\xml_parser\src\xml_content.h
 	<stdbool.h>
 
 1597570121 source:c:\project\xml_code_generator\src\xml_parser\src\xml_content.c
