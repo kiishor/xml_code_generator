@@ -17,7 +17,7 @@
 1596965118 c:\project\xml_code_generator\src\includes\libs\xml_content.h
 	<stdbool.h>
 
-1597498608 c:\project\xml_code_generator\src\includes\apps\xsd.h
+1597763970 c:\project\xml_code_generator\src\includes\apps\xsd.h
 	"apps/tree.h"
 	"apps/list.h"
 	"util/util.h"
@@ -29,7 +29,7 @@
 
 1596473924 c:\project\xml_code_generator\src\apps\elements\xs_attribute.h
 
-1597760803 source:c:\project\xml_code_generator\src\apps\elements\xs_complex_type.c
+1597764234 source:c:\project\xml_code_generator\src\apps\elements\xs_complex_type.c
 	<stdint.h>
 	<stdbool.h>
 	<stdlib.h>
@@ -38,10 +38,11 @@
 	"apps/xsd.h"
 	"xs_complex_type.h"
 	"xs_sequence.h"
+	"xs_choice.h"
 	"xs_simple_content.h"
 	"xs_attribute.h"
 
-1597498608 c:\project\xml_code_generator\src\apps\elements\xs_complex_type.h
+1597764215 c:\project\xml_code_generator\src\apps\elements\xs_complex_type.h
 	"xs_type.h"
 
 1597498608 c:\project\xml_code_generator\src\apps\elements\xs_sequence.h
@@ -260,17 +261,30 @@
 1597760452 c:\project\xml_code_generator\src\xml_parser\src\xml_content.h
 	<stdbool.h>
 
-1597570121 source:c:\project\xml_code_generator\src\xml_parser\src\xml_content.c
+1597760452 source:c:\project\xml_code_generator\src\xml_parser\src\xml_content.c
 	<stdint.h>
 	<string.h>
 	<stdbool.h>
 	<stdlib.h>
 	"parse_xml.h"
 
-1597638738 source:c:\project\xml_code_generator\src\xml_parser\src\parse_xml.c
+1597766424 source:c:\project\xml_code_generator\src\xml_parser\src\parse_xml.c
 	<stdint.h>
 	<string.h>
 	<stdbool.h>
 	<stdlib.h>
 	"parse_xml.h"
+
+1597763938 source:c:\project\xml_code_generator\src\apps\elements\xs_choice.c
+	<stdint.h>
+	<stdbool.h>
+	<stdlib.h>
+	"parse_xml.h"
+	"apps/xsd.h"
+	"apps/tree.h"
+	"xs_choice.h"
+	"util/util.h"
+	"xs_element.h"
+
+1597763870 c:\project\xml_code_generator\src\apps\elements\xs_choice.h
 

@@ -30,6 +30,7 @@
   ADD_TAG(XS_CHILD_ELEMENT_TAG,   xs:element)         \
   ADD_TAG(XS_COMPLEX_TAG,         xs:complexType)      \
   ADD_TAG(XS_SEQUENCE_TAG,        xs:sequence)        \
+  ADD_TAG(XS_CHOICE_TAG,          xs:choice)        \
   ADD_TAG(XS_SIMPLE_CONTENT_TAG,  xs:simpleContent)   \
   ADD_TAG(XS_EXTENSION_TAG,       xs:extension)       \
   ADD_TAG(XS_ATTRIBUTE_TAG,       xs:attribute)       \
