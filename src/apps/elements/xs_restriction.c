@@ -14,7 +14,6 @@
 #include <stdbool.h>
 #include <stdlib.h>
 
-#include "common.h"
 #include "parse_xml.h"
 #include "apps/xsd.h"
 #include "apps/tree.h"
@@ -35,7 +34,7 @@ void add_restriction_tag(uint32_t occurrence, void* content, void** context);
  *  ---------------------------- GLOBAL VARIABLES -----------------------------
  */
 
-const xs_element_t restriction_Descendant[TOTAL_RESTRICTION_DESCENDANT] =
+const xs_element_t restriction_Descendant[TOTAL_RESTRICTION_DESCENDANTS] =
 {
   [EN_restriction_attribute].Name.String = "xs:attribute",
   [EN_restriction_attribute].Name.Length    = sizeof("xs:attribute") - 1,
@@ -81,7 +80,7 @@ const xs_element_t restriction_Descendant[TOTAL_RESTRICTION_DESCENDANT] =
   [EN_restriction_length].Callback      = add_facet_tag,
   [EN_restriction_length].Target.Type  = EN_DYNAMIC,
   [EN_restriction_length].Target.Allocate = allocate_facet,
-  [EN_restriction_length].Attribute_Quantity = ARRAY_LENGTH(facet_Attr),
+  [EN_restriction_length].Attribute_Quantity = TOTAL_FACET_ATTRIBUTES,
   [EN_restriction_length].Attribute = facet_Attr,
 
   [EN_restriction_maxInclusive].Name.String  = "xs:maxInclusive",
@@ -91,7 +90,7 @@ const xs_element_t restriction_Descendant[TOTAL_RESTRICTION_DESCENDANT] =
   [EN_restriction_maxInclusive].Callback      = add_facet_tag,
   [EN_restriction_maxInclusive].Target.Type  = EN_DYNAMIC,
   [EN_restriction_maxInclusive].Target.Allocate = allocate_facet,
-  [EN_restriction_maxInclusive].Attribute_Quantity = ARRAY_LENGTH(facet_Attr),
+  [EN_restriction_maxInclusive].Attribute_Quantity = TOTAL_FACET_ATTRIBUTES,
   [EN_restriction_maxInclusive].Attribute = facet_Attr,
 
   [EN_restriction_minInclusive].Name.String  = "xs:minInclusive",
@@ -101,7 +100,7 @@ const xs_element_t restriction_Descendant[TOTAL_RESTRICTION_DESCENDANT] =
   [EN_restriction_minInclusive].Callback      = add_facet_tag,
   [EN_restriction_minInclusive].Target.Type  = EN_DYNAMIC,
   [EN_restriction_minInclusive].Target.Allocate = allocate_facet,
-  [EN_restriction_minInclusive].Attribute_Quantity = ARRAY_LENGTH(facet_Attr),
+  [EN_restriction_minInclusive].Attribute_Quantity = TOTAL_FACET_ATTRIBUTES,
   [EN_restriction_minInclusive].Attribute = facet_Attr,
 
   [EN_restriction_pattern].Name.String  = "xs:pattern",
@@ -111,7 +110,7 @@ const xs_element_t restriction_Descendant[TOTAL_RESTRICTION_DESCENDANT] =
   [EN_restriction_pattern].Callback      = add_facet_tag,
   [EN_restriction_pattern].Target.Type  = EN_DYNAMIC,
   [EN_restriction_pattern].Target.Allocate = allocate_facet,
-  [EN_restriction_pattern].Attribute_Quantity = ARRAY_LENGTH(facet_Attr),
+  [EN_restriction_pattern].Attribute_Quantity = TOTAL_FACET_ATTRIBUTES,
   [EN_restriction_pattern].Attribute = facet_Attr,
 
   [EN_restriction_maxLength].Name.String  = "xs:maxLength",
@@ -121,7 +120,7 @@ const xs_element_t restriction_Descendant[TOTAL_RESTRICTION_DESCENDANT] =
   [EN_restriction_maxLength].Callback      = add_facet_tag,
   [EN_restriction_maxLength].Target.Type  = EN_DYNAMIC,
   [EN_restriction_maxLength].Target.Allocate = allocate_facet,
-  [EN_restriction_maxLength].Attribute_Quantity = ARRAY_LENGTH(facet_Attr),
+  [EN_restriction_maxLength].Attribute_Quantity = TOTAL_FACET_ATTRIBUTES,
   [EN_restriction_maxLength].Attribute = facet_Attr,
 
   [EN_restriction_minLength].Name.String  = "xs:minLength",
@@ -131,7 +130,7 @@ const xs_element_t restriction_Descendant[TOTAL_RESTRICTION_DESCENDANT] =
   [EN_restriction_minLength].Callback      = add_facet_tag,
   [EN_restriction_minLength].Target.Type  = EN_DYNAMIC,
   [EN_restriction_minLength].Target.Allocate = allocate_facet,
-  [EN_restriction_minLength].Attribute_Quantity = ARRAY_LENGTH(facet_Attr),
+  [EN_restriction_minLength].Attribute_Quantity = TOTAL_FACET_ATTRIBUTES,
   [EN_restriction_minLength].Attribute = facet_Attr,
 };
 
@@ -176,7 +175,7 @@ const xs_element_t xs_restriction =
   .Attribute_Quantity = TOTAL_RESTRICTION_ATTRIBUTES,
   .Attribute = restriction_Attr,
 
-  .Child_Quantity = TOTAL_RESTRICTION_DESCENDANT,
+  .Child_Quantity = TOTAL_RESTRICTION_DESCENDANTS,
   .Child_Order     = EN_ALL,
   .Child = restriction_Descendant,
 };

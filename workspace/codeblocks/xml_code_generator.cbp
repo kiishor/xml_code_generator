@@ -11,7 +11,7 @@
 				<Option object_output="obj/Debug/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
-				<Option parameters="C:\project\xml_parser\config.xsd" />
+				<Option parameters="C:\project\xml_code_generator\src\xml_parser\example\shiporder\xml\shiporder1.xsd" />
 				<Compiler>
 					<Add option="-g" />
 				</Compiler>
@@ -46,6 +46,10 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../../src/apps/elements/xs_attribute.h" />
+		<Unit filename="../../src/apps/elements/xs_choice.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../src/apps/elements/xs_choice.h" />
 		<Unit filename="../../src/apps/elements/xs_complex_type.c">
 			<Option compilerVar="CC" />
 		</Unit>

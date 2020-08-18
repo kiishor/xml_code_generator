@@ -34,7 +34,7 @@
 typedef enum
 {
   ALL_RESTRICTION_DESCENDANTS
-  TOTAL_RESTRICTION_DESCENDANT
+  TOTAL_RESTRICTION_DESCENDANTS
 }en_restriction_descendant;
 #undef ADD_DESCENDANT
 
@@ -65,7 +65,7 @@ typedef struct
 /*
  *  ------------------------ EXTERNAL GLOBAL VARIABLES ------------------------
  */
-extern const xs_element_t restriction_Descendant[TOTAL_RESTRICTION_DESCENDANT];
+extern const xs_element_t restriction_Descendant[TOTAL_RESTRICTION_DESCENDANTS];
 extern const xs_attribute_t restriction_Attr[TOTAL_RESTRICTION_ATTRIBUTES];
 extern const xs_element_t xs_restriction;
 

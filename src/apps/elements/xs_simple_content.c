@@ -15,7 +15,6 @@
 #include <stdbool.h>
 #include <stdlib.h>
 
-#include "common.h"
 #include "parse_xml.h"
 #include "apps/xsd.h"
 #include "apps/tree.h"
@@ -46,10 +45,10 @@ const xs_element_t simpleContent_Descendant[TOTAL_SIMPLE_CONTENT_DESCENDANTS] =
   [EN_simple_content_extension].Target.Type  	= EN_DYNAMIC,
   [EN_simple_content_extension].Target.Allocate = allocate_extension,
 
-  [EN_simple_content_extension].Attribute_Quantity = ARRAY_LENGTH(extension_Attr),
+  [EN_simple_content_extension].Attribute_Quantity = TOTAL_EXTENSION_ATTRIBUTES,
   [EN_simple_content_extension].Attribute 		   = extension_Attr,
 
-  [EN_simple_content_extension].Child_Quantity = ARRAY_LENGTH(extension_Descendant),
+  [EN_simple_content_extension].Child_Quantity = TOTAL_EXTENSION_DESCENDANTS,
   [EN_simple_content_extension].Child_Order     = EN_CHOICE,
   [EN_simple_content_extension].Child = extension_Descendant,
 
@@ -62,10 +61,10 @@ const xs_element_t simpleContent_Descendant[TOTAL_SIMPLE_CONTENT_DESCENDANTS] =
   [EN_simple_content_restriction].Target.Type     = EN_DYNAMIC,
   [EN_simple_content_restriction].Target.Allocate = allocate_restriction,
 
-  [EN_simple_content_restriction].Attribute_Quantity = ARRAY_LENGTH(restriction_Attr),
+  [EN_simple_content_restriction].Attribute_Quantity = TOTAL_RESTRICTION_ATTRIBUTES,
   [EN_simple_content_restriction].Attribute          = restriction_Attr,
 
-  [EN_simple_content_restriction].Child_Quantity = ARRAY_LENGTH(restriction_Descendant),
+  [EN_simple_content_restriction].Child_Quantity = TOTAL_RESTRICTION_DESCENDANTS,
   [EN_simple_content_restriction].Child_Order     = EN_ALL,
   [EN_simple_content_restriction].Child          = restriction_Descendant,
 };

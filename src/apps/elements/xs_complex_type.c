@@ -14,13 +14,13 @@
 #include <stdbool.h>
 #include <stdlib.h>
 
-#include "common.h"
 #include "parse_xml.h"
 #include "apps/tree.h"
 #include "apps/xsd.h"
 
 #include "xs_complex_type.h"
 #include "xs_sequence.h"
+#include "xs_choice.h"
 #include "xs_simple_content.h"
 #include "xs_attribute.h"
 
@@ -52,6 +52,22 @@ const xs_element_t ComplexType_Descendant[TOTAL_COMPLEX_TYPE_DESCENDANT] =
   [EN_complex_sequence].Child_Quantity = TOTAL_SEQUENCE_DESCENDANTS,
   [EN_complex_sequence].Child_Order    = EN_CHOICE,
   [EN_complex_sequence].Child 		     = Sequence_Descendant,
+
+  [EN_complex_choice].Name.String  = "xs:choice",
+  [EN_complex_choice].Name.Length  = sizeof("xs:choice") - 1,
+  [EN_complex_choice].MinOccur     = 0,
+  [EN_complex_choice].MaxOccur     = 64,
+  [EN_complex_choice].Callback     = traverse_up,
+
+  [EN_complex_choice].Target.Type  	  = EN_DYNAMIC,
+  [EN_complex_choice].Target.Allocate = allocate_choice,
+
+  [EN_complex_choice].Attribute_Quantity = TOTAL_CHOICE_ATTRIBUTES,
+  [EN_complex_choice].Attribute 		     = Choice_attr,
+
+  [EN_complex_choice].Child_Quantity = TOTAL_CHOICE_DESCENDANTS,
+  [EN_complex_choice].Child_Order    = EN_CHOICE,
+  [EN_complex_choice].Child 		     = Choice_Descendant,
 
   [EN_complex_simpleContent].Name.String  = "xs:simpleContent",
   [EN_complex_simpleContent].Name.Length  = sizeof("xs:simpleContent") - 1,

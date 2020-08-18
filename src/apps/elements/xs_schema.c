@@ -19,8 +19,6 @@
 
 #include "apps/tree.h"
 
-#include "common.h"
-
 #include "parse_xml.h"
 #include "xs_schema.h"
 
@@ -141,10 +139,10 @@ static const xs_element_t xsd_schema =
   .Target.Type    = EN_STATIC,
   .Target.Address = &Schema,
 
-  .Attribute_Quantity = ARRAY_LENGTH(schema_attr),
+  .Attribute_Quantity = sizeof(schema_attr) / sizeof(xs_attribute_t),
   .Attribute          = schema_attr,
 
-  .Child_Quantity = ARRAY_LENGTH(schemaDescendant),
+  .Child_Quantity = TOTAL_SCHEMA_DESCENDANTS,
   .Child_Order      = EN_ALL,
   .Child          = schemaDescendant,
 };

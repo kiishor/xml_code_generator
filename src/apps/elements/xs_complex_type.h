@@ -19,8 +19,9 @@
  */
 
 #define ALL_COMPLEX_TYPE_DESCENDANTS(parent) \
-  ADD_DESCENDANT(parent, sequence)            \
-  ADD_DESCENDANT(parent, simpleContent)       \
+  ADD_DESCENDANT(parent, sequence)           \
+  ADD_DESCENDANT(parent, choice)           \
+  ADD_DESCENDANT(parent, simpleContent)      \
   ADD_DESCENDANT(parent, attribute)
 
 /*
