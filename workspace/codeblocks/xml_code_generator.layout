@@ -2,109 +2,19 @@
 <CodeBlocks_layout_file>
 	<FileVersion major="1" minor="0" />
 	<ActiveTarget name="Debug" />
-	<File name="..\..\src\includes\apps\xsd.h" open="1" top="0" tabpos="10" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="1021" topLine="17" />
-		</Cursor>
-	</File>
-	<File name="..\..\src\apps\xs_data_type.c" open="0" top="0" tabpos="7" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="1012" topLine="3" />
-		</Cursor>
-	</File>
-	<File name="..\..\src\apps\elements\xs_attribute.c" open="1" top="0" tabpos="7" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="5640" topLine="103" />
-		</Cursor>
-	</File>
-	<File name="..\..\src\xml_parser\src\xml_content.c" open="0" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="1936" topLine="0" />
-		</Cursor>
-	</File>
-	<File name="..\..\src\apps\tree.c" open="0" top="0" tabpos="8" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="611" topLine="0" />
-		</Cursor>
-	</File>
-	<File name="..\..\src\apps\elements\xs_schema.h" open="0" top="0" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="257" topLine="0" />
-		</Cursor>
-	</File>
-	<File name="..\..\src\xml_parser\src\xml_content.h" open="0" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="3183" topLine="111" />
-		</Cursor>
-	</File>
-	<File name="..\..\src\apps\elements\xs_attribute.h" open="0" top="0" tabpos="17" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="1286" topLine="16" />
-		</Cursor>
-	</File>
-	<File name="..\..\src\apps\elements\xs_extension.c" open="0" top="0" tabpos="12" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="1746" topLine="28" />
-		</Cursor>
-	</File>
-	<File name="..\..\src\apps\elements\xs_complex_type.c" open="1" top="0" tabpos="6" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="4581" topLine="88" />
-		</Cursor>
-	</File>
-	<File name="..\..\src\xml_parser\src\parse_xml.h" open="1" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="3397" topLine="74" />
-		</Cursor>
-	</File>
-	<File name="..\..\src\includes\apps\list.h" open="0" top="0" tabpos="18" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="282" topLine="0" />
-		</Cursor>
-	</File>
-	<File name="..\..\src\apps\elements\xs_simple_content.c" open="1" top="0" tabpos="8" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="2422" topLine="50" />
-		</Cursor>
-	</File>
-	<File name="..\..\src\includes\common.h" open="0" top="0" tabpos="13" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="273" topLine="0" />
-		</Cursor>
-	</File>
-	<File name="..\..\src\apps\elements\xs_schema.c" open="1" top="0" tabpos="12" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="4854" topLine="103" />
-		</Cursor>
-	</File>
-	<File name="..\..\src\apps\xsd.c" open="1" top="0" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="13372" topLine="420" />
-		</Cursor>
-	</File>
-	<File name="..\..\src\apps\elements\xs_extension.h" open="0" top="0" tabpos="8" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="1209" topLine="9" />
-		</Cursor>
-	</File>
-	<File name="..\..\src\includes\apps\tree.h" open="0" top="0" tabpos="14" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="306" topLine="0" />
-		</Cursor>
-	</File>
 	<File name="..\..\src\apps\elements\xs_element.h" open="0" top="0" tabpos="8" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
 			<Cursor1 position="1333" topLine="12" />
 		</Cursor>
 	</File>
-	<File name="..\..\src\apps\elements\xs_element.c" open="1" top="0" tabpos="11" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="..\..\src\xml_parser\src\xml_content.c" open="1" top="0" tabpos="13" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="1703" topLine="40" />
+			<Cursor1 position="2308" topLine="77" />
 		</Cursor>
 	</File>
-	<File name="..\..\src\apps\main.c" open="0" top="0" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="..\..\src\apps\elements\xs_attribute.c" open="1" top="0" tabpos="6" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="374" topLine="10" />
+			<Cursor1 position="5640" topLine="103" />
 		</Cursor>
 	</File>
 	<File name="..\..\src\includes\apps\xs_data_type.h" open="0" top="0" tabpos="6" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
@@ -112,14 +22,14 @@
 			<Cursor1 position="1515" topLine="0" />
 		</Cursor>
 	</File>
-	<File name="..\..\src\apps\elements\xs_complex_type.h" open="0" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="..\..\src\xml_parser\src\xml_content.h" open="1" top="0" tabpos="12" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="1183" topLine="3" />
+			<Cursor1 position="374" topLine="0" />
 		</Cursor>
 	</File>
-	<File name="..\..\src\apps\code_generator.h" open="0" top="0" tabpos="11" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="..\..\src\apps\elements\xs_element.c" open="1" top="0" tabpos="10" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="92" topLine="0" />
+			<Cursor1 position="1703" topLine="40" />
 		</Cursor>
 	</File>
 	<File name="..\..\src\includes\util\util.h" open="0" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
@@ -132,47 +42,34 @@
 			<Cursor1 position="175" topLine="0" />
 		</Cursor>
 	</File>
+	<File name="..\..\src\apps\elements\xs_facet.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="710" topLine="0" />
+		</Cursor>
+	</File>
 	<File name="..\..\src\apps\elements\xs_restriction.h" open="0" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
 			<Cursor1 position="962" topLine="4" />
 		</Cursor>
 	</File>
-	<File name="..\..\src\apps\elements\xs_restriction.c" open="1" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="..\..\src\apps\elements\xs_simple_type.c" open="1" top="0" tabpos="8" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="7864" topLine="135" />
+			<Cursor1 position="3031" topLine="50" />
 		</Cursor>
 	</File>
-	<File name="..\..\src\apps\elements\xs_simple_type.c" open="1" top="1" tabpos="9" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="..\..\src\apps\tree.c" open="0" top="0" tabpos="8" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="3035" topLine="52" />
+			<Cursor1 position="611" topLine="0" />
 		</Cursor>
 	</File>
-	<File name="..\..\src\apps\elements\xs_sequence.h" open="0" top="0" tabpos="13" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="..\..\src\includes\apps\xsd.h" open="1" top="0" tabpos="9" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="51" topLine="0" />
+			<Cursor1 position="1021" topLine="17" />
 		</Cursor>
 	</File>
-	<File name="..\..\src\xml_parser\src\parse_xml.c" open="1" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="..\..\src\apps\xsd.c" open="1" top="0" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="8670" topLine="310" />
-		</Cursor>
-		<Folding>
-			<Collapse line="197" />
-		</Folding>
-	</File>
-	<File name="..\..\src\apps\elements\xs_simple_content.h" open="0" top="0" tabpos="6" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="1229" topLine="8" />
-		</Cursor>
-	</File>
-	<File name="..\..\src\util\util.c" open="0" top="0" tabpos="12" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="313" topLine="37" />
-		</Cursor>
-	</File>
-	<File name="..\..\src\apps\elements\xs_sequence.c" open="0" top="0" tabpos="13" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="3526" topLine="65" />
+			<Cursor1 position="13372" topLine="420" />
 		</Cursor>
 	</File>
 	<File name="..\..\src\apps\list.c" open="0" top="0" tabpos="15" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
@@ -180,19 +77,24 @@
 			<Cursor1 position="570" topLine="0" />
 		</Cursor>
 	</File>
-	<File name="..\..\src\apps\elements\xs_facet.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="..\..\src\apps\elements\xs_simple_content.h" open="0" top="0" tabpos="6" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="710" topLine="0" />
+			<Cursor1 position="1229" topLine="8" />
 		</Cursor>
 	</File>
-	<File name="..\..\src\apps\elements\xs_type.h" open="0" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="..\..\src\apps\elements\xs_attribute.h" open="0" top="0" tabpos="17" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="933" topLine="0" />
+			<Cursor1 position="1286" topLine="16" />
 		</Cursor>
 	</File>
-	<File name="..\..\src\apps\elements\xs_facet.c" open="0" top="0" tabpos="15" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="..\..\src\apps\elements\xs_sequence.c" open="0" top="0" tabpos="13" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="3155" topLine="114" />
+			<Cursor1 position="3526" topLine="65" />
+		</Cursor>
+	</File>
+	<File name="..\..\src\apps\elements\xs_complex_type.h" open="0" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="1183" topLine="3" />
 		</Cursor>
 	</File>
 	<File name="..\..\src\apps\code_generator.c" open="0" top="0" tabpos="8" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
@@ -204,5 +106,103 @@
 			<Collapse line="112" />
 			<Collapse line="148" />
 		</Folding>
+	</File>
+	<File name="..\..\src\apps\elements\xs_facet.c" open="0" top="0" tabpos="15" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="3155" topLine="114" />
+		</Cursor>
+	</File>
+	<File name="..\..\src\xml_parser\src\parse_xml.c" open="1" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="313" topLine="0" />
+		</Cursor>
+		<Folding>
+			<Collapse line="197" />
+		</Folding>
+	</File>
+	<File name="..\..\src\apps\elements\xs_extension.c" open="0" top="0" tabpos="12" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="1746" topLine="28" />
+		</Cursor>
+	</File>
+	<File name="..\..\src\includes\apps\tree.h" open="0" top="0" tabpos="14" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="306" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="..\..\src\apps\elements\xs_extension.h" open="0" top="0" tabpos="8" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="1209" topLine="9" />
+		</Cursor>
+	</File>
+	<File name="..\..\src\includes\common.h" open="0" top="0" tabpos="13" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="273" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="..\..\src\apps\elements\xs_sequence.h" open="0" top="0" tabpos="13" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="51" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="..\..\src\apps\elements\xs_schema.h" open="0" top="0" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="257" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="..\..\src\apps\elements\xs_schema.c" open="1" top="0" tabpos="11" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="4854" topLine="103" />
+		</Cursor>
+	</File>
+	<File name="..\..\src\apps\elements\xs_simple_content.c" open="1" top="0" tabpos="7" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="2422" topLine="50" />
+		</Cursor>
+	</File>
+	<File name="..\..\src\apps\main.c" open="0" top="0" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="374" topLine="10" />
+		</Cursor>
+	</File>
+	<File name="..\..\src\util\util.c" open="0" top="0" tabpos="12" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="313" topLine="37" />
+		</Cursor>
+	</File>
+	<File name="..\..\src\includes\apps\list.h" open="0" top="0" tabpos="18" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="282" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="..\..\src\apps\xs_data_type.c" open="0" top="0" tabpos="7" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="1012" topLine="3" />
+		</Cursor>
+	</File>
+	<File name="..\..\src\apps\elements\xs_type.h" open="0" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="933" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="..\..\src\apps\code_generator.h" open="0" top="0" tabpos="11" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="92" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="..\..\src\apps\elements\xs_restriction.c" open="1" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="7864" topLine="135" />
+		</Cursor>
+	</File>
+	<File name="..\..\src\xml_parser\src\parse_xml.h" open="1" top="1" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="1843" topLine="18" />
+		</Cursor>
+	</File>
+	<File name="..\..\src\apps\elements\xs_complex_type.c" open="1" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="4581" topLine="88" />
+		</Cursor>
 	</File>
 </CodeBlocks_layout_file>
