@@ -44,7 +44,7 @@ const xs_element_t simple_type_Descendant[TOTAL_SIMPLE_TYPE_DESCENDANTS] =
   [EN_simple_restriction].Attribute_Quantity = TOTAL_RESTRICTION_ATTRIBUTES,
   [EN_simple_restriction].Attribute = restriction_Attr,
   [EN_simple_restriction].Child_Quantity = TOTAL_RESTRICTION_DESCENDANTS,
-  [EN_simple_restriction].Child_Order     = EN_ALL,
+  [EN_simple_restriction].Child_Order     = EN_RANDOM,
   [EN_simple_restriction].Child = restriction_Descendant,
 };
 

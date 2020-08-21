@@ -54,7 +54,7 @@ const xs_element_t Element_Descendant[TOTAL_ELEMENT_DESCENDANTS] =
   [EN_element_complexType].Attribute = complexType_Attr,
 
   [EN_element_complexType].Child_Quantity = TOTAL_COMPLEX_TYPE_DESCENDANT,
-  [EN_element_complexType].Child_Order    = EN_ALL,
+  [EN_element_complexType].Child_Order    = EN_RANDOM,
   [EN_element_complexType].Child          = ComplexType_Descendant,
 
   [EN_element_simpleType].Name.String  = "xs:simpleType",

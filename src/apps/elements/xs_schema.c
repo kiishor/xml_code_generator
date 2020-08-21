@@ -84,7 +84,7 @@ const xs_element_t schemaDescendant[TOTAL_SCHEMA_DESCENDANTS] =
   [EN_schema_complexType].Attribute_Quantity = TOTAL_TYPE_ATTRIBUTES,
   [EN_schema_complexType].Attribute = complexType_Attr,
   [EN_schema_complexType].Child_Quantity = TOTAL_COMPLEX_TYPE_DESCENDANT,
-  [EN_schema_complexType].Child_Order     = EN_ALL,
+  [EN_schema_complexType].Child_Order     = EN_RANDOM,
   [EN_schema_complexType].Child = ComplexType_Descendant,
 
   [EN_schema_attribute].Name.String = "xs:attribute",
@@ -143,7 +143,7 @@ static const xs_element_t xsd_schema =
   .Attribute          = schema_attr,
 
   .Child_Quantity = TOTAL_SCHEMA_DESCENDANTS,
-  .Child_Order      = EN_ALL,
+  .Child_Order      = EN_RANDOM,
   .Child          = schemaDescendant,
 };
 

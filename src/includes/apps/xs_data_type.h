@@ -25,6 +25,30 @@
   ADD_TYPE(EN_DYNAMIC)  \
   ADD_TYPE(EN_RELATIVE)
 
+#define ALL_XSD_DATA_TYPE  \
+ADD_DATA_TYPE(XS_STRING,               xs:string,             char*,    string)                   \
+ADD_DATA_TYPE(XS_DECIMAL,              xs:decimal,            float,    float/double)             \
+ADD_DATA_TYPE(XS_INTEGER,              xs:integer,            int32_t,  int32_t/int64_t)          \
+ADD_DATA_TYPE(XS_BYTE,                 xs:byte,               int8_t,   A 8-bit signed integer)   \
+ADD_DATA_TYPE(XS_INT,                  xs:int,                int32_t,  A signed 32-bit integer)  \
+ADD_DATA_TYPE(XS_LONG,                 xs:long,               int64_t,  A signed 64-bit integer)  \
+ADD_DATA_TYPE(XS_NEGATIVE_INTEGER,     xs:negativeInteger,    int32_t,  An integer containing only negative values (..,-2,-1))       \
+ADD_DATA_TYPE(XS_NON_NEGATIVE_INTEGER, xs:nonNegativeInteger, uint32_t, An integer containing only non-negative values (0,1,2,..))   \
+ADD_DATA_TYPE(XS_NON_POSITIVE_INTEGER, xs:nonPositiveInteger, int32_t,  An integer containing only non-positive values (..,-2,-1,0)) \
+ADD_DATA_TYPE(XS_POSITIVE_INTEGER,     xs:positiveInteger,    uint32_t, An integer containing only positive values (1,2,..))         \
+ADD_DATA_TYPE(XS_SHORT,                xs:short,              int16_t,  A signed 16-bit integer)     \
+ADD_DATA_TYPE(EN_UNSIGNED_LONG,        xs:unsignedLong,       uint64_t, An unsigned 64-bit integer)  \
+ADD_DATA_TYPE(XS_UNSIGNED_INT,         xs:unsignedInt,        uint32_t, An unsigned 32-bit integer)  \
+ADD_DATA_TYPE(EN_UNSIGNED_SHORT,       xs:unsignedShort,      uint16_t, An unsigned 16-bit integer)  \
+ADD_DATA_TYPE(EN_UNSIGNED_BYTE,        xs:unsignedByte,       uint8_t,  An unsigned 8-bit integer)   \
+ADD_DATA_TYPE(XS_BOOLEAN,              xs:boolean,            bool,     boolean)  \
+ADD_DATA_TYPE(XS_DOUBLE,               xs:double,             double,   double)   \
+ADD_DATA_TYPE(XS_FLOAT,                xs:float,              float,    float)    \
+ADD_DATA_TYPE(XS_DATE,                 xs:date,               char*,    string)   \
+ADD_DATA_TYPE(XS_TIME,                 xs:time,               char*,    string)   \
+ADD_DATA_TYPE(XS_DATE_TIME,            xs:dateTime,           char*,    string)   \
+ADD_DATA_TYPE(XS_DURATION,             xs:duration,           uint32_t, string)
+
 /*
  *  ------------------------------- ENUMERATION -------------------------------
  */

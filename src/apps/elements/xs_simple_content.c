@@ -65,7 +65,7 @@ const xs_element_t simpleContent_Descendant[TOTAL_SIMPLE_CONTENT_DESCENDANTS] =
   [EN_simple_content_restriction].Attribute          = restriction_Attr,
 
   [EN_simple_content_restriction].Child_Quantity = TOTAL_RESTRICTION_DESCENDANTS,
-  [EN_simple_content_restriction].Child_Order     = EN_ALL,
+  [EN_simple_content_restriction].Child_Order     = EN_RANDOM,
   [EN_simple_content_restriction].Child          = restriction_Descendant,
 };
 

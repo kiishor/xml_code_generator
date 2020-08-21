@@ -146,7 +146,7 @@ const xs_element_t xs_complexType =
   .Attribute = complexType_Attr,
 
   .Child_Quantity = TOTAL_COMPLEX_TYPE_DESCENDANT,
-  .Child_Order    = EN_ALL,
+  .Child_Order    = EN_RANDOM,
   .Child          = ComplexType_Descendant,
 };
 

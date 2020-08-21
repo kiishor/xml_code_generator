@@ -176,7 +176,7 @@ const xs_element_t xs_restriction =
   .Attribute = restriction_Attr,
 
   .Child_Quantity = TOTAL_RESTRICTION_DESCENDANTS,
-  .Child_Order     = EN_ALL,
+  .Child_Order     = EN_RANDOM,
   .Child = restriction_Descendant,
 };
 
