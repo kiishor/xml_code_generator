@@ -109,7 +109,6 @@
 		<Unit filename="../../src/includes/apps/tree.h" />
 		<Unit filename="../../src/includes/apps/xs_data_type.h" />
 		<Unit filename="../../src/includes/apps/xsd.h" />
-		<Unit filename="../../src/includes/common.h" />
 		<Unit filename="../../src/includes/util/util.h" />
 		<Unit filename="../../src/util/util.c">
 			<Option compilerVar="CC" />
@@ -123,6 +122,15 @@
 		</Unit>
 		<Unit filename="../../src/xml_parser/src/xml_content.h" />
 		<Extensions>
+			<DoxyBlocks>
+				<comment_style block="0" line="1" />
+				<doxyfile_project />
+				<doxyfile_build extract_all="1" />
+				<doxyfile_warnings warn_if_undocumented="1" />
+				<doxyfile_output />
+				<doxyfile_dot />
+				<general />
+			</DoxyBlocks>
 			<lib_finder disable_auto="1" />
 		</Extensions>
 	</Project>
