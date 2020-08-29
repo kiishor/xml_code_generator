@@ -129,8 +129,8 @@ static inline void write_content(const xml_content_t* const content,
   break;
 
   case EN_DECIMAL:
-    fprintf(source, "    [%u].Content.Facet.Decimal.MinValue = %g,\n", index, content->Facet.Decimal.MinValue);
-    fprintf(source, "    [%u].Content.Facet.Decimal.MaxValue = %g,\n", index, content->Facet.Decimal.MaxValue);
+    fprintf(source, "    [%u].Content.Facet.Decimal.MinValue = %gf,\n", index, content->Facet.Decimal.MinValue);
+    fprintf(source, "    [%u].Content.Facet.Decimal.MaxValue = %gf,\n", index, content->Facet.Decimal.MaxValue);
     break;
 
   case EN_UNSIGNED:
@@ -246,7 +246,7 @@ static inline void write_source(const xs_element_t* const element,
     }
     else
     {
-      fprintf(source, "\nconst xs_element_t root_descendant[] =\n{\n");
+      fprintf(source, "\nstatic const xs_element_t root_descendant[] =\n{\n");
     }
 
     uint32_t i = 0;

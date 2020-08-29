@@ -60,7 +60,7 @@ int main(int argc, char *argv[])
   }
   else
   {
-    printf("Failed to parse XML file\n");
+    printf("Failed to parse XML file: %d\n", result);
   }
 
   free(schema);
