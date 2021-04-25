@@ -165,17 +165,7 @@ static inline void write_header(const xs_element_t* const element,
 {
   const xs_element_t* const child = element->Child;
 
-  bool use_linked_list = (((xsd_element_t*)element)->Allocate == LINKED_LIST_ALLOCATE);
-  if(use_linked_list)
-  {
-    fprintf(header, "\ntypedef struct %s_t %s_t;\n", element->Name.String, element->Name.String);
-    fprintf(header, "\nstruct %s_t\n{\n", element->Name.String);
-  }
-  else
-  {
-    fprintf(header, "\ntypedef struct\n{\n");
-  }
-
+  fprintf(header, "\ntypedef struct\n{\n");
   if(element->Content.Type != EN_NO_XML_DATA_TYPE)
   {
     fprintf(header, "    %s %s;\n", xml_data_type[element->Content.Type],
@@ -215,15 +205,7 @@ static inline void write_header(const xs_element_t* const element,
                                     attributes[i].Name.String);
   }
 
-  if(use_linked_list)
-  {
-    fprintf(header, "    %s_t* Next;\n", element->Name.String);
-    fprintf(header, "};\n");
-  }
-  else
-  {
-    fprintf(header, "}%s_t;\n", element->Name.String);
-  }
+  fprintf(header, "}%s_t;\n", element->Name.String);
 }
 
 static inline void write_source(const xs_element_t* const element,
@@ -364,25 +346,7 @@ static inline void write_functions(const xs_element_t* const element, FILE* cons
   {
     if(child[i].Target.Type == EN_DYNAMIC)
     {
-      const char* const element_name = element->Name.String;
-      const char* const child_name = child[i].Name.String;
-
-      bool use_linked_list = (((xsd_element_t*)&child[i])->Allocate == LINKED_LIST_ALLOCATE);
       fprintf(source, "\nstatic void* allocate_%s(uint32_t occurrence, void** context)\n{\n", child[i].Name.String);
-      if(use_linked_list)
-      {
-        fprintf(source, "    void* const target = calloc(sizeof(%s_t), 1);\n", child_name);
-        fprintf(source, "    if(%s.%s == NULL)\n    {\n", element_name, child_name);
-        fprintf(source, "        %s.%s = target;\n", element_name, child_name);
-        fprintf(source, "        return target;\n");
-        fprintf(source, "    }\n\n");
-        fprintf(source, "    %s_t* node = %s.%s;\n", child_name, element_name, child_name);
-        fprintf(source, "    while(node->Next)\n    {\n");
-        fprintf(source, "        node = node->Next;\n");
-        fprintf(source, "    }\n\n");
-        fprintf(source, "    node->Next = target;\n");
-        fprintf(source, "    return target;\n");
-      }
       fprintf(source, "}\n");
     }
   }
@@ -442,21 +406,13 @@ static inline void write_print_function(const xs_element_t* const element, FILE*
   bool use_linked_list = false;
   if(element->MaxOccur > 1)
   {
-    use_linked_list = (((xsd_element_t*)element)->Allocate == LINKED_LIST_ALLOCATE);
-
-    if(use_linked_list)
+    if(element->Target.Type == EN_DYNAMIC)
     {
-      fprintf(file, "\n%sconst %s_t* %s = %s;\n", space, element->Name.String,
-                                                element->Name.String, variable);
-      fprintf(file, "%swhile(%s != NULL)\n%s{\n", space, element->Name.String, space);
-      strcat(variable, "->");
+      return;
     }
-    else
-    {
       fprintf(file, "\n%sfor(uint32_t i = 0; i < %u; i++)\n%s{\n", space,
                                                       element->MaxOccur, space);
       strcat(variable, "[i].");
-    }
 
     strcat(space, "    ");
   }
