@@ -53,10 +53,10 @@ int main(int argc, char *argv[])
   if(result == XML_PARSE_SUCCESS)
   {
     printf("Parsing completed successfully\n");
-    options_t options = {.Occurrence = UNSPECIFIED};
-    const xsd_element_t* root = compile_xsd(pXsdData->Descendant, &options);
-    generate_xml_source((xs_element_t*)root);
-    generate_print_file((xs_element_t*)root);
+    options_t options = {.Occurrence = ARRAY, .Context = ", void** context", .Content_Callback = false};
+    const xs_element_t* root = compile_xsd(pXsdData->Descendant, &options);
+    generate_xml_source(root, &options);
+    generate_print_file(root);
   }
   else
   {

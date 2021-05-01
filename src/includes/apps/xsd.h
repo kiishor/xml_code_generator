@@ -50,31 +50,11 @@ typedef enum
 }xsd_tag_t;
 #undef ADD_TAG
 
-//! List of allocate callback type
-typedef enum
-{
-  NO_ALLOCATE,          //!< Do not insert allocate callback
-  SIMPLE_ALLOCATE,      //!< use Simple calloc to allocate memory
-  LINKED_LIST_ALLOCATE, //!< Implement linked list based allocation
-}en_allocate_type;
-
-typedef enum
-{
-  NO_CALLBACK,          //!< Do not insert callback
-
-  //! insert printf functions in the callback.
-  //! If target type is dynamic then free the memory
-  PRINT_CALLBACK,
-}en_callback_type;
-
 //! List of Methods to handle multiple occurrence
-//! 0 - is for unspecified input
 typedef enum
 {
-  UNSPECIFIED,
-  ARRAY,
-  LINKED_LIST,
-  DYNAMIC
+  ARRAY,        //!< Use Array to handle multiple occurrence
+  DYNAMIC       //!< Use allocate callback to allocate elements dynamically
 }en_occurrence_t;
 
 // List of parents of restriction or extension
@@ -89,11 +69,22 @@ typedef enum
  *  -------------------------------- STRUCTURE --------------------------------
  */
 
-// Global options received from command line
+//! Global options received from command line
 typedef struct
 {
   en_occurrence_t Occurrence;
-  bool content_callback;  // Every content element shall have a callback to print the content.
+
+  //! Add context to the function callbacks signature
+  //! true: Callback functions signature contains context
+  //! false: Callback functions signature doesn't contains context
+  //! Default - false
+  const char* Context;
+
+//! Every content element shall have a callback to print the content.
+//! true: Specify empty callback function
+//! false: Do not specify callback function
+//! Default - false.
+  bool Content_Callback;
 }options_t;
 
 typedef struct
@@ -105,13 +96,6 @@ typedef struct
   const options_t* Options;
 }context_t;
 
-typedef struct
-{
-  xs_element_t Element;
-  en_allocate_type Allocate;
-  en_callback_type Callback;
-}xsd_element_t;
-
 /*
  *  ------------------------ EXTERNAL GLOBAL VARIABLES ------------------------
  */
@@ -121,7 +105,7 @@ extern const char* const XsdTag[TOTAL_XSD_TAGS];
 /*
  *  ---------------------------- EXPORTED FUNCTION ----------------------------
  */
-extern xsd_element_t* compile_xsd(const tree_t* tree, const options_t* const options);
+extern xs_element_t* compile_xsd(const tree_t* tree, const options_t* const options);
 
 #endif // XSD_H
 
