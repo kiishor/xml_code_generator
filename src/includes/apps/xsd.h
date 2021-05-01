@@ -78,7 +78,7 @@ typedef struct
   //! true: Callback functions signature contains context
   //! false: Callback functions signature doesn't contains context
   //! Default - false
-  bool Enable_Context;
+  const char* Context;
 
 //! Every content element shall have a callback to print the content.
 //! true: Specify empty callback function

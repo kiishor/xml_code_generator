@@ -209,7 +209,7 @@ static inline void write_header(const xs_element_t* const element,
 }
 
 static inline void write_source(const xs_element_t* const element,
-                                FILE* const source)
+                                FILE* const source, const options_t* const options)
 {
   const xs_element_t* const child = element->Child;
   if(element->Child_Quantity)
@@ -218,7 +218,7 @@ static inline void write_source(const xs_element_t* const element,
     {
       if(child[i].Target.Type == EN_DYNAMIC)
       {
-        fprintf(source, "\nstatic void* allocate_%s(uint32_t occurrence, void** context);\n", child[i].Name.String);
+        fprintf(source, "\nstatic void* allocate_%s(uint32_t occurrence%s);\n", child[i].Name.String, options->Context);
       }
     }
 
@@ -238,7 +238,10 @@ static inline void write_source(const xs_element_t* const element,
       fprintf(source, "    [%u].Name.Length = %u,\n", i, child[i].Name.Length);
       fprintf(source, "    [%u].MinOccur    = %u,\n", i, child[i].MinOccur);
       fprintf(source, "    [%u].MaxOccur    = %u,\n", i, child[i].MaxOccur);
-      fprintf(source, "    [%u].Callback    = NULL,\n", i);
+      if(options->Content_Callback)
+      {
+        fprintf(source, "    [%u].Callback    = NULL,\n", i);
+      }
       bool target_size = (child[i].MaxOccur > 1);
       write_target(&child[i].Target, i, element->Name.String, child[i].Name.String,
                    target_size, source);
@@ -299,7 +302,7 @@ static inline void write_source(const xs_element_t* const element,
 
 // Reorder all the complex xs_element_t
 static inline void write_source_code(const xs_element_t* const element, FILE* const header,
-                         FILE* const source)
+                         FILE* const source, const options_t* const options)
 {
   uint32_t quantity = element->Child_Quantity;
   const xs_element_t* const child = element->Child;
@@ -308,7 +311,7 @@ static inline void write_source_code(const xs_element_t* const element, FILE* co
     quantity--;
     if(child[quantity].Child_Quantity || child[quantity].Attribute_Quantity)
     {
-      write_source_code(&child[quantity], header, source);
+      write_source_code(&child[quantity], header, source, options);
     }
   }
 
@@ -317,7 +320,7 @@ static inline void write_source_code(const xs_element_t* const element, FILE* co
     write_header(element, header);
   }
 
-  write_source(element, source);
+  write_source(element, source, options);
 }
 
 static inline void write_xml_root(FILE* const source)
@@ -329,7 +332,7 @@ static inline void write_xml_root(FILE* const source)
   fprintf(source, "};\n");
 }
 
-static inline void write_functions(const xs_element_t* const element, FILE* const source)
+static inline void write_functions(const xs_element_t* const element, FILE* const source, const options_t* const options)
 {
   uint32_t quantity = element->Child_Quantity;
   const xs_element_t* const child = element->Child;
@@ -338,7 +341,7 @@ static inline void write_functions(const xs_element_t* const element, FILE* cons
     quantity--;
     if(child[quantity].Child_Quantity || child[quantity].Attribute_Quantity)
     {
-      write_functions(&child[quantity], source);
+      write_functions(&child[quantity], source, options);
     }
   }
 
@@ -346,20 +349,20 @@ static inline void write_functions(const xs_element_t* const element, FILE* cons
   {
     if(child[i].Target.Type == EN_DYNAMIC)
     {
-      fprintf(source, "\nstatic void* allocate_%s(uint32_t occurrence, void** context)\n{\n", child[i].Name.String);
+      fprintf(source, "\nstatic void* allocate_%s(uint32_t occurrence%s)\n{\n", child[i].Name.String, options->Context);
       fprintf(source, "}\n");
     }
   }
 }
 
-void generate_xml_source(const xs_element_t* const root)
+void generate_xml_source(const xs_element_t* const root,  const options_t* const options)
 {
   const char* const name = root->Child[0].Name.String;
   FILE* header_file = create_header_file(name);
   FILE* source_file = create_source_file(name);
-  write_source_code(root, header_file, source_file);
+  write_source_code(root, header_file, source_file, options);
   write_xml_root(source_file);
-  write_functions(root, source_file);
+  write_functions(root, source_file, options);
   close_header_file(header_file, name);
   fclose(source_file);
 }

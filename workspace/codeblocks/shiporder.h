@@ -26,7 +26,7 @@ typedef struct
 {
     char* orderperson;
     shipto_t shipto;
-    item_t* item;
+    item_t item[10];
     char* orderid;
 }shiporder_t;
 
