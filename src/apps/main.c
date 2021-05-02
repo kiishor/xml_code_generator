@@ -26,20 +26,7 @@
 /*
  *  ------------------------------ FUNCTION BODY ------------------------------
  */
-
-/*
- * i, input      : input source file
- * a, allocate   : Allocation method for multiple XML elements.
- *                 + Array: use array to store content of multiple XML elements
- *                 + Dynamic: use allocator function to allocate memory dynamically to store multiple XML elements
- * content callback
- * Contenxt
- *
-*/
-
-/**
- * This is the main configuration of all options available.
- */
+//! Holds the configuration of command line arguments
 static struct cag_option Cag_Options[] = {
   {
     .identifier = 'd',
@@ -114,7 +101,7 @@ int main(int argc, char *argv[])
   if(fSchema == NULL )
   {
     printf("Error in opening XML schema file: %s\n", argv[argc - 1]);
-    return 2;
+    return EXIT_FAILURE;
   }
 
   fseek(fSchema, 0, SEEK_END);
@@ -139,7 +126,6 @@ int main(int argc, char *argv[])
   }
 
   free(schema);
-  return 0;
+  return EXIT_SUCCESS;
 }
-
 
