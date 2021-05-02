@@ -11,7 +11,7 @@
 				<Option object_output="obj/Debug/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
-				<Option parameters="C:\project\xml_code_generator\src\xml_parser\example\shiporder\xml\shiporder1.xsd" />
+				<Option parameters="--callback --context --dynamic -h C:\project\xml_code_generator\src\xml_parser\example\shiporder\xml\shiporder1.xsd" />
 				<Compiler>
 					<Add option="-g" />
 				</Compiler>
@@ -39,6 +39,7 @@
 			<Add option='-DXML_PARSER_CALLBACK=&quot;1&quot;' />
 			<Add directory="../../src/includes" />
 			<Add directory="../../src/xml_parser/src" />
+			<Add directory="../../src/includes/util" />
 		</Compiler>
 		<ExtraCommands>
 			<Add after='cmd /c copy &quot;$(PROJECT_DIR)$(TARGET_OUTPUT_FILE)&quot; &quot;$(PROJECT_DIR)/../../src/xml_parser/tool/' />
@@ -111,7 +112,11 @@
 		<Unit filename="../../src/includes/apps/tree.h" />
 		<Unit filename="../../src/includes/apps/xs_data_type.h" />
 		<Unit filename="../../src/includes/apps/xsd.h" />
+		<Unit filename="../../src/includes/util/cargs.h" />
 		<Unit filename="../../src/includes/util/util.h" />
+		<Unit filename="../../src/util/cargs.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="../../src/util/util.c">
 			<Option compilerVar="CC" />
 		</Unit>
