@@ -47,7 +47,7 @@ static inline FILE* create_header_file(const char* const name)
 static inline void close_header_file(FILE* const header, const char* const name)
 {
   fprintf(header, "\nextern %s_t %s;\n", name, name);
-  fprintf(header, "\nextern const xs_element_t xml_root;\n");
+  fprintf(header, "\nextern const xs_element_t %s_root;\n", name);
   fprintf(header, "\n#endif\n");
   fclose(header);
 }
@@ -323,9 +323,9 @@ static inline void write_source_code(const xs_element_t* const element, FILE* co
   write_source(element, source, options);
 }
 
-static inline void write_xml_root(FILE* const source)
+static inline void write_xml_root(FILE* const source, const char* const name)
 {
-  fprintf(source, "\nconst xs_element_t xml_root =\n{\n");
+  fprintf(source, "\nconst xs_element_t %s_root =\n{\n", name);
   fprintf(source, "    .Child_Quantity = 1,\n");
   fprintf(source, "    .Child_Order    = EN_CHOICE,\n");
   fprintf(source, "    .Child          = root_descendant,\n");
@@ -361,7 +361,7 @@ void generate_xml_source(const xs_element_t* const root,  const options_t* const
   FILE* header_file = create_header_file(name);
   FILE* source_file = create_source_file(name);
   write_source_code(root, header_file, source_file, options);
-  write_xml_root(source_file);
+  write_xml_root(source_file, name);
   write_functions(root, source_file, options);
   close_header_file(header_file, name);
   fclose(source_file);
