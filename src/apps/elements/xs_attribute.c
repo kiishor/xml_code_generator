@@ -20,14 +20,7 @@
 
 #include "xs_simple_type.h"
 #include "xs_attribute.h"
-
-
-/*
- *  --------------------------- FORWARD DECLARATION ---------------------------
- */
-
-void* allocate_attribute(uint32_t occurrence, void** context);
-void add_attribute_tag(uint32_t occurrence, void* content, void** context);
+#include "xs_schema.h"
 
 /*
  *  ---------------------------- GLOBAL VARIABLES -----------------------------
@@ -39,7 +32,7 @@ const xs_element_t attribute_Descendant[TOTAL_ATTRIBUTE_DESCENDANTS] =
   [EN_attribute_simpleType].Name.Length  = sizeof("xs:simpleType") - 1,
   [EN_attribute_simpleType].MinOccur     = 0,
   [EN_attribute_simpleType].MaxOccur     = 64,
-  [EN_attribute_simpleType].Callback      = add_simple_type_tag,
+  [EN_attribute_simpleType].Callback      = traverse_up,
 
   [EN_attribute_simpleType].Target.Type  = EN_DYNAMIC,
   [EN_attribute_simpleType].Target.Allocate = allocate_simple_type,
@@ -147,7 +140,7 @@ const xs_element_t xs_attribute =
   .MinOccur    = 0,
   .MaxOccur    = 64,
 
-  .Callback    = add_attribute_tag,
+  .Callback    = traverse_up,
 
   .Target.Type     = EN_DYNAMIC,
   .Target.Allocate = allocate_attribute,
@@ -165,20 +158,7 @@ const xs_element_t xs_attribute =
  *  ------------------------------ FUNCTION BODY ------------------------------
  */
 
-void* allocate_attribute(uint32_t occurrence, void** context)
+void* allocate_attribute(uint32_t occurrence, void* context)
 {
-  attribute_t* attribute = calloc(1, sizeof(attribute_t));
-  attribute->Type = XS_ATTRIBUTE_TAG;
-  tree_t* node = create_node(attribute);
-  add_descendant_node(*context, node);
-  *context = node;
-  return attribute;
+  return allocate_element_type(context, sizeof(attribute_t), XS_ATTRIBUTE_TAG);
 }
-
-void add_attribute_tag(uint32_t occurrence, void* content, void** context)
-{
-  tree_t* node = *context;
-  *context = node->Parent;
-}
-
-

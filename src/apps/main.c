@@ -18,8 +18,8 @@
 
 #include "apps/tree.h"
 #include "parse_xml.h"
-#include "elements/xs_schema.h"
 #include "apps/xsd.h"
+#include "elements/xs_schema.h"
 #include "code_generator.h"
 #include "cargs.h"
 

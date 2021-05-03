@@ -20,13 +20,7 @@
 
 #include "xs_restriction.h"
 #include "xs_simple_type.h"
-
-/*
- *	--------------------------- FORWARD DECLARATION ---------------------------
- */
-
-void* allocate_simple_type(uint32_t occurrence, void** context);
-void add_simple_type_tag(uint32_t occurrence, void* content, void** context);
+#include "xs_schema.h"
 
 /*
  *  ---------------------------- GLOBAL VARIABLES -----------------------------
@@ -38,7 +32,7 @@ const xs_element_t simple_type_Descendant[TOTAL_SIMPLE_TYPE_DESCENDANTS] =
   [EN_simple_restriction].Name.Length = sizeof("xs:restriction") - 1,
   [EN_simple_restriction].MinOccur     = 0,
   [EN_simple_restriction].MaxOccur     = 64,
-  [EN_simple_restriction].Callback      = add_restriction_tag,
+  [EN_simple_restriction].Callback      = traverse_up,
   [EN_simple_restriction].Target.Type  = EN_DYNAMIC,
   [EN_simple_restriction].Target.Allocate = allocate_restriction,
   [EN_simple_restriction].Attribute_Quantity = TOTAL_RESTRICTION_ATTRIBUTES,
@@ -75,7 +69,7 @@ const xs_element_t xs_simpleType =
   .Name.Length  = sizeof("xs:simpleType") - 1,
   .MinOccur     = 0,
   .MaxOccur     = 64,
-  .Callback      = add_simple_type_tag,
+  .Callback      = traverse_up,
 
   .Target.Type  = EN_DYNAMIC,
   .Target.Allocate = allocate_simple_type,
@@ -92,21 +86,11 @@ const xs_element_t xs_simpleType =
  *  ------------------------------ FUNCTION BODY ------------------------------
  */
 
-void* allocate_simple_type(uint32_t occurrence, void** context)
+void* allocate_simple_type(uint32_t occurrence, void* context)
 {
-  simpleType_t* simpleType = calloc(1, sizeof(simpleType_t));
-  simpleType->Type = XS_SIMPLE_TYPE_TAG;
-  tree_t* node = create_node(simpleType);
-  add_descendant_node(*context, node);
-  *context = node;
-  return simpleType;
+  return allocate_element_type(context, sizeof(simpleType_t), XS_SIMPLE_TYPE_TAG);
 }
 
-void add_simple_type_tag(uint32_t occurrence, void* content, void** context)
-{
-  tree_t* node = *context;
-  *context = node->Parent;
-}
 
 
 

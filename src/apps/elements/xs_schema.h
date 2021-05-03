@@ -40,6 +40,8 @@ extern tree_t* pXsdData;
 /*
  *  ---------------------------- EXPORTED FUNCTION ----------------------------
  */
-void add_schema(uint32_t Occurrence, void *Content, void** context);
+
+extern void* allocate_element_type(tree_t** schemaTree, size_t size, xsd_tag_t type);
+
 
 #endif // XS_SCHEMA_H

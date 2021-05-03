@@ -73,8 +73,8 @@ extern const xs_element_t xs_restriction;
  *  ---------------------------- EXPORTED FUNCTION ----------------------------
  */
 
-extern void* allocate_restriction(uint32_t occurrence, void** context);
-extern void add_restriction_tag(uint32_t occurrence, void* content, void** context);
+extern void* allocate_restriction(uint32_t occurrence, void* context);
+
 
 #endif // XS_RESTRICTION_H
 

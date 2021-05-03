@@ -22,13 +22,7 @@
 #include "xs_extension.h"
 #include "xs_restriction.h"
 #include "xs_simple_content.h"
-
-/*
- *	--------------------------- FORWARD DECLARATION ---------------------------
- */
-
-void* allocate_simple_content(uint32_t occurrence, void** context);
-void add_simple_content(uint32_t occurrence, void* content, void** context);
+#include "xs_schema.h"
 
 /*
  *  ---------------------------- GLOBAL VARIABLES -----------------------------
@@ -40,7 +34,7 @@ const xs_element_t simpleContent_Descendant[TOTAL_SIMPLE_CONTENT_DESCENDANTS] =
   [EN_simple_content_extension].Name.Length  = sizeof("xs:extension") - 1,
   [EN_simple_content_extension].MinOccur     = 0,
   [EN_simple_content_extension].MaxOccur     = 64,
-  [EN_simple_content_extension].Callback     = add_extension_tag,
+  [EN_simple_content_extension].Callback     = traverse_up,
 
   [EN_simple_content_extension].Target.Type  	= EN_DYNAMIC,
   [EN_simple_content_extension].Target.Allocate = allocate_extension,
@@ -56,7 +50,7 @@ const xs_element_t simpleContent_Descendant[TOTAL_SIMPLE_CONTENT_DESCENDANTS] =
   [EN_simple_content_restriction].Name.Length = sizeof("xs:restriction") - 1,
   [EN_simple_content_restriction].MinOccur    = 0,
   [EN_simple_content_restriction].MaxOccur    = 64,
-  [EN_simple_content_restriction].Callback    = add_restriction_tag,
+  [EN_simple_content_restriction].Callback    = traverse_up,
 
   [EN_simple_content_restriction].Target.Type     = EN_DYNAMIC,
   [EN_simple_content_restriction].Target.Allocate = allocate_restriction,
@@ -90,7 +84,7 @@ const xs_element_t xs_simpleContent =
   .Name.Length  = sizeof("xs:simpleContent") - 1,
   .MinOccur     = 0,
   .MaxOccur     = 64,
-  .Callback      = add_simple_content,
+  .Callback      = traverse_up,
 
   .Target.Type  = EN_DYNAMIC,
   .Target.Allocate = allocate_simple_content,
@@ -107,18 +101,7 @@ const xs_element_t xs_simpleContent =
  *  ------------------------------ FUNCTION BODY ------------------------------
  */
 
-void* allocate_simple_content(uint32_t occurrence, void** context)
+void* allocate_simple_content(uint32_t occurrence, void* context)
 {
-  simpleContent_t* simpleContent = calloc(1, sizeof(simpleContent_t));
-  simpleContent->Type = XS_SIMPLE_CONTENT_TAG;
-  tree_t* node = create_node(simpleContent);
-  add_descendant_node(*context, node);
-  *context = node;
-  return simpleContent;
-}
-
-void add_simple_content(uint32_t occurrence, void* content, void** context)
-{
-  tree_t* node = *context;
-  *context = node->Parent;
+  return allocate_element_type(context, sizeof(simpleContent_t), XS_SIMPLE_CONTENT_TAG);
 }

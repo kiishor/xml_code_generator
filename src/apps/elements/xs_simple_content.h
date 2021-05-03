@@ -64,8 +64,7 @@ extern const xs_element_t xs_simpleContent;
 /*
  *  ---------------------------- EXPORTED FUNCTION ----------------------------
  */
-extern void* allocate_simple_content(uint32_t occurrence, void** context);
-extern void add_simple_content(uint32_t occurrence, void* content, void** context);
+extern void* allocate_simple_content(uint32_t occurrence, void* context);
 
 #endif // XS_SIMPLE_CONTENT_H
 

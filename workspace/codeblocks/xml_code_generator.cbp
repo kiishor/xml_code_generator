@@ -11,7 +11,7 @@
 				<Option object_output="obj/Debug/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
-				<Option parameters="--callback --context --dynamic C:\project\xml_code_generator\src\xml_parser\example\shiporder\xml\shiporder1.xsd" />
+				<Option parameters="--callback --context --dynamic C:\project\xml_code_generator\src\xml_parser\example\shiporder\xml\shiporder3.xsd" />
 				<Compiler>
 					<Add option="-g" />
 				</Compiler>

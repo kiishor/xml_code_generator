@@ -21,12 +21,7 @@
 #include "util/util.h"
 
 #include "xs_element.h"
-
-/*
- *	--------------------------- FORWARD DECLARATION ---------------------------
- */
-
-void* allocate_choice(uint32_t occurrence, void** context);
+#include "xs_schema.h"
 
 /*
  *  ---------------------------- GLOBAL VARIABLES -----------------------------
@@ -38,7 +33,7 @@ const xs_element_t Choice_Descendant[TOTAL_CHOICE_DESCENDANTS] =
   [EN_choice_child_element].Name.Length  = sizeof("xs:element") - 1,
   [EN_choice_child_element].MinOccur      = 0,
   [EN_choice_child_element].MaxOccur      = 64,
-  [EN_choice_child_element].Callback      = add_child_element,
+  [EN_choice_child_element].Callback      = traverse_up,
 
   [EN_choice_child_element].Target.Type  = EN_DYNAMIC,
   [EN_choice_child_element].Target.Allocate = allocate_child_schema_element,
@@ -111,12 +106,7 @@ const xs_element_t xs_choice =
  *  ------------------------------ FUNCTION BODY ------------------------------
  */
 
-void* allocate_choice(uint32_t occurrence, void** context)
+void* allocate_choice(uint32_t occurrence, void* context)
 {
-  choice_t* choice = calloc(1, sizeof(choice_t));
-  choice->Type = XS_CHOICE_TAG;
-  tree_t* node = create_node(choice);
-  add_descendant_node(*context, node);
-  *context = node;
-  return choice;
+  return allocate_element_type(context, sizeof(choice_t), XS_CHOICE_TAG);
 }

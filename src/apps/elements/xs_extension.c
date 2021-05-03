@@ -20,13 +20,7 @@
 
 #include "xs_attribute.h"
 #include "xs_extension.h"
-
-/*
- *	--------------------------- FORWARD DECLARATION ---------------------------
- */
-
-void* allocate_extension(uint32_t occurrence, void** context);
-void add_extension_tag(uint32_t occurrence, void* content, void** context);
+#include "xs_schema.h"
 
 /*
  *  ---------------------------- GLOBAL VARIABLES -----------------------------
@@ -38,7 +32,7 @@ const xs_element_t extension_Descendant[TOTAL_EXTENSION_DESCENDANTS] =
   [EN_extension_attribute].Name.Length    = sizeof("xs:attribute") - 1,
   [EN_extension_attribute].MinOccur    = 0,
   [EN_extension_attribute].MaxOccur    = 64,
-  [EN_extension_attribute].Callback      = add_attribute_tag,
+  [EN_extension_attribute].Callback      = traverse_up,
   [EN_extension_attribute].Target.Type  = EN_DYNAMIC,
   [EN_extension_attribute].Target.Allocate = allocate_attribute,
   [EN_extension_attribute].Target.Size = sizeof(attribute_t),
@@ -77,7 +71,7 @@ const xs_element_t xs_extension =
   .MinOccur      = 0,
   .MaxOccur      = 64,
 
-  .Callback      = add_extension_tag,
+  .Callback      = traverse_up,
 
   .Target.Type  = EN_DYNAMIC,
   .Target.Allocate = allocate_extension,
@@ -94,19 +88,8 @@ const xs_element_t xs_extension =
  *  ------------------------------ FUNCTION BODY ------------------------------
  */
 
-void* allocate_extension(uint32_t occurrence, void** context)
+void* allocate_extension(uint32_t occurrence, void* context)
 {
-  extension_t* extension = calloc(1, sizeof(extension_t));
-  extension->Type = XS_EXTENSION_TAG;
-  tree_t* node = create_node(extension);
-  add_descendant_node(*context, node);
-  *context = node;
-  return extension;
-}
-
-void add_extension_tag(uint32_t occurrence, void* content, void** context)
-{
-  tree_t* node = *context;
-  *context = node->Parent;
+  return allocate_element_type(context, sizeof(extension_t), XS_EXTENSION_TAG);
 }
 

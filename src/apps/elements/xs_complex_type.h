@@ -58,8 +58,7 @@ extern const xs_attribute_t complexType_Attr[TOTAL_TYPE_ATTRIBUTES];
  *  ---------------------------- EXPORTED FUNCTION ----------------------------
  */
 
-extern void* allocate_complex_type(uint32_t occurrence,void** context);
-extern void add_complex_type(uint32_t occurrence, void* content, void** context);
+extern void* allocate_complex_type(uint32_t occurrence,void* context);
 
 #endif // XS_COMPLEX_TYPE_H
 

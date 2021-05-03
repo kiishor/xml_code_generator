@@ -22,13 +22,7 @@
 #include "xs_attribute.h"
 #include "xs_facet.h"
 #include "xs_restriction.h"
-
-/*
- *	--------------------------- FORWARD DECLARATION ---------------------------
- */
-
-void* allocate_restriction(uint32_t occurrence, void** context);
-void add_restriction_tag(uint32_t occurrence, void* content, void** context);
+#include "xs_schema.h"
 
 /*
  *  ---------------------------- GLOBAL VARIABLES -----------------------------
@@ -40,7 +34,7 @@ const xs_element_t restriction_Descendant[TOTAL_RESTRICTION_DESCENDANTS] =
   [EN_restriction_attribute].Name.Length    = sizeof("xs:attribute") - 1,
   [EN_restriction_attribute].MinOccur    = 0,
   [EN_restriction_attribute].MaxOccur    = 64,
-  [EN_restriction_attribute].Callback      = add_attribute_tag,
+  [EN_restriction_attribute].Callback      = traverse_up,
   [EN_restriction_attribute].Target.Type  = EN_DYNAMIC,
   [EN_restriction_attribute].Target.Allocate = allocate_attribute,
   [EN_restriction_attribute].Target.Size = sizeof(attribute_t),
@@ -54,7 +48,7 @@ const xs_element_t restriction_Descendant[TOTAL_RESTRICTION_DESCENDANTS] =
   [EN_restriction_simpleType].Name.Length  = sizeof("xs:simpleType") - 1,
   [EN_restriction_simpleType].MinOccur     = 0,
   [EN_restriction_simpleType].MaxOccur     = 64,
-  [EN_restriction_simpleType].Callback      = add_simple_type_tag,
+  [EN_restriction_simpleType].Callback      = traverse_up,
   [EN_restriction_simpleType].Target.Type  = EN_DYNAMIC,
   [EN_restriction_simpleType].Target.Allocate = allocate_simple_type,
   [EN_restriction_simpleType].Attribute_Quantity = TOTAL_TYPE_ATTRIBUTES,
@@ -67,7 +61,7 @@ const xs_element_t restriction_Descendant[TOTAL_RESTRICTION_DESCENDANTS] =
   [EN_restriction_enumeration].Name.Length  = sizeof("xs:enumeration") - 1,
   [EN_restriction_enumeration].MinOccur     = 0,
   [EN_restriction_enumeration].MaxOccur     = 64,
-  [EN_restriction_enumeration].Callback     = add_facet_tag,
+  [EN_restriction_enumeration].Callback     = traverse_up,
   [EN_restriction_enumeration].Target.Type  = EN_DYNAMIC,
   [EN_restriction_enumeration].Target.Allocate = allocate_facet,
   [EN_restriction_enumeration].Attribute_Quantity = TOTAL_FACET_ATTRIBUTES,
@@ -77,7 +71,7 @@ const xs_element_t restriction_Descendant[TOTAL_RESTRICTION_DESCENDANTS] =
   [EN_restriction_length].Name.Length  = sizeof("xs:length") - 1,
   [EN_restriction_length].MinOccur     = 0,
   [EN_restriction_length].MaxOccur     = 64,
-  [EN_restriction_length].Callback      = add_facet_tag,
+  [EN_restriction_length].Callback      = traverse_up,
   [EN_restriction_length].Target.Type  = EN_DYNAMIC,
   [EN_restriction_length].Target.Allocate = allocate_facet,
   [EN_restriction_length].Attribute_Quantity = TOTAL_FACET_ATTRIBUTES,
@@ -87,7 +81,7 @@ const xs_element_t restriction_Descendant[TOTAL_RESTRICTION_DESCENDANTS] =
   [EN_restriction_maxInclusive].Name.Length  = sizeof("xs:maxInclusive") - 1,
   [EN_restriction_maxInclusive].MinOccur     = 0,
   [EN_restriction_maxInclusive].MaxOccur     = 64,
-  [EN_restriction_maxInclusive].Callback      = add_facet_tag,
+  [EN_restriction_maxInclusive].Callback      = traverse_up,
   [EN_restriction_maxInclusive].Target.Type  = EN_DYNAMIC,
   [EN_restriction_maxInclusive].Target.Allocate = allocate_facet,
   [EN_restriction_maxInclusive].Attribute_Quantity = TOTAL_FACET_ATTRIBUTES,
@@ -97,7 +91,7 @@ const xs_element_t restriction_Descendant[TOTAL_RESTRICTION_DESCENDANTS] =
   [EN_restriction_minInclusive].Name.Length  = sizeof("xs:minInclusive") - 1,
   [EN_restriction_minInclusive].MinOccur     = 0,
   [EN_restriction_minInclusive].MaxOccur     = 64,
-  [EN_restriction_minInclusive].Callback      = add_facet_tag,
+  [EN_restriction_minInclusive].Callback      = traverse_up,
   [EN_restriction_minInclusive].Target.Type  = EN_DYNAMIC,
   [EN_restriction_minInclusive].Target.Allocate = allocate_facet,
   [EN_restriction_minInclusive].Attribute_Quantity = TOTAL_FACET_ATTRIBUTES,
@@ -107,7 +101,7 @@ const xs_element_t restriction_Descendant[TOTAL_RESTRICTION_DESCENDANTS] =
   [EN_restriction_pattern].Name.Length  = sizeof("xs:pattern") - 1,
   [EN_restriction_pattern].MinOccur     = 0,
   [EN_restriction_pattern].MaxOccur     = 64,
-  [EN_restriction_pattern].Callback      = add_facet_tag,
+  [EN_restriction_pattern].Callback      = traverse_up,
   [EN_restriction_pattern].Target.Type  = EN_DYNAMIC,
   [EN_restriction_pattern].Target.Allocate = allocate_facet,
   [EN_restriction_pattern].Attribute_Quantity = TOTAL_FACET_ATTRIBUTES,
@@ -117,7 +111,7 @@ const xs_element_t restriction_Descendant[TOTAL_RESTRICTION_DESCENDANTS] =
   [EN_restriction_maxLength].Name.Length  = sizeof("xs:maxLength") - 1,
   [EN_restriction_maxLength].MinOccur     = 0,
   [EN_restriction_maxLength].MaxOccur     = 64,
-  [EN_restriction_maxLength].Callback      = add_facet_tag,
+  [EN_restriction_maxLength].Callback      = traverse_up,
   [EN_restriction_maxLength].Target.Type  = EN_DYNAMIC,
   [EN_restriction_maxLength].Target.Allocate = allocate_facet,
   [EN_restriction_maxLength].Attribute_Quantity = TOTAL_FACET_ATTRIBUTES,
@@ -127,7 +121,7 @@ const xs_element_t restriction_Descendant[TOTAL_RESTRICTION_DESCENDANTS] =
   [EN_restriction_minLength].Name.Length  = sizeof("xs:minLength") - 1,
   [EN_restriction_minLength].MinOccur     = 0,
   [EN_restriction_minLength].MaxOccur     = 64,
-  [EN_restriction_minLength].Callback      = add_facet_tag,
+  [EN_restriction_minLength].Callback      = traverse_up,
   [EN_restriction_minLength].Target.Type  = EN_DYNAMIC,
   [EN_restriction_minLength].Target.Allocate = allocate_facet,
   [EN_restriction_minLength].Attribute_Quantity = TOTAL_FACET_ATTRIBUTES,
@@ -167,7 +161,7 @@ const xs_element_t xs_restriction =
   .Name.Length = sizeof("xs:restriction") - 1,
   .MinOccur     = 0,
   .MaxOccur     = 64,
-  .Callback      = add_restriction_tag,
+  .Callback      = traverse_up,
 
   .Target.Type  = EN_DYNAMIC,
   .Target.Allocate = allocate_restriction,
@@ -184,20 +178,9 @@ const xs_element_t xs_restriction =
  *  ------------------------------ FUNCTION BODY ------------------------------
  */
 
-void* allocate_restriction(uint32_t occurrence, void** context)
+void* allocate_restriction(uint32_t occurrence, void* context)
 {
-  restriction_t* restriction = calloc(1, sizeof(restriction_t));
-  restriction->Type = XS_RESTRICTION_TAG;
-  tree_t* node = create_node(restriction);
-  add_descendant_node(*context, node);
-  *context = node;
-  return restriction;
-}
-
-void add_restriction_tag(uint32_t occurrence, void* content, void** context)
-{
-  tree_t* node = *context;
-  *context = node->Parent;
+  return allocate_element_type(context, sizeof(restriction_t), XS_RESTRICTION_TAG);
 }
 
 

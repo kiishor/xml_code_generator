@@ -67,6 +67,6 @@ extern const xs_element_t xs_sequence;
  *  ---------------------------- EXPORTED FUNCTION ----------------------------
  */
 
-extern void* allocate_sequence(uint32_t occurrence, void** context);
+extern void* allocate_sequence(uint32_t occurrence, void* context);
 
 #endif // XS_SEQUENCE_H

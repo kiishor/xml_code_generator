@@ -44,6 +44,6 @@ extern const attribute_list_t* search_attribute_node(const attribute_list_t* lis
                                                const string_t* const reference);
 extern const element_list_t* search_element_node(const element_list_t* list,
                                            const string_t* const reference);
-extern void traverse_up( uint32_t occurrence, void* content, void** context);
+extern void traverse_up( uint32_t occurrence, void* content, void* context);
 
 #endif // UTIL_H

@@ -20,13 +20,13 @@
 #include "apps/tree.h"
 
 #include "parse_xml.h"
-#include "xs_schema.h"
 
 #include "apps/xsd.h"
 #include "xs_element.h"
 #include "xs_complex_type.h"
 #include "xs_attribute.h"
 #include "xs_simple_type.h"
+#include "xs_schema.h"
 
 /*
  *  -------------------------------- STRUCTURE --------------------------------
@@ -37,14 +37,6 @@ typedef struct
   size_t ElementQuantity;
   element_t* Elements;
 }schema_t;
-
-
-
-/*
- *	--------------------------- FORWARD DECLARATION ---------------------------
- */
-
-void add_schema(uint32_t Occurrence, void *Content, void** context);
 
 /*
  *  ---------------------------- GLOBAL VARIABLES -----------------------------
@@ -64,7 +56,7 @@ const xs_element_t schemaDescendant[TOTAL_SCHEMA_DESCENDANTS] =
   [EN_schema_element].Name.Length  = sizeof("xs:element") - 1,
   [EN_schema_element].MinOccur      = 0,
   [EN_schema_element].MaxOccur      = 64,
-  [EN_schema_element].Callback      = add_global_element,
+  [EN_schema_element].Callback      = traverse_up,
   [EN_schema_element].Target.Type  = EN_DYNAMIC,
   [EN_schema_element].Target.Allocate = allocate_global_schema_element,
   [EN_schema_element].Attribute_Quantity = TOTAL_GLOBAL_ELEMENT_ATTRIBUTES,
@@ -77,7 +69,7 @@ const xs_element_t schemaDescendant[TOTAL_SCHEMA_DESCENDANTS] =
   [EN_schema_complexType].Name.Length  = sizeof("xs:complexType") - 1,
   [EN_schema_complexType].MinOccur      = 0,
   [EN_schema_complexType].MaxOccur      = 64,
-  [EN_schema_complexType].Callback      = add_complex_type,
+  [EN_schema_complexType].Callback      = traverse_up,
   [EN_schema_complexType].Target.Type  = EN_DYNAMIC,
   [EN_schema_complexType].Target.Allocate = allocate_complex_type,
   [EN_schema_complexType].Target.Size   = sizeof(complexType_t),
@@ -91,7 +83,7 @@ const xs_element_t schemaDescendant[TOTAL_SCHEMA_DESCENDANTS] =
   [EN_schema_attribute].Name.Length    = sizeof("xs:attribute") - 1,
   [EN_schema_attribute].MinOccur    = 0,
   [EN_schema_attribute].MaxOccur    = 64,
-  [EN_schema_attribute].Callback      = add_attribute_tag,
+  [EN_schema_attribute].Callback      = traverse_up,
   [EN_schema_attribute].Target.Type  = EN_DYNAMIC,
   [EN_schema_attribute].Target.Allocate = allocate_attribute,
   [EN_schema_attribute].Target.Size = sizeof(attribute_t),
@@ -105,7 +97,7 @@ const xs_element_t schemaDescendant[TOTAL_SCHEMA_DESCENDANTS] =
   [EN_schema_simpleType].Name.Length  = sizeof("xs:simpleType") - 1,
   [EN_schema_simpleType].MinOccur     = 0,
   [EN_schema_simpleType].MaxOccur     = 64,
-  [EN_schema_simpleType].Callback      = add_simple_type_tag,
+  [EN_schema_simpleType].Callback      = traverse_up,
   [EN_schema_simpleType].Target.Type  = EN_DYNAMIC,
   [EN_schema_simpleType].Target.Allocate = allocate_simple_type,
   [EN_schema_simpleType].Attribute_Quantity = TOTAL_TYPE_ATTRIBUTES,
@@ -134,7 +126,7 @@ static const xs_element_t xsd_schema =
   .Name.Length = sizeof("xs:schema") - 1,
   .MinOccur     = 1,
   .MaxOccur     = 1,
-  .Callback     = add_schema,
+  .Callback     = NULL,
 
   .Target.Type    = EN_STATIC,
   .Target.Address = &Schema,
@@ -158,7 +150,12 @@ const xs_element_t xsd_root =
  *  ------------------------------ FUNCTION BODY ------------------------------
  */
 
-void add_schema(uint32_t Occurrence, void *Content, void** context)
+void* allocate_element_type(tree_t** schemaTree, size_t size, xsd_tag_t type)
 {
-
+  xsd_tag_t* elementType = calloc(1, size);
+  *elementType = type;
+  tree_t* node = create_node(elementType);
+  add_descendant_node(*schemaTree, node);
+  *schemaTree = node;
+  return elementType;
 }
