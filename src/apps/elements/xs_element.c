@@ -22,16 +22,7 @@
 #include "xs_element.h"
 #include "xs_complex_type.h"
 #include "xs_simple_type.h"
-
-/*
- *  --------------------------- FORWARD DECLARATION ---------------------------
- */
-
-void add_global_element(uint32_t occurrence, void* content, void** context);
-void add_child_element(uint32_t occurrence, void* content, void** context);
-
-void* allocate_global_schema_element(uint32_t, void**);
-void* allocate_child_schema_element(uint32_t, void**);
+#include "xs_schema.h"
 
 /*
  *  ---------------------------- GLOBAL VARIABLES -----------------------------
@@ -44,7 +35,7 @@ const xs_element_t Element_Descendant[TOTAL_ELEMENT_DESCENDANTS] =
   [EN_element_complexType].MinOccur      = 0,
   [EN_element_complexType].MaxOccur      = 64,
 
-  [EN_element_complexType].Callback      = add_complex_type,
+  [EN_element_complexType].Callback      = traverse_up,
 
   [EN_element_complexType].Target.Type  = EN_DYNAMIC,
   [EN_element_complexType].Target.Allocate = allocate_complex_type,
@@ -61,7 +52,7 @@ const xs_element_t Element_Descendant[TOTAL_ELEMENT_DESCENDANTS] =
   [EN_element_simpleType].Name.Length  = sizeof("xs:simpleType") - 1,
   [EN_element_simpleType].MinOccur     = 0,
   [EN_element_simpleType].MaxOccur     = 64,
-  [EN_element_simpleType].Callback     = add_simple_type_tag,
+  [EN_element_simpleType].Callback     = traverse_up,
 
   [EN_element_simpleType].Target.Type  = EN_DYNAMIC,
   [EN_element_simpleType].Target.Allocate = allocate_simple_type,
@@ -193,7 +184,7 @@ const xs_element_t xs_global_element =
   .MinOccur      = 0,
   .MaxOccur      = 64,
 
-  .Callback      = add_global_element,
+  .Callback      = traverse_up,
 
   .Target.Type  = EN_DYNAMIC,
   .Target.Allocate = allocate_global_schema_element,
@@ -213,7 +204,7 @@ const xs_element_t xs_child_element =
   .MinOccur      = 0,
   .MaxOccur      = 64,
 
-  .Callback      = add_child_element,
+  .Callback      = traverse_up,
 
   .Target.Type  = EN_DYNAMIC,
   .Target.Allocate = allocate_child_schema_element,
@@ -230,36 +221,15 @@ const xs_element_t xs_child_element =
  *  ------------------------------ FUNCTION BODY ------------------------------
  */
 
-void* allocate_global_schema_element(uint32_t occurrence, void** context)
+void* allocate_global_schema_element(uint32_t occurrence, void* context)
 {
-  element_t* element = calloc(1, sizeof(element_t));
-  element->Type = XS_GLOBAL_ELEMENT_TAG;
-  tree_t* node = create_node(element);
-  add_descendant_node(*context, node);
-  *context = node;
-  return element;
+  return allocate_element_type(context, sizeof(element_t), XS_GLOBAL_ELEMENT_TAG);
 }
 
-void* allocate_child_schema_element(uint32_t occurrence, void** context)
+void* allocate_child_schema_element(uint32_t occurrence, void* context)
 {
-  element_t* element = calloc(1, sizeof(element_t));
-  element->Type = XS_CHILD_ELEMENT_TAG;
+  element_t* element = allocate_element_type(context, sizeof(element_t), XS_CHILD_ELEMENT_TAG);
   element->child.minOccurs = 1;
-  tree_t* node = create_node(element);
-  add_descendant_node(*context, node);
-  *context = node;
   return element;
-}
-
-void add_global_element(uint32_t occurrence, void *content, void** context)
-{
-  tree_t* node = *context;
-  *context = node->Parent;
-}
-
-void add_child_element(uint32_t occurrence, void* content, void** context)
-{
-  tree_t* node = *context;
-  *context = node->Parent;
 }
 

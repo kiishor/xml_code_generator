@@ -66,6 +66,6 @@ extern const xs_element_t xs_choice;
  *  ---------------------------- EXPORTED FUNCTION ----------------------------
  */
 
-extern void* allocate_choice(uint32_t occurrence, void** context);
+extern void* allocate_choice(uint32_t occurrence, void* context);
 
 #endif // XS_CHOICE_H

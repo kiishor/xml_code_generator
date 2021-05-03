@@ -23,13 +23,7 @@
 #include "xs_choice.h"
 #include "xs_simple_content.h"
 #include "xs_attribute.h"
-
-/*
- *  --------------------------- FORWARD DECLARATION ---------------------------
- */
-
-void* allocate_complex_type(uint32_t occurrence,void** context);
-void add_complex_type(uint32_t occurrence, void* content, void** context);
+#include "xs_schema.h"
 
 /*
  *  ---------------------------- GLOBAL VARIABLES -----------------------------
@@ -73,7 +67,7 @@ const xs_element_t ComplexType_Descendant[TOTAL_COMPLEX_TYPE_DESCENDANT] =
   [EN_complex_simpleContent].Name.Length  = sizeof("xs:simpleContent") - 1,
   [EN_complex_simpleContent].MinOccur     = 0,
   [EN_complex_simpleContent].MaxOccur     = 64,
-  [EN_complex_simpleContent].Callback     = add_simple_content,
+  [EN_complex_simpleContent].Callback     = traverse_up,
 
   [EN_complex_simpleContent].Target.Type  	 = EN_DYNAMIC,
   [EN_complex_simpleContent].Target.Allocate = allocate_simple_content,
@@ -89,7 +83,7 @@ const xs_element_t ComplexType_Descendant[TOTAL_COMPLEX_TYPE_DESCENDANT] =
   [EN_complex_attribute].Name.Length = sizeof("xs:attribute") - 1,
   [EN_complex_attribute].MinOccur    = 0,
   [EN_complex_attribute].MaxOccur    = 64,
-  [EN_complex_attribute].Callback    = add_attribute_tag,
+  [EN_complex_attribute].Callback    = traverse_up,
 
   [EN_complex_attribute].Target.Type     = EN_DYNAMIC,
   [EN_complex_attribute].Target.Allocate = allocate_attribute,
@@ -136,7 +130,7 @@ const xs_element_t xs_complexType =
   .MinOccur      = 0,
   .MaxOccur      = 64,
 
-  .Callback      = add_complex_type,
+  .Callback      = traverse_up,
 
   .Target.Type  = EN_DYNAMIC,
   .Target.Allocate = allocate_complex_type,
@@ -154,18 +148,8 @@ const xs_element_t xs_complexType =
  *  ------------------------------ FUNCTION BODY ------------------------------
  */
 
-void* allocate_complex_type(uint32_t occurrence, void** context)
+void* allocate_complex_type(uint32_t occurrence, void* context)
 {
-  complexType_t* complexType = calloc(1, sizeof(complexType_t));
-  complexType->Type = XS_COMPLEX_TAG;
-  tree_t* node = create_node(complexType);
-  add_descendant_node(*context, node);
-  *context = node;
-  return complexType;
+  return allocate_element_type(context, sizeof(complexType_t), XS_COMPLEX_TAG);
 }
 
-void add_complex_type(uint32_t occurrence, void* content, void** context)
-{
-  tree_t* node = *context;
-  *context = node->Parent;
-}

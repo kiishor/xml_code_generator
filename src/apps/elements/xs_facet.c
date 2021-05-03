@@ -19,13 +19,7 @@
 #include "apps/xsd.h"
 #include "apps/tree.h"
 #include "xs_facet.h"
-
-/*
- *	--------------------------- FORWARD DECLARATION ---------------------------
- */
-
-void* allocate_facet(uint32_t occurrence, void** context);
-void add_facet_tag(uint32_t occurrence, void* content, void** context);
+#include "xs_schema.h"
 
 /*
  *  ---------------------------- GLOBAL VARIABLES -----------------------------
@@ -52,7 +46,7 @@ const xs_element_t xs_enumeration =
   .Name.Length  = sizeof("xs:enumeration") - 1,
   .MinOccur     = 0,
   .MaxOccur     = 64,
-  .Callback      = add_facet_tag,
+  .Callback      = traverse_up,
 
   .Target.Type  = EN_DYNAMIC,
   .Target.Allocate = allocate_facet,
@@ -67,7 +61,7 @@ const xs_element_t xs_length =
   .Name.Length  = sizeof("xs:length") - 1,
   .MinOccur     = 0,
   .MaxOccur     = 64,
-  .Callback      = add_facet_tag,
+  .Callback      = traverse_up,
 
   .Target.Type  = EN_DYNAMIC,
   .Target.Allocate = allocate_facet,
@@ -82,7 +76,7 @@ const xs_element_t xs_maxInclusive =
   .Name.Length  = sizeof("xs:maxInclusive") - 1,
   .MinOccur     = 0,
   .MaxOccur     = 64,
-  .Callback      = add_facet_tag,
+  .Callback      = traverse_up,
 
   .Target.Type  = EN_DYNAMIC,
   .Target.Allocate = allocate_facet,
@@ -97,7 +91,7 @@ const xs_element_t xs_minInclusive =
   .Name.Length  = sizeof("xs:minInclusive") - 1,
   .MinOccur     = 0,
   .MaxOccur     = 64,
-  .Callback      = add_facet_tag,
+  .Callback      = traverse_up,
 
   .Target.Type  = EN_DYNAMIC,
   .Target.Allocate = allocate_facet,
@@ -112,7 +106,7 @@ const xs_element_t xs_pattern =
   .Name.Length  = sizeof("xs:pattern") - 1,
   .MinOccur     = 0,
   .MaxOccur     = 64,
-  .Callback      = add_facet_tag,
+  .Callback      = traverse_up,
 
   .Target.Type  = EN_DYNAMIC,
   .Target.Allocate = allocate_facet,
@@ -127,7 +121,7 @@ const xs_element_t xs_maxLength =
   .Name.Length  = sizeof("xs:maxLength") - 1,
   .MinOccur     = 0,
   .MaxOccur     = 64,
-  .Callback      = add_facet_tag,
+  .Callback      = traverse_up,
 
   .Target.Type  = EN_DYNAMIC,
   .Target.Allocate = allocate_facet,
@@ -142,7 +136,7 @@ const xs_element_t xs_minLength =
   .Name.Length  = sizeof("xs:minLength") - 1,
   .MinOccur     = 0,
   .MaxOccur     = 64,
-  .Callback      = add_facet_tag,
+  .Callback      = traverse_up,
 
   .Target.Type  = EN_DYNAMIC,
   .Target.Allocate = allocate_facet,
@@ -155,20 +149,7 @@ const xs_element_t xs_minLength =
  *  ------------------------------ FUNCTION BODY ------------------------------
  */
 
-void* allocate_facet(uint32_t occurrence, void** context)
+void* allocate_facet(uint32_t occurrence, void* context)
 {
-  xs_facet_t* facet = calloc(1, sizeof(xs_facet_t));
-  facet->Type = XS_ENUMERATION_TAG;
-  tree_t* node = create_node(facet);
-  add_descendant_node(*context, node);
-  *context = node;
-  return facet;
+  return allocate_element_type(context, sizeof(xs_facet_t), XS_ENUMERATION_TAG);
 }
-
-void add_facet_tag(uint32_t occurrence, void* content, void** context)
-{
-  tree_t* node = *context;
-  *context = node->Parent;
-}
-
-

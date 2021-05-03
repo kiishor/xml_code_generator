@@ -111,10 +111,8 @@ extern const xs_attribute_t global_element_attr[TOTAL_GLOBAL_ELEMENT_ATTRIBUTES]
 /*
  *  ---------------------------- EXPORTED FUNCTION ----------------------------
  */
-void add_global_element(uint32_t occurrence, void* content, void** context);
-void add_child_element(uint32_t occurrence, void* content, void** context);
 
-void* allocate_global_schema_element(uint32_t, void**);
-void* allocate_child_schema_element(uint32_t, void**);
+extern void* allocate_global_schema_element(uint32_t, void*);
+extern void* allocate_child_schema_element(uint32_t, void*);
 
 #endif // XS_ELEMENT_H

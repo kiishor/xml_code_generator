@@ -64,8 +64,7 @@ extern const xs_element_t xs_extension;
 /*
  *  ---------------------------- EXPORTED FUNCTION ----------------------------
  */
-extern void* allocate_extension(uint32_t occurrence, void** context);
-extern void add_extension_tag(uint32_t occurrence, void* content, void** context);
+extern void* allocate_extension(uint32_t occurrence, void* context);
 
 
 #endif // XS_EXTENSION_H

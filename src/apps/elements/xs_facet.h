@@ -45,9 +45,8 @@ extern const xs_element_t xs_minLength;
 /*
  *  ---------------------------- EXPORTED FUNCTION ----------------------------
  */
-extern void* allocate_facet(uint32_t occurrence, void** context);
-extern void add_facet_tag(uint32_t occurrence, void* content, void** context);
 
+extern void* allocate_facet(uint32_t occurrence, void* context);
 
 #endif // XS_FACET_H
 

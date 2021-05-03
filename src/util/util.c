@@ -24,12 +24,12 @@
  *  ------------------------------ FUNCTION BODY ------------------------------
  */
 
-void traverse_up(uint32_t occurrence, void* content, void** context)
+void traverse_up(uint32_t occurrence, void* content, void* context)
 {
-  tree_t* node = *context;
-  *context = node->Parent;
+  tree_t** schemaTree = context;
+  tree_t* node = *schemaTree;
+  *schemaTree = node->Parent;
 }
-
 
 void add_attribute_node(attribute_list_t* list, const xs_attribute_t* attribute)
 {
@@ -98,3 +98,4 @@ const element_list_t* search_element_node(const element_list_t* list, const stri
   }
   return NULL;
 }
+

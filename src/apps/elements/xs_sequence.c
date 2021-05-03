@@ -22,12 +22,7 @@
 #include "util/util.h"
 
 #include "xs_element.h"
-
-/*
- *	--------------------------- FORWARD DECLARATION ---------------------------
- */
-
-void* allocate_sequence(uint32_t occurrence, void** context);
+#include "xs_schema.h"
 
 /*
  *  ---------------------------- GLOBAL VARIABLES -----------------------------
@@ -39,7 +34,7 @@ const xs_element_t Sequence_Descendant[TOTAL_SEQUENCE_DESCENDANTS] =
   [EN_sequence_child_element].Name.Length  = sizeof("xs:element") - 1,
   [EN_sequence_child_element].MinOccur      = 0,
   [EN_sequence_child_element].MaxOccur      = 64,
-  [EN_sequence_child_element].Callback      = add_child_element,
+  [EN_sequence_child_element].Callback      = traverse_up,
 
   [EN_sequence_child_element].Target.Type  = EN_DYNAMIC,
   [EN_sequence_child_element].Target.Allocate = allocate_child_schema_element,
@@ -114,13 +109,8 @@ const xs_element_t xs_sequence =
  *  ------------------------------ FUNCTION BODY ------------------------------
  */
 
-void* allocate_sequence(uint32_t occurrence, void** context)
+void* allocate_sequence(uint32_t occurrence, void* context)
 {
-  sequence_t* sequence = calloc(1, sizeof(sequence_t));
-  sequence->Type = XS_SEQUENCE_TAG;
-  tree_t* node = create_node(sequence);
-  add_descendant_node(*context, node);
-  *context = node;
-  return sequence;
+  return allocate_element_type(context, sizeof(sequence_t), XS_SEQUENCE_TAG);
 }
 
