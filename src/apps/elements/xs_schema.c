@@ -29,25 +29,8 @@
 #include "xs_schema.h"
 
 /*
- *  -------------------------------- STRUCTURE --------------------------------
- */
-
-typedef struct
-{
-  size_t ElementQuantity;
-  element_t* Elements;
-}schema_t;
-
-/*
  *  ---------------------------- GLOBAL VARIABLES -----------------------------
  */
-
-schema_t Schema;
-tree_t SchemaTree =
-{
-  .Data = &Schema,
-};
-tree_t* pXsdData = &SchemaTree;
 
 
 static const xs_element_t schemaDescendant[TOTAL_SCHEMA_DESCENDANTS] =
@@ -128,8 +111,8 @@ const xs_element_t xsd_root =
   .MaxOccur     = 1,
   .Callback     = NULL,
 
-  .Target.Type    = EN_STATIC,
-  .Target.Address = &Schema,
+  .Target.Type    = EN_RELATIVE,
+  .Target.Offset = 0,
 
   .Attribute_Quantity = sizeof(schema_attr) / sizeof(xs_attribute_t),
   .Attribute          = schema_attr,

@@ -20,6 +20,7 @@
 #include "parse_xml.h"
 #include "apps/xsd.h"
 #include "elements/xs_schema.h"
+#include "elements/xs_element.h"
 #include "code_generator.h"
 #include "cargs.h"
 
@@ -113,7 +114,10 @@ int main(int argc, char *argv[])
   fread(schema, 1, size, fSchema);
   fclose(fSchema);
 
-  xml_parse_result_t result = parse_xml(&xsd_root, schema, NULL, (void**)&pXsdData);
+  tree_t SchemaTree;
+  tree_t* pXsdData = &SchemaTree;
+
+  xml_parse_result_t result = parse_xml(&xsd_root, schema, NULL, &pXsdData);
   if(result == XML_PARSE_SUCCESS)
   {
     printf("Parsing completed successfully\n");

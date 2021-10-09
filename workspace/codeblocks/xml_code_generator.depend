@@ -23,7 +23,7 @@
 	"apps/list.h"
 	"util/util.h"
 
-1612200120 c:\project\xml_code_generator\src\includes\apps\tree.h
+1633817946 c:\project\xml_code_generator\src\includes\apps\tree.h
 
 1620059552 c:\project\xml_code_generator\src\apps\elements\xs_simple_type.h
 	"xs_type.h"
@@ -51,7 +51,7 @@
 
 1620059552 c:\project\xml_code_generator\src\apps\elements\xs_simple_content.h
 
-1633788622 source:c:\project\xml_code_generator\src\apps\main.c
+1633817780 source:c:\project\xml_code_generator\src\apps\main.c
 	<stdio.h>
 	<stdlib.h>
 	<stdint.h>
@@ -61,12 +61,13 @@
 	"parse_xml.h"
 	"apps/xsd.h"
 	"elements/xs_schema.h"
+	"elements/xs_element.h"
 	"code_generator.h"
 	"cargs.h"
 
-1620059552 c:\project\xml_code_generator\src\apps\elements\xs_schema.h
+1633815885 c:\project\xml_code_generator\src\apps\elements\xs_schema.h
 
-1612200120 source:c:\project\xml_code_generator\src\apps\tree.c
+1633817635 source:c:\project\xml_code_generator\src\apps\tree.c
 	<stdint.h>
 	<stdlib.h>
 	"apps/tree.h"
@@ -87,7 +88,7 @@
 	"apps/list.h"
 	"util/util.h"
 
-1620059552 source:c:\project\xml_code_generator\src\apps\elements\xs_element.c
+1633815823 source:c:\project\xml_code_generator\src\apps\elements\xs_element.c
 	<stdint.h>
 	<stdbool.h>
 	<stdlib.h>
@@ -142,7 +143,7 @@
 
 1620059552 c:\project\xml_code_generator\src\apps\elements\xs_restriction.h
 
-1632681224 source:c:\project\xml_code_generator\src\apps\elements\xs_schema.c
+1633815782 source:c:\project\xml_code_generator\src\apps\elements\xs_schema.c
 	<stdint.h>
 	<stdbool.h>
 	<stdlib.h>
@@ -238,7 +239,7 @@
 	<stdlib.h>
 	"libs/xml_content.h"
 
-1633795636 source:c:\project\xml_code_generator\src\apps\code_generator.c
+1633795795 source:c:\project\xml_code_generator\src\apps\code_generator.c
 	<stdint.h>
 	<stdio.h>
 	<stdlib.h>
@@ -278,7 +279,7 @@
 	<stdlib.h>
 	"parse_xml.h"
 
-1632681005 source:c:\project\xml_code_generator\src\xml_parser\src\parse_xml.c
+1633817659 source:c:\project\xml_code_generator\src\xml_parser\src\parse_xml.c
 	<stdint.h>
 	<string.h>
 	<stdbool.h>
