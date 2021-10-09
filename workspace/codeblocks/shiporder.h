@@ -30,8 +30,6 @@ typedef struct
     char* orderid;
 }shiporder_t;
 
-extern shiporder_t shiporder;
-
 extern const xs_element_t shiporder_root;
 
 #endif

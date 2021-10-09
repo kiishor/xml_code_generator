@@ -452,7 +452,7 @@ static inline xs_element_t* create_root(const element_list_t* const list)
 
   xs_element_t* const element = get_root(list);
   root->Child = element;
-  element->Target.Type = EN_STATIC;
+  element->Target.Type = EN_RELATIVE;
   element->MinOccur = 1;
   element->MaxOccur = 1;
 

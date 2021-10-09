@@ -26,6 +26,7 @@
 /*
  *  ------------------------------ FUNCTION BODY ------------------------------
  */
+
 //! Holds the configuration of command line arguments
 static struct cag_option Cag_Options[] = {
   {
@@ -112,7 +113,7 @@ int main(int argc, char *argv[])
   fread(schema, 1, size, fSchema);
   fclose(fSchema);
 
-  xml_parse_result_t result = parse_xml(&xsd_root, schema, (void**)&pXsdData);
+  xml_parse_result_t result = parse_xml(&xsd_root, schema, NULL, (void**)&pXsdData);
   if(result == XML_PARSE_SUCCESS)
   {
     printf("Parsing completed successfully\n");
