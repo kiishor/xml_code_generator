@@ -235,7 +235,7 @@ static inline void write_source(const xs_element_t* const element,
     }
     else
     {
-      fprintf(source, "\nconst xs_element_t %s_root[] =\n{\n", element->Child[0].Name.String);
+      fprintf(source, "\nconst xs_element_t %s_root =\n{\n", element->Child[0].Name.String);
     }
 
     uint32_t i = 0;
@@ -401,6 +401,7 @@ static inline void get_content_format(const xml_content_t* const content, char* 
   }
 }
 
+#if GENERATE_PRINT_FUNCTION
 static inline void write_print_function(const xs_element_t* const element, FILE* const file,
                              char* space, char* variable)
 {
@@ -523,6 +524,7 @@ void generate_print_file(const xs_element_t* const root)
   fprintf(file, "}\n");
   fclose(file);
 }
+#endif // GENERATE_PRINT_FUNCTION
 
 /*
  *  ------------------------------ FUNCTION BODY ------------------------------

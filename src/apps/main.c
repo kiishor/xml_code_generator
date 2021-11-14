@@ -114,16 +114,21 @@ int main(int argc, char *argv[])
   fread(schema, 1, size, fSchema);
   fclose(fSchema);
 
-  tree_t SchemaTree;
-  tree_t* pXsdData = &SchemaTree;
+  tree_t schemaTree;
+  memset(&schemaTree, 0, sizeof(schemaTree));
+  tree_t* pXsdData = &schemaTree;
 
-  xml_parse_result_t result = parse_xml(&xsd_root, schema, NULL, &pXsdData);
+  xml_parse_result_t result = parse_xml(&xsd_root, schema, &schemaTree, &pXsdData);
   if(result == XML_PARSE_SUCCESS)
   {
     printf("Parsing completed successfully\n");
     const xs_element_t* root = compile_xsd(pXsdData->Descendant, &options);
     generate_xml_source(root, &options);
+
+#if GENERATE_PRINT_FUNCTION
     generate_print_file(root);
+#endif // GENERATE_PRINT_FUNCTION
+
   }
   else
   {
