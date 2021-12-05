@@ -14,7 +14,7 @@
  */
 
 #define ALL_SCHEMA_DESCENDANTS    \
-  ADD_DESCENDANT(element)  \
+  ADD_DESCENDANT(element)         \
   ADD_DESCENDANT(complexType)     \
   ADD_DESCENDANT(attribute)       \
   ADD_DESCENDANT(simpleType)
@@ -33,9 +33,7 @@ typedef enum
 /*
  *  ------------------------ EXTERNAL GLOBAL VARIABLES ------------------------
  */
-
 extern const xs_element_t xsd_root;
-extern tree_t* pXsdData;
 
 /*
  *  ---------------------------- EXPORTED FUNCTION ----------------------------

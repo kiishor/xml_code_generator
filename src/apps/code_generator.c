@@ -46,7 +46,6 @@ static inline FILE* create_header_file(const char* const name)
 
 static inline void close_header_file(FILE* const header, const char* const name)
 {
-  fprintf(header, "\nextern %s_t %s;\n", name, name);
   fprintf(header, "\nextern const xs_element_t %s_root;\n", name);
   fprintf(header, "\n#endif\n");
   fclose(header);
@@ -61,44 +60,50 @@ static inline FILE* create_source_file(const char* const name)
   FILE* source = fopen( file_name, "w");
 
   fprintf(source, "#include <stdlib.h>\n#include <stdbool.h>\n#include <float.h>\n\n#include \"%s.h\"\n\n", name);
-  fprintf(source, "\n%s_t %s;\n\n", name, name);
   return source;
 }
 
 static inline void write_target(const target_address_t* const target,
-                                uint32_t index,
+                                const char* const array,
                                 const char* const parent,
                                 const char* const element,
                                 bool target_size,
                                 FILE* const source)
 {
-  fprintf(source, "    [%u].Target.Type    = %s,\n", index, xs_target_address_type[target->Type]);
+  fprintf(source, "    %s.Target.Type    = %s,\n", array, xs_target_address_type[target->Type]);
   switch(target->Type)
   {
   case EN_STATIC:
     if(parent)
     {
-      fprintf(source, "    [%u].Target.Address = &%s.%s,\n", index, parent, element);
+      fprintf(source, "    %s.Target.Address = &%s.%s,\n", array, parent, element);
       if(target_size)
       {
-        fprintf(source, "    [%u].Target.Size    = sizeof(%s_t),\n", index, element);
+        fprintf(source, "    %s.Target.Size    = sizeof(%s_t),\n", array, element);
       }
     }
     else
     {
-      fprintf(source, "    [%u].Target.Address = &%s,\n", index, element);
+      fprintf(source, "    %s.Target.Address = &%s,\n", array, element);
     }
     break;
 
   case EN_DYNAMIC:
-    fprintf(source, "    [%u].Target.Allocate = allocate_%s,\n", index, element);
+    fprintf(source, "    %s.Target.Allocate = allocate_%s,\n", array, element);
     break;
 
   case EN_RELATIVE:
-    fprintf(source, "    [%u].Target.Offset  = offsetof(%s_t, %s),\n", index, parent, element);
+    if(parent)
+    {
+      fprintf(source, "    %s.Target.Offset  = offsetof(%s_t, %s),\n", array, parent, element);
+    }
+    else
+    {
+      fprintf(source, "    %s.Target.Offset  = 0,\n", array);
+    }
     if(target_size)
     {
-      fprintf(source, "    [%u].Target.Size    = sizeof(%s_t),\n", index, element);
+      fprintf(source, "    %s.Target.Size    = sizeof(%s_t),\n", array, element);
     }
     break;
 
@@ -108,39 +113,39 @@ static inline void write_target(const target_address_t* const target,
 }
 
 static inline void write_content(const xml_content_t* const content,
-                                 uint32_t index,
+                                 const char* const array,
                                  FILE* const source)
 {
 
-  fprintf(source, "    [%u].Content.Type   = %s,\n", index, xml_content_type[content->Type]);
+  fprintf(source, "    %s.Content.Type   = %s,\n", array, xml_content_type[content->Type]);
 
   switch(content->Type)
   {
   case EN_STRING_DYNAMIC:
   case EN_CHAR_ARRAY:
-    fprintf(source, "    [%u].Content.Facet.String.MinLength = %u,\n", index, content->Facet.String.MinLength);
-    fprintf(source, "    [%u].Content.Facet.String.MaxLength = %u,\n", index, content->Facet.String.MaxLength);
+    fprintf(source, "    %s.Content.Facet.String.MinLength = %u,\n", array, content->Facet.String.MinLength);
+    fprintf(source, "    %s.Content.Facet.String.MaxLength = %u,\n", array, content->Facet.String.MaxLength);
     break;
 
   case EN_ENUM_STRING:
   case EN_ENUM_UINT:
   case EN_ENUM_INT:
-    fprintf(source, "    [%u].Content.Facet.Enum.Quantity = %u,\n", index, content->Facet.Enum.Quantity);
+    fprintf(source, "    %s.Content.Facet.Enum.Quantity = %u,\n", array, content->Facet.Enum.Quantity);
   break;
 
   case EN_DECIMAL:
-    fprintf(source, "    [%u].Content.Facet.Decimal.MinValue = %gf,\n", index, content->Facet.Decimal.MinValue);
-    fprintf(source, "    [%u].Content.Facet.Decimal.MaxValue = %gf,\n", index, content->Facet.Decimal.MaxValue);
+    fprintf(source, "    %s.Content.Facet.Decimal.MinValue = %gf,\n", array, content->Facet.Decimal.MinValue);
+    fprintf(source, "    %s.Content.Facet.Decimal.MaxValue = %gf,\n", array, content->Facet.Decimal.MaxValue);
     break;
 
   case EN_UNSIGNED:
-    fprintf(source, "    [%u].Content.Facet.Uint.MinValue = %u,\n", index, content->Facet.Uint.MinValue);
-    fprintf(source, "    [%u].Content.Facet.Uint.MaxValue = %u,\n", index, content->Facet.Uint.MaxValue);
+    fprintf(source, "    %s.Content.Facet.Uint.MinValue = %u,\n", array, content->Facet.Uint.MinValue);
+    fprintf(source, "    %s.Content.Facet.Uint.MaxValue = %u,\n", array, content->Facet.Uint.MaxValue);
     break;
 
   case EN_INTEGER:
-    fprintf(source, "    [%u].Content.Facet.Int.MinValue = %d,\n", index, content->Facet.Int.MinValue);
-    fprintf(source, "    [%u].Content.Facet.Int.MaxValue = %d,\n", index, content->Facet.Int.MaxValue);
+    fprintf(source, "    %s.Content.Facet.Int.MinValue = %d,\n", array, content->Facet.Int.MinValue);
+    fprintf(source, "    %s.Content.Facet.Int.MaxValue = %d,\n", array, content->Facet.Int.MaxValue);
     break;
   }
 }
@@ -222,42 +227,49 @@ static inline void write_source(const xs_element_t* const element,
       }
     }
 
+    bool useArray = false;
     if(element->Name.String)
     {
       fprintf(source, "\nstatic const xs_element_t %s_descendant[] =\n{\n", element->Name.String);
+      useArray = true;
     }
     else
     {
-      fprintf(source, "\nstatic const xs_element_t root_descendant[] =\n{\n");
+      fprintf(source, "\nconst xs_element_t %s_root =\n{\n", element->Child[0].Name.String);
     }
 
     uint32_t i = 0;
     do
     {
-      fprintf(source, "    [%u].Name.String = \"%s\",\n", i, child[i].Name.String);
-      fprintf(source, "    [%u].Name.Length = %u,\n", i, child[i].Name.Length);
-      fprintf(source, "    [%u].MinOccur    = %u,\n", i, child[i].MinOccur);
-      fprintf(source, "    [%u].MaxOccur    = %u,\n", i, child[i].MaxOccur);
+      char array[16] = "";
+      if(useArray)
+      {
+         sprintf(array, "[%u]", i);
+      }
+      fprintf(source, "    %s.Name.String = \"%s\",\n", array, child[i].Name.String);
+      fprintf(source, "    %s.Name.Length = %u,\n", array, child[i].Name.Length);
+      fprintf(source, "    %s.MinOccur    = %u,\n", array, child[i].MinOccur);
+      fprintf(source, "    %s.MaxOccur    = %u,\n", array, child[i].MaxOccur);
       if(options->Content_Callback)
       {
-        fprintf(source, "    [%u].Callback    = NULL,\n", i);
+        fprintf(source, "    %s.Callback    = NULL,\n", array);
       }
       bool target_size = (child[i].MaxOccur > 1);
-      write_target(&child[i].Target, i, element->Name.String, child[i].Name.String,
+      write_target(&child[i].Target, array, element->Name.String, child[i].Name.String,
                    target_size, source);
-      write_content(&child[i].Content, i, source);
+      write_content(&child[i].Content, array, source);
 
       if(child[i].Attribute_Quantity)
       {
-        fprintf(source, "    [%u].Attribute_Quantity = %u,\n", i, child[i].Attribute_Quantity);
-        fprintf(source, "    [%u].Attribute          = %s_attribute,\n", i, child[i].Name.String);
+        fprintf(source, "    %s.Attribute_Quantity = %u,\n", array, child[i].Attribute_Quantity);
+        fprintf(source, "    %s.Attribute          = %s_attribute,\n", array, child[i].Name.String);
 
       }
       if(child[i].Child_Quantity)
       {
-        fprintf(source, "    [%u].Child_Quantity = %u,\n", i, child[i].Child_Quantity);
-        fprintf(source, "    [%u].Child_Order    = %s,\n", i, xml_child_order[child[i].Child_Order]);
-        fprintf(source, "    [%u].Child          = %s_descendant,\n", i, child[i].Name.String);
+        fprintf(source, "    %s.Child_Quantity = %u,\n", array, child[i].Child_Quantity);
+        fprintf(source, "    %s.Child_Order    = %s,\n", array, xml_child_order[child[i].Child_Order]);
+        fprintf(source, "    %s.Child          = %s_descendant,\n", array, child[i].Name.String);
       }
 
       if(++i == element->Child_Quantity)
@@ -283,9 +295,11 @@ static inline void write_source(const xs_element_t* const element,
 
       if(attribute[i].Content.Type != EN_NO_XML_DATA_TYPE)
       {
-        write_target(&attribute[i].Target, i, element->Name.String,
+        char array[16] = "";
+        sprintf(array, "[%u]", i);
+        write_target(&attribute[i].Target, array, element->Name.String,
                      attribute[i].Name.String, false, source);
-        write_content(&attribute[i].Content, i, source);
+        write_content(&attribute[i].Content, array, source);
       }
       fprintf(source, "    [%u].Use         = %s,\n", i, xml_attribute_use_type[attribute[i].Use]);
 
@@ -323,15 +337,6 @@ static inline void write_source_code(const xs_element_t* const element, FILE* co
   write_source(element, source, options);
 }
 
-static inline void write_xml_root(FILE* const source, const char* const name)
-{
-  fprintf(source, "\nconst xs_element_t %s_root =\n{\n", name);
-  fprintf(source, "    .Child_Quantity = 1,\n");
-  fprintf(source, "    .Child_Order    = EN_CHOICE,\n");
-  fprintf(source, "    .Child          = root_descendant,\n");
-  fprintf(source, "};\n");
-}
-
 static inline void write_functions(const xs_element_t* const element, FILE* const source, const options_t* const options)
 {
   uint32_t quantity = element->Child_Quantity;
@@ -361,7 +366,6 @@ void generate_xml_source(const xs_element_t* const root,  const options_t* const
   FILE* header_file = create_header_file(name);
   FILE* source_file = create_source_file(name);
   write_source_code(root, header_file, source_file, options);
-  write_xml_root(source_file, name);
   write_functions(root, source_file, options);
   close_header_file(header_file, name);
   fclose(source_file);
@@ -397,6 +401,7 @@ static inline void get_content_format(const xml_content_t* const content, char* 
   }
 }
 
+#if GENERATE_PRINT_FUNCTION
 static inline void write_print_function(const xs_element_t* const element, FILE* const file,
                              char* space, char* variable)
 {
@@ -519,6 +524,7 @@ void generate_print_file(const xs_element_t* const root)
   fprintf(file, "}\n");
   fclose(file);
 }
+#endif // GENERATE_PRINT_FUNCTION
 
 /*
  *  ------------------------------ FUNCTION BODY ------------------------------

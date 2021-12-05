@@ -20,12 +20,14 @@
 #include "parse_xml.h"
 #include "apps/xsd.h"
 #include "elements/xs_schema.h"
+#include "elements/xs_element.h"
 #include "code_generator.h"
 #include "cargs.h"
 
 /*
  *  ------------------------------ FUNCTION BODY ------------------------------
  */
+
 //! Holds the configuration of command line arguments
 static struct cag_option Cag_Options[] = {
   {
@@ -112,13 +114,21 @@ int main(int argc, char *argv[])
   fread(schema, 1, size, fSchema);
   fclose(fSchema);
 
-  xml_parse_result_t result = parse_xml(&xsd_root, schema, (void**)&pXsdData);
+  tree_t schemaTree;
+  memset(&schemaTree, 0, sizeof(schemaTree));
+  tree_t* pXsdData = &schemaTree;
+
+  xml_parse_result_t result = parse_xml(&xsd_root, schema, &schemaTree, &pXsdData);
   if(result == XML_PARSE_SUCCESS)
   {
     printf("Parsing completed successfully\n");
     const xs_element_t* root = compile_xsd(pXsdData->Descendant, &options);
     generate_xml_source(root, &options);
+
+#if GENERATE_PRINT_FUNCTION
     generate_print_file(root);
+#endif // GENERATE_PRINT_FUNCTION
+
   }
   else
   {

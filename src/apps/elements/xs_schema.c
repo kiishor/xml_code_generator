@@ -29,28 +29,11 @@
 #include "xs_schema.h"
 
 /*
- *  -------------------------------- STRUCTURE --------------------------------
- */
-
-typedef struct
-{
-  size_t ElementQuantity;
-  element_t* Elements;
-}schema_t;
-
-/*
  *  ---------------------------- GLOBAL VARIABLES -----------------------------
  */
 
-schema_t Schema;
-tree_t SchemaTree =
-{
-  .Data = &Schema,
-};
-tree_t* pXsdData = &SchemaTree;
 
-
-const xs_element_t schemaDescendant[TOTAL_SCHEMA_DESCENDANTS] =
+static const xs_element_t schemaDescendant[TOTAL_SCHEMA_DESCENDANTS] =
 {
   [EN_schema_element].Name.String  = "xs:element",
   [EN_schema_element].Name.Length  = sizeof("xs:element") - 1,
@@ -108,7 +91,7 @@ const xs_element_t schemaDescendant[TOTAL_SCHEMA_DESCENDANTS] =
 
 };
 
-const xs_attribute_t schema_attr[] =
+static const xs_attribute_t schema_attr[] =
 {
   [0].Name.String = "xmlns:xsi",
   [0].Name.Length = sizeof("xmlns:xsi") - 1,
@@ -120,7 +103,7 @@ const xs_attribute_t schema_attr[] =
   [2].Name.Length = sizeof("xmlns:hfp") - 1,
 };
 
-static const xs_element_t xsd_schema =
+const xs_element_t xsd_root =
 {
   .Name.String = "xs:schema",
   .Name.Length = sizeof("xs:schema") - 1,
@@ -128,8 +111,8 @@ static const xs_element_t xsd_schema =
   .MaxOccur     = 1,
   .Callback     = NULL,
 
-  .Target.Type    = EN_STATIC,
-  .Target.Address = &Schema,
+  .Target.Type    = EN_RELATIVE,
+  .Target.Offset = 0,
 
   .Attribute_Quantity = sizeof(schema_attr) / sizeof(xs_attribute_t),
   .Attribute          = schema_attr,
@@ -137,13 +120,6 @@ static const xs_element_t xsd_schema =
   .Child_Quantity = TOTAL_SCHEMA_DESCENDANTS,
   .Child_Order      = EN_RANDOM,
   .Child          = schemaDescendant,
-};
-
-const xs_element_t xsd_root =
-{
-  .Child_Quantity = 1,
-  .Child_Order     = EN_CHOICE,
-  .Child = &xsd_schema,
 };
 
 /*

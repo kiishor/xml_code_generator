@@ -11,7 +11,7 @@
 				<Option object_output="obj/Debug/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
-				<Option parameters="--callback --context --dynamic C:\project\xml_code_generator\src\xml_parser\example\shiporder\xml\shiporder3.xsd" />
+				<Option parameters="C:\project\xml_parser_in_c\example\food\xml\food.xsd" />
 				<Compiler>
 					<Add option="-g" />
 				</Compiler>
@@ -35,6 +35,7 @@
 		</Build>
 		<Compiler>
 			<Add option="-Wall" />
+			<Add option="-std=c17" />
 			<Add option='-DXML_PARSER_CONTEXT=&quot;1&quot;' />
 			<Add option='-DXML_PARSER_CALLBACK=&quot;1&quot;' />
 			<Add directory="../../src/includes" />
