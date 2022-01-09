@@ -223,7 +223,7 @@ static inline void write_source(const xs_element_t* const element,
     {
       if(child[i].Target.Type == EN_DYNAMIC)
       {
-        fprintf(source, "\nstatic void* allocate_%s(uint32_t occurrence%s);\n", child[i].Name.String, options->Context);
+        fprintf(source, "\nextern void* allocate_%s(uint32_t occurrence%s);\n", child[i].Name.String, options->Context);
       }
     }
 
@@ -347,15 +347,6 @@ static inline void write_functions(const xs_element_t* const element, FILE* cons
     if(child[quantity].Child_Quantity || child[quantity].Attribute_Quantity)
     {
       write_functions(&child[quantity], source, options);
-    }
-  }
-
-  for(uint32_t i = 0; i < element->Child_Quantity; i++)
-  {
-    if(child[i].Target.Type == EN_DYNAMIC)
-    {
-      fprintf(source, "\nstatic void* allocate_%s(uint32_t occurrence%s)\n{\n", child[i].Name.String, options->Context);
-      fprintf(source, "}\n");
     }
   }
 }
