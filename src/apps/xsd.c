@@ -32,10 +32,10 @@
  *  ------------------------------ FUNCTION BODY ------------------------------
  */
 static inline void parse_child_element(const tree_t* node, xs_element_t* const element,
-                                       context_t* const context);
+                                       const context_t* const context);
 
 static inline xs_element_t* parse_sequence(const tree_t* const sequence, xs_element_t* const element,
-                                           context_t* const context)
+                                           const context_t* const context)
 {
   const tree_t* node = sequence->Descendant;
 
@@ -50,6 +50,7 @@ static inline xs_element_t* parse_sequence(const tree_t* const sequence, xs_elem
     quantity++;
     node = node->Next;
   }
+
   element->Child_Quantity = quantity;
   xs_element_t* child_elements = calloc(sizeof(xs_element_t), quantity);
   element->Child = child_elements;
@@ -124,7 +125,7 @@ static inline void parse_extended_type(xs_element_t* const element,
   }
 }
 
-static inline void parse_attribute(const tree_t* node, xs_attribute_t* const attribute,
+static inline void parse_attribute(const tree_t* const node, xs_attribute_t* const attribute,
                                    const context_t* const context)
 {
   attribute_t* source = node->Data;
@@ -189,10 +190,10 @@ static inline void set_attribute(const tree_t* node,
 // the descendants that are not supposed to be part of it.
 static inline void parse_restriction(const tree_t* const tree,
                                      xs_element_t* const element,
-                                     context_t* const context,
+                                     const context_t* const context,
                                      en_restriction_parent parent)
 {
-  const restriction_t* const restriction = tree->Data;
+  restriction_t* const restriction = tree->Data;
   string_t* const type = &restriction->attr.base;
   type->Length = strlen(type->String);
 
@@ -218,7 +219,7 @@ static inline void parse_restriction(const tree_t* const tree,
       break;
 
     case XS_ATTRIBUTE_TAG:
-       parse_attribute(node, &element->Attribute[attr_index++], context);
+       parse_attribute(node, (xs_attribute_t*)&element->Attribute[attr_index++], context);
       break;
 
     // TODO: support restriction facets
@@ -231,7 +232,7 @@ static inline void parse_restriction(const tree_t* const tree,
   }
 }
 
-static inline void parse_simple_content(const tree_t* tree,
+static inline void parse_simple_content(const tree_t* const tree,
                                         xs_element_t* const element,
                                         const context_t* const context)
 {
@@ -246,7 +247,7 @@ static inline void parse_simple_content(const tree_t* tree,
   }
 }
 
-static inline void parse_complex_element(const tree_t* tree,
+static inline void parse_complex_element(const tree_t* const tree,
                                     xs_element_t* const element,
                                     const context_t* const context)
 {
@@ -270,7 +271,7 @@ static inline void parse_complex_element(const tree_t* tree,
       break;
 
     case XS_ATTRIBUTE_TAG:
-       parse_attribute(node, &element->Attribute[attr_index++], context);
+       parse_attribute(node, (xs_attribute_t*)&element->Attribute[attr_index++], context);
       break;
 
     default:
@@ -281,7 +282,7 @@ static inline void parse_complex_element(const tree_t* tree,
   }
 }
 
-static inline void parse_complex_type(const tree_t* tree, xs_element_t* const element,
+static inline void parse_complex_type(const tree_t* const tree, xs_element_t* const element,
                                       context_t* const context)
 {
   complexType_t* complexType = tree->Data;
@@ -300,22 +301,21 @@ static inline void parse_simple_element(const tree_t* const tree,
                                         const context_t* const context)
 {
   const tree_t* node = tree->Descendant;
-  const restriction_t* const restriction = node->Data;
   assert((*(xsd_tag_t*)node->Data) == XS_RESTRICTION_TAG);
 
   parse_restriction(node, element, context, SIMPLE_TYPE_PARENT);
   return;
 }
 
-static inline void parse_simple_type(const tree_t* tree, xs_element_t* const element,
+static inline void parse_simple_type(const tree_t* const tree, xs_element_t* const element,
                                      context_t* const context)
 {
-  simpleType_t* simpleType = tree->Data;
+  const simpleType_t* const simpleType = tree->Data;
   const char* const name = simpleType->attr.name.String;
   assert(name);
 
   element->Name.Length = strlen(name);
-  element->Name.String = name;
+  element->Name.String = (char*)name;
 
   parse_simple_element(tree, element, context);
   add_element_node(&context->SimpleType_List, element);
@@ -324,7 +324,7 @@ static inline void parse_simple_type(const tree_t* tree, xs_element_t* const ele
 static inline void parse_element(const tree_t* node, xs_element_t* const element,
                                  const context_t* const context)
 {
-  const element_t* source = node->Data;
+  element_t* const source = node->Data;
 
   element->Name.Length = strlen(source->global.name.String);
   element->Name.String = source->global.name.String;
@@ -370,7 +370,7 @@ static inline void set_target_type(xs_element_t* const element,
 
 static inline void parse_child_element(const tree_t* const node,
                                        xs_element_t* const element,
-                                       context_t* const context)
+                                       const context_t* const context)
 {
   element_t* source = node->Data;
 
@@ -396,7 +396,7 @@ static inline void parse_child_element(const tree_t* const node,
   if(source->child.ref.String)
   {
     source->child.ref.Length = strlen(source->child.ref.String);
-    add_reference_node(&context->Element_List, element, &source->child.ref);
+    add_reference_node((reference_list_t*)&context->Element_List, element, &source->child.ref);
     return;
   }
   parse_element(node, element, context);
@@ -407,10 +407,10 @@ static inline void resolve_element_references(const element_list_t* const elemen
 {
   while(reference_list)
   {
-    element_list_t* node = search_element_node(element_list, &reference_list->Reference);
+    element_list_t* node = (element_list_t* )search_element_node(element_list, &reference_list->Reference);
     assert(node != NULL);
     node->Ref_Count++;
-    xs_element_t* target = reference_list->Element;
+    xs_element_t* target = (xs_element_t* )reference_list->Element;
 
     uint32_t minOccurs = target->MinOccur;
     uint32_t maxOccurs = target->MaxOccur;
@@ -437,7 +437,7 @@ static inline xs_element_t* get_root(const element_list_t* list)
       {
         return NULL;
       }
-      root = list->Element;
+      root = (xs_element_t*)list->Element;
     }
     list = (element_list_t*)list->List.Next;
   }
@@ -470,7 +470,7 @@ static inline xs_element_t* create_root(const element_list_t* const list)
               sizeof(xs_attribute_t) * element->Attribute_Quantity);
   }
   element->Attribute_Quantity += 2;
-  free(element->Attribute);
+  free((void*)element->Attribute);
   element->Attribute = attributes;
 
   return (xs_element_t*)root;
@@ -485,6 +485,8 @@ xs_element_t* compile_xsd(const tree_t* const tree, const options_t* const optio
   memset(&context, 0, sizeof(context_t));
   context.Options = options;
 
+  //Parse all the globaL complexType, attributes and simpleType tags
+  // before global elements
   const tree_t* node = tree;
   while(node)
   {
@@ -519,6 +521,7 @@ xs_element_t* compile_xsd(const tree_t* const tree, const options_t* const optio
     node = node->Next;
   }
 
+  // Now parse all the global elements
   node = tree;
   while(node)
   {
@@ -532,10 +535,12 @@ xs_element_t* compile_xsd(const tree_t* const tree, const options_t* const optio
     node = node->Next;
   }
 
+  // Resolve all the element references
   if(context.Element_List.Element)
   {
     resolve_element_references(&element_list, &context.Element_List);
   }
 
+  // search and return root element.
   return create_root(&element_list);
 }

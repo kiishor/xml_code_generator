@@ -28,6 +28,26 @@
  *  ------------------------------ FUNCTION BODY ------------------------------
  */
 
+void free_xsd_tree(const tree_t* node)
+{
+  if(node->Data)
+  {
+    free(node->Data);
+  }
+
+  if(node->Next)
+  {
+    free_xsd_tree(node->Next);
+  }
+
+  if(node->Descendant)
+  {
+    free_xsd_tree(node->Descendant);
+  }
+
+  free((void*)node);
+}
+
 //! Holds the configuration of command line arguments
 static struct cag_option Cag_Options[] = {
   {
@@ -114,6 +134,7 @@ int main(int argc, char *argv[])
   fread(schema, 1, size, fSchema);
   fclose(fSchema);
 
+  // This holds all the schema elements in tree structure.
   tree_t schemaTree;
   memset(&schemaTree, 0, sizeof(schemaTree));
   tree_t* pXsdData = &schemaTree;
@@ -124,6 +145,7 @@ int main(int argc, char *argv[])
     printf("Parsing completed successfully\n");
     const xs_element_t* root = compile_xsd(pXsdData->Descendant, &options);
     generate_xml_source(root, &options);
+    free_xsd_tree(schemaTree.Descendant);
 
 #if GENERATE_PRINT_FUNCTION
     generate_print_file(root);
