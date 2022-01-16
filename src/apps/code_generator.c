@@ -157,6 +157,7 @@ static inline void write_content(const xml_content_t* const content,
   {
   case EN_STRING_DYNAMIC:
   case EN_CHAR_ARRAY:
+  case EN_STRING:
     fprintf(source, "    %s.Content.Facet.String.MinLength = %u,\n", array, content->Facet.String.MinLength);
     fprintf(source, "    %s.Content.Facet.String.MaxLength = %u,\n", array, content->Facet.String.MaxLength);
     break;
@@ -172,6 +173,11 @@ static inline void write_content(const xml_content_t* const content,
     fprintf(source, "    %s.Content.Facet.Decimal.MaxValue = %gf,\n", array, content->Facet.Decimal.MaxValue);
     break;
 
+  case EN_DOUBLE:
+    fprintf(source, "    %s.Content.Facet.Double.MinValue = %gf,\n", array, content->Facet.Double.MinValue);
+    fprintf(source, "    %s.Content.Facet.Double.MaxValue = %gf,\n", array, content->Facet.Double.MaxValue);
+    break;
+
   case EN_UNSIGNED:
     fprintf(source, "    %s.Content.Facet.Uint.MinValue = %u,\n", array, content->Facet.Uint.MinValue);
     fprintf(source, "    %s.Content.Facet.Uint.MaxValue = %u,\n", array, content->Facet.Uint.MaxValue);
@@ -180,6 +186,19 @@ static inline void write_content(const xml_content_t* const content,
   case EN_INTEGER:
     fprintf(source, "    %s.Content.Facet.Int.MinValue = %d,\n", array, content->Facet.Int.MinValue);
     fprintf(source, "    %s.Content.Facet.Int.MaxValue = %d,\n", array, content->Facet.Int.MaxValue);
+    break;
+
+  case EN_UNSIGNED_LONG:
+    fprintf(source, "    %s.Content.Facet.Ulong.MinValue = %llu,\n", array, content->Facet.Ulong.MinValue);
+    fprintf(source, "    %s.Content.Facet.Ulong.MaxValue = %llu,\n", array, content->Facet.Ulong.MaxValue);
+    break;
+
+  case EN_LONG:
+    fprintf(source, "    %s.Content.Facet.Long.MinValue = %lld,\n", array, content->Facet.Long.MinValue);
+    fprintf(source, "    %s.Content.Facet.Long.MaxValue = %lld,\n", array, content->Facet.Long.MaxValue);
+    break;
+
+  default:
     break;
   }
 }
@@ -196,6 +215,9 @@ void handle_occurrences(address_type_t type, uint32_t maxOccur, char* pointer, c
   case EN_DYNAMIC:
     sprintf(pointer, "*");
     break;
+
+  default:
+    printf("Unsupported target address type: %d", type);
   }
 }
 
@@ -281,7 +303,7 @@ static inline void write_source(const xs_element_t* const element,
          sprintf(array, "[%u]", i);
       }
       fprintf(source, "    %s.Name.String = \"%s\",\n", array, child[i].Name.String);
-      fprintf(source, "    %s.Name.Length = %u,\n", array, child[i].Name.Length);
+      fprintf(source, "    %s.Name.Length = %llu,\n", array, child[i].Name.Length);
       fprintf(source, "    %s.MinOccur    = %u,\n", array, child[i].MinOccur);
       fprintf(source, "    %s.MaxOccur    = %u,\n", array, child[i].MaxOccur);
       if(options->Content_Callback)
@@ -396,12 +418,15 @@ void generate_xml_source(const xs_element_t* const root,  const options_t* const
   fclose(source_file);
 }
 
+#if GENERATE_PRINT_FUNCTION
+
 static inline void get_content_format(const xml_content_t* const content, char* format)
 {
   switch(content->Type)
   {
   case EN_STRING_DYNAMIC:
   case EN_ENUM_STRING:
+  case EN_STRING:
     strcpy(format, "%s");
     break;
 
@@ -423,10 +448,11 @@ static inline void get_content_format(const xml_content_t* const content, char* 
   case EN_BOOL:
     strcpy(format, "%d");
     break;
+
+    default:
   }
 }
 
-#if GENERATE_PRINT_FUNCTION
 static inline void write_print_function(const xs_element_t* const element, FILE* const file,
                              char* space, char* variable)
 {

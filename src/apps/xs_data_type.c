@@ -87,11 +87,29 @@ void convert_xsd_data_type(xml_content_t* const content, xs_data_type_t type)
     content->Facet.Decimal.MaxValue = FLT_MAX;
     break;
 
+  case XS_DOUBLE:
+    content->Type = EN_DOUBLE;
+    content->Facet.Double.MinValue = -DBL_MAX;
+    content->Facet.Double.MaxValue = DBL_MAX;
+    break;
+
   case XS_INTEGER:
   case XS_INT:
     content->Type = EN_INTEGER;
     content->Facet.Int.MinValue = INT32_MIN;
     content->Facet.Int.MaxValue = INT32_MAX;
+    break;
+
+  case XS_BYTE:
+    content->Type = EN_INTEGER;
+    content->Facet.Int.MinValue = INT8_MIN;
+    content->Facet.Int.MaxValue = INT8_MAX;
+    break;
+
+  case XS_SHORT:
+    content->Type = EN_INTEGER;
+    content->Facet.Int.MinValue = INT16_MIN;
+    content->Facet.Int.MaxValue = INT16_MAX;
     break;
 
   case XS_NEGATIVE_INTEGER:
@@ -119,6 +137,30 @@ void convert_xsd_data_type(xml_content_t* const content, xs_data_type_t type)
     content->Facet.Uint.MaxValue = UINT32_MAX;
     break;
 
+  case XS_UNSIGNED_SHORT:
+    content->Type = EN_UNSIGNED;
+    content->Facet.Uint.MinValue = 0;
+    content->Facet.Uint.MaxValue = UINT16_MAX;
+    break;
+
+  case XS_UNSIGNED_BYTE:
+    content->Type = EN_UNSIGNED;
+    content->Facet.Uint.MinValue = 0;
+    content->Facet.Uint.MaxValue = UINT8_MAX;
+    break;
+
+  case XS_LONG:
+    content->Type = EN_LONG;
+    content->Facet.Long.MinValue = INT64_MIN;
+    content->Facet.Long.MaxValue = INT64_MAX;
+    break;
+
+  case XS_UNSIGNED_LONG:
+    content->Type = EN_UNSIGNED_LONG;
+    content->Facet.Ulong.MinValue = 0;
+    content->Facet.Ulong.MaxValue = UINT64_MAX;
+    break;
+
   case XS_BOOLEAN:
     content->Type = EN_BOOL;
     break;
@@ -137,6 +179,9 @@ void convert_xsd_data_type(xml_content_t* const content, xs_data_type_t type)
 
   case XS_DURATION:
     content->Type = EN_DURATION;
+    break;
+
+  default:
     break;
   }
 }
