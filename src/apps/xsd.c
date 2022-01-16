@@ -224,9 +224,9 @@ static inline void parse_restriction(const tree_t* const tree,
 
     // TODO: support restriction facets
 
-//    default:
+    default:
 //      assert(false);
-//      return;
+      break;
     }
     node = node->Next;
   }
@@ -243,6 +243,9 @@ static inline void parse_simple_content(const tree_t* const tree,
   case XS_RESTRICTION_TAG:
   case XS_EXTENSION_TAG:
     parse_restriction(node, element, context, SIMPLE_CONTENT_PARENT);
+    break;
+
+  default:
     break;
   }
 }
