@@ -107,18 +107,19 @@ const xs_element_t xsd_root =
 {
   .Name.String = "xs:schema",
   .Name.Length = sizeof("xs:schema") - 1,
-  .MinOccur     = 1,
-  .MaxOccur     = 1,
-  .Callback     = NULL,
+  .MinOccur    = 1,
+  .MaxOccur    = 1,
+  .Callback    = NULL,
 
-  .Target.Type    = EN_RELATIVE,
+  .Target.Type   = EN_RELATIVE,
   .Target.Offset = 0,
 
   .Attribute_Quantity = sizeof(schema_attr) / sizeof(xs_attribute_t),
   .Attribute          = schema_attr,
+  .Ignore_Attribute   = true,
 
   .Child_Quantity = TOTAL_SCHEMA_DESCENDANTS,
-  .Child_Order      = EN_RANDOM,
+  .Child_Order    = EN_RANDOM,
   .Child          = schemaDescendant,
 };
 

@@ -11,7 +11,7 @@
 				<Option object_output="obj/Debug/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
-				<Option parameters="C:\project\xml_parser_in_c\example\food\xml\food.xsd" />
+				<Option parameters="C:\project\xml_parser_in_c\example\purchase_order\xml\purchase_order.xsd" />
 				<Compiler>
 					<Add option="-g" />
 				</Compiler>
@@ -34,6 +34,14 @@
 			</Target>
 		</Build>
 		<Compiler>
+			<Add option="-Wshadow" />
+			<Add option="-Winit-self" />
+			<Add option="-Wredundant-decls" />
+			<Add option="-Wcast-align" />
+			<Add option="-Wfloat-equal" />
+			<Add option="-Wunreachable-code" />
+			<Add option="-Wmissing-include-dirs" />
+			<Add option="-Wmain" />
 			<Add option="-Wall" />
 			<Add option="-std=c17" />
 			<Add option='-DXML_PARSER_CONTEXT=&quot;1&quot;' />

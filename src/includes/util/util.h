@@ -13,13 +13,17 @@
  *  -------------------------------- STRUCTURE --------------------------------
  */
 
+//! Linked list of xs_element_t structure
 typedef struct
 {
-  list_t List;
-  const xs_element_t* Element;
+  list_t List;                  //!< Linked list
+  const xs_element_t* Element;  //!< pointer to element
+  //!< Reference count of element. This keeps track if any element is referred by another element or type.
+  //!< Ref_Count > 0 indicates that it is a child element not a root element.
   uint32_t Ref_Count;
 }element_list_t;
 
+//! Attribute linked list.
 typedef struct
 {
   list_t List;

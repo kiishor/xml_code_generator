@@ -24,25 +24,33 @@
 #include "code_generator.h"
 #include "cargs.h"
 
+#define ADD_TAG(TAG, NAME) [TAG]=#NAME,
+const char* TagName[TOTAL_XSD_TAGS] = {ALL_XSD_TAG};
+#undef ADD_TAG
+
 /*
  *  ------------------------------ FUNCTION BODY ------------------------------
  */
 
-void free_xsd_tree(const tree_t* node)
+void free_xsd_tree(const tree_t* node, uint32_t level)
 {
   if(node->Data)
   {
+    const xsd_tag_t* const tag = node->Data;
+    printf("Level: %u, Tag: %s", level, TagName[*tag]);
     free(node->Data);
   }
 
   if(node->Next)
   {
-    free_xsd_tree(node->Next);
+    printf("\t");
+    free_xsd_tree(node->Next, level);
   }
 
   if(node->Descendant)
   {
-    free_xsd_tree(node->Descendant);
+    printf("\n");
+    free_xsd_tree(node->Descendant, level + 1);
   }
 
   free((void*)node);
@@ -145,7 +153,7 @@ int main(int argc, char *argv[])
     printf("Parsing completed successfully\n");
     const xs_element_t* root = compile_xsd(pXsdData->Descendant, &options);
     generate_xml_source(root, &options);
-    free_xsd_tree(schemaTree.Descendant);
+    free_xsd_tree(schemaTree.Descendant, 0);
 
 #if GENERATE_PRINT_FUNCTION
     generate_print_file(root);

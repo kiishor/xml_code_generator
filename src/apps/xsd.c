@@ -538,7 +538,7 @@ xs_element_t* compile_xsd(const tree_t* const tree, const options_t* const optio
     node = node->Next;
   }
 
-  // Resolve all the element references
+  // Resolve all element references
   if(context.Element_List.Element)
   {
     resolve_element_references(&element_list, &context.Element_List);
