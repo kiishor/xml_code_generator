@@ -102,44 +102,6 @@ static inline bool parse_base_type(xml_content_t* const content, const string_t*
     }
   }
   return false;
-  // TODO: Attribute with simple data type. also needs to be supported
-}
-
-static inline void parse_extended_type(xs_element_t* const element,
-                              const string_t* const type,
-                              const context_t* const context,
-                              bool complex_type)
-{
-
-  //! Parse element type.
-  if(!parse_base_type(&element->Content, type, context))
-  {
-    // Could not found the given type. It may be simple type or complex type.
-    add_unresolved_tag((unresolved_tag_t*)&context->Type_List, element, type);
-  }
-
-//  const element_list_t* simpleType_List = search_element_node(&context->SimpleType_List, type);
-//  if(simpleType_List)
-//  {
-//    const xs_element_t* const simpleType = simpleType_List->Element;
-//    memcpy(content, &simpleType->Content, sizeof(xml_content_t));
-//  }
-//
-//  if((element->Content.Type != EN_NO_XML_DATA_TYPE) || (!complex_type))
-//  {
-//    return;
-//  }
-//
-//  const element_list_t* const list = search_element_node(&context->ComplexType_List, type);
-//  if(list)
-//  {
-//    const xs_element_t* const complexType = list->Element;
-//    element->Attribute = complexType->Attribute;
-//    element->Attribute_Quantity = complexType->Attribute_Quantity;
-//    element->Child = complexType->Child;
-//    element->Child_Quantity = complexType->Child_Quantity;
-//    element->Child_Order = complexType->Child_Order;
-//  }
 }
 
 static inline void parse_attribute(const tree_t* const node, xs_attribute_t* const attribute,
@@ -462,7 +424,6 @@ static inline void resolve_element_types(unresolved_tag_t* element_list, const s
       element->Child_Quantity = complexType->Child_Quantity;
       element->Child_Order = complexType->Child_Order;
       memcpy((void*)&element->Content, &complexType->Content, sizeof(xml_content_t));
-
     }
 
     element_list = (unresolved_tag_t*)element_list->List.Next;
@@ -586,14 +547,21 @@ xs_element_t* compile_xsd(const tree_t* const tree, const options_t* const optio
   memset(&context, 0, sizeof(context_t));
   context.Options = options;
 
-  //Parse all the globaL complexType, attributes and simpleType tags
-  // before global elements
+  //Parse all the global elements, globaL complexType, attributes and simpleType tags
   const tree_t* node = tree;
   while(node)
   {
     const xsd_tag_t* const tag = node->Data;
     switch(*tag)
     {
+    case XS_GLOBAL_ELEMENT_TAG:
+    {
+      xs_element_t* element = calloc(sizeof(xs_element_t), 1);
+      parse_element(node, element, &context);
+      add_global_element(&element_list, element);
+      break;
+    }
+
     case XS_COMPLEX_TAG:
     {
       xs_element_t* complexType = calloc(sizeof(xs_element_t), 1);
@@ -618,20 +586,6 @@ xs_element_t* compile_xsd(const tree_t* const tree, const options_t* const optio
 
     default:
       break;
-    }
-    node = node->Next;
-  }
-
-  // Now parse all the global elements
-  node = tree;
-  while(node)
-  {
-    const xsd_tag_t* const tag = node->Data;
-    if(*tag == XS_GLOBAL_ELEMENT_TAG)
-    {
-      xs_element_t* element = calloc(sizeof(xs_element_t), 1);
-      parse_element(node, element, &context);
-      add_global_element(&element_list, element);
     }
     node = node->Next;
   }
