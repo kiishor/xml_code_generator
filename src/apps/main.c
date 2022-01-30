@@ -24,10 +24,6 @@
 #include "code_generator.h"
 #include "cargs.h"
 
-#define ADD_TAG(TAG, NAME) [TAG]=#NAME,
-const char* TagName[TOTAL_XSD_TAGS] = {ALL_XSD_TAG};
-#undef ADD_TAG
-
 /*
  *  ------------------------------ FUNCTION BODY ------------------------------
  */
