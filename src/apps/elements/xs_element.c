@@ -134,6 +134,8 @@ const xs_attribute_t child_element_attr[TOTAL_CHILD_ELEMENT_ATTRIBUTES] =
   [EN_child_maxOccurs].Target.Offset = offsetof(element_t, child.maxOccurs),
 
   [EN_child_maxOccurs].Content.Type = EN_STRING,
+  [EN_child_maxOccurs].Content.Facet.String.MinLength = DEFAULT_MIN_STRING_LENGTH,
+  [EN_child_maxOccurs].Content.Facet.String.MaxLength = DEFAULT_MAX_STRING_LENGTH,
 
   [EN_child_maxOccurs].Use = EN_OPTIONAL,
 };

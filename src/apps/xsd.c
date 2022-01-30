@@ -77,8 +77,18 @@ static inline xs_attribute_use_t parse_attribute_use(const string_t* const use)
   return TOTAL_XSD_ATTRIBUTE_USE_VALUES;
 }
 
-static inline void parse_base_type(xml_content_t* const content,
-                                   const string_t* const type,
+/** \brief Assigns the content type based on the schema type name.
+
+ * This function checks whether the give type is basic XML type (xs:string, xs:decimal, ..).
+ * Function returns false if given type is not a basic XML type.
+ *
+ * \param content xml_content_t* const Content of an element/atrrtibute to set type
+ * \param type const string_t* const Type of an element/attribute in string
+ * \param context const context_t* const Context of compiler
+ * \return bool Returns true if given type is found in the list of supported basic types. Otherwise returns false.
+ *
+ */
+static inline bool parse_base_type(xml_content_t* const content, const string_t* const type,
                                    const context_t* const context)
 {
   content->Type = EN_NO_XML_DATA_TYPE;
@@ -88,41 +98,10 @@ static inline void parse_base_type(xml_content_t* const content,
        (!memcmp(type->String, xs_data_type[i].String, type->Length)))
     {
       convert_xsd_data_type(content, i);
-      return;
+      return true;
     }
   }
-
-  const element_list_t* simpleType_List = search_element_node(&context->SimpleType_List, type);
-  if(simpleType_List)
-  {
-    const xs_element_t* const simpleType = simpleType_List->Element;
-    memcpy(content, &simpleType->Content, sizeof(xml_content_t));
-  }
-}
-
-static inline void parse_extended_type(xs_element_t* const element,
-                              const string_t* const type,
-                              const context_t* const context,
-                              bool complex_type)
-{
-
-  parse_base_type(&element->Content, type, context);
-
-  if((element->Content.Type != EN_NO_XML_DATA_TYPE) || (!complex_type))
-  {
-    return;
-  }
-
-  const element_list_t* const list = search_element_node(&context->ComplexType_List, type);
-  if(list)
-  {
-    const xs_element_t* const complexType = list->Element;
-    element->Attribute = complexType->Attribute;
-    element->Attribute_Quantity = complexType->Attribute_Quantity;
-    element->Child = complexType->Child;
-    element->Child_Quantity = complexType->Child_Quantity;
-    element->Child_Order = complexType->Child_Order;
-  }
+  return false;
 }
 
 static inline void parse_attribute(const tree_t* const node, xs_attribute_t* const attribute,
@@ -135,19 +114,16 @@ static inline void parse_attribute(const tree_t* const node, xs_attribute_t* con
     source->attr.use.Length = strlen(source->attr.use.String);
     use = parse_attribute_use(&source->attr.use);
   }
+  attribute->Use = use;
 
   string_t* const ref = &source->attr.ref;
   if(ref->String)
   {
     ref->Length = strlen(ref->String);
-    const attribute_list_t* const attr_list =
-                          search_attribute_node(&context->Attribute_List, ref);
-    memcpy(attribute, attr_list->Attribute, sizeof(xs_attribute_t));
-    attribute->Use = use;
+    add_unresolved_tag((unresolved_tag_t*)&context->Attr_Ref_List, attribute, ref);
     return;
   }
 
-  attribute->Use = use;
   attribute->Name.Length = strlen(source->attr.name.String);
   attribute->Name.String = source->attr.name.String;
   attribute->Target.Type = EN_RELATIVE;
@@ -156,7 +132,12 @@ static inline void parse_attribute(const tree_t* const node, xs_attribute_t* con
   if(type->String)
   {
     type->Length = strlen(type->String);
-    parse_base_type(&attribute->Content, type, context);
+    // Parse element type.
+    if(!parse_base_type(&attribute->Content, type, context))
+    {
+      // Could not found the given type. It may be simple type.
+      add_unresolved_tag((unresolved_tag_t*)&context->Attr_Type_List, attribute, type);
+    }
   }
 }
 
@@ -197,8 +178,12 @@ static inline void parse_restriction(const tree_t* const tree,
   string_t* const type = &restriction->attr.base;
   type->Length = strlen(type->String);
 
-  bool complex_type = (parent == COMPLEX_CONTENT_PARENT);
-  parse_extended_type(element, type, context, complex_type);
+
+  if(!parse_base_type(&element->Content, type, context))
+  {
+    // Could not found the given type. It may be simple type or complex type.
+    add_unresolved_tag((unresolved_tag_t*)&context->Type_List, element, type);
+  }
 
   if((parent == SIMPLE_CONTENT_PARENT) || (parent == COMPLEX_CONTENT_PARENT))
   {
@@ -295,7 +280,7 @@ static inline void parse_complex_type(const tree_t* const tree, xs_element_t* co
   element->Name.String = complexType->attr.name.String;
 
   parse_complex_element(tree, element, context);
-  add_element_node(&context->ComplexType_List, element);
+  add_node((linked_list_t*)&context->ComplexType_List, element);
 }
 
 // xs:simpleType
@@ -321,7 +306,7 @@ static inline void parse_simple_type(const tree_t* const tree, xs_element_t* con
   element->Name.String = (char*)name;
 
   parse_simple_element(tree, element, context);
-  add_element_node(&context->SimpleType_List, element);
+  add_node((linked_list_t*)&context->SimpleType_List, element);
 }
 
 static inline void parse_element(const tree_t* node, xs_element_t* const element,
@@ -336,7 +321,12 @@ static inline void parse_element(const tree_t* node, xs_element_t* const element
   if(type->String)
   {
     type->Length = strlen(type->String);
-    parse_extended_type(element, type, context, true);
+    // Parse element type.
+    if(!parse_base_type(&element->Content, type, context))
+    {
+      // Could not found the given type. It may be simple type or complex type.
+      add_unresolved_tag((unresolved_tag_t*)&context->Type_List, element, type);
+    }
   }
 
   node = node->Descendant;
@@ -396,40 +386,110 @@ static inline void parse_child_element(const tree_t* const node,
   element->MaxOccur = maxOccurs;
   set_target_type(element, context->Options->Occurrence);
 
+  // If element has reference attribute, then add the element and its reference name
+  // to the unresolved element list to resolve it later.
   if(source->child.ref.String)
   {
     source->child.ref.Length = strlen(source->child.ref.String);
-    add_reference_node((reference_list_t*)&context->Element_List, element, &source->child.ref);
+    add_unresolved_tag((unresolved_tag_t*)&context->Ref_List, element, &source->child.ref);
     return;
   }
   parse_element(node, element, context);
 }
 
-static inline void resolve_element_references(const element_list_t* const element_list,
-                                const reference_list_t* reference_list)
+static inline void resolve_element_types(unresolved_tag_t* element_list, const simpleType_list_t* simpleType_List,
+                                         const complexType_list_t* complexType_List)
+{
+  while(element_list)
+  {
+    {
+      const simpleType_list_t* const simpleType_Node =
+            (simpleType_list_t*)search_node((linked_list_t*)simpleType_List, &element_list->Tag);
+      if(simpleType_Node)
+      {
+        xs_element_t* const element = (xs_element_t*)element_list->Element;
+        memcpy((void*)&element->Content, &simpleType_Node->Element->Content, sizeof(xml_content_t));
+      }
+    }
+
+    const complexType_list_t* const complexType_Node =
+              (complexType_list_t*)search_node((linked_list_t*)complexType_List, &element_list->Tag);
+    if(complexType_Node)
+    {
+      xs_element_t* const element = (xs_element_t*)element_list->Element;
+      const xs_element_t* const complexType = complexType_Node->Element;
+      element->Attribute = complexType->Attribute;
+      element->Attribute_Quantity = complexType->Attribute_Quantity;
+      element->Child = complexType->Child;
+      element->Child_Quantity = complexType->Child_Quantity;
+      element->Child_Order = complexType->Child_Order;
+      memcpy((void*)&element->Content, &complexType->Content, sizeof(xml_content_t));
+    }
+
+    element_list = (unresolved_tag_t*)element_list->List.Next;
+  }
+}
+
+static inline void resolve_attribute_types(unresolved_tag_t* attribute_List, const simpleType_list_t* simpleType_List)
+{
+  while(attribute_List)
+  {
+    const simpleType_list_t* const simpleType_Node =
+          (simpleType_list_t*)search_node((linked_list_t*)simpleType_List, &attribute_List->Tag);
+    if(simpleType_Node)
+    {
+      xs_attribute_t* const attribute = (xs_attribute_t*)attribute_List->Attribute;
+      memcpy((void*)&attribute->Content, &simpleType_Node->Element->Content, sizeof(xml_content_t));
+    }
+    attribute_List = (unresolved_tag_t*)attribute_List->List.Next;
+  }
+}
+
+static inline void resolve_element_references(const global_element_list_t* const element_list,
+                                const unresolved_tag_t* reference_list)
 {
   while(reference_list)
   {
-    element_list_t* node = (element_list_t* )search_element_node(element_list, &reference_list->Reference);
+    // Search unresolved referred element into list of global elements
+    global_element_list_t* const node =
+          (global_element_list_t* )search_node((linked_list_t*)element_list, &reference_list->Tag);
     assert(node != NULL);
-    node->Ref_Count++;
-    xs_element_t* target = (xs_element_t* )reference_list->Element;
 
+    node->Ref_Count++;  // This global element is referred by another element. Hence it can not be a root element.
+
+    // Store element property of target element before copying from reference element.
+    xs_element_t* const target = (xs_element_t* )reference_list->Element;
     uint32_t minOccurs = target->MinOccur;
     uint32_t maxOccurs = target->MaxOccur;
     target_address_t target_address;
     memcpy(&target_address, &target->Target, sizeof(target_address_t));
 
+    // Copy all the properties of reference element to target element
     memcpy(target, node->Element, sizeof(xs_element_t));
 
+    // Restore original properties of target element.
     target->MinOccur = minOccurs;
     target->MaxOccur = maxOccurs;
     memcpy(&target->Target, &target_address, sizeof(target_address_t));
-    reference_list = (reference_list_t*)reference_list->List.Next;
+    reference_list = (unresolved_tag_t*)reference_list->List.Next;
   }
 }
 
-static inline xs_element_t* get_root(const element_list_t* list)
+static inline void resolve_attribute_references(const attribute_list_t* const attribute_list,
+                                                unresolved_tag_t* reference_list)
+{
+  while(reference_list)
+  {
+    const attribute_list_t* const attr_list =
+                    (attribute_list_t* )search_node((linked_list_t*)attribute_list, &reference_list->Tag);
+    bool use = reference_list->Attribute->Use;
+    memcpy((void*)reference_list->Attribute, attr_list->Attribute, sizeof(xs_attribute_t));
+    ((xs_attribute_t*)(reference_list->Attribute))->Use = use;
+    reference_list = (unresolved_tag_t* )reference_list->List.Next;
+  }
+}
+
+static inline xs_element_t* get_root(const global_element_list_t* list)
 {
   xs_element_t* root = NULL;
   while(list)
@@ -442,12 +502,12 @@ static inline xs_element_t* get_root(const element_list_t* list)
       }
       root = (xs_element_t*)list->Element;
     }
-    list = (element_list_t*)list->List.Next;
+    list = (global_element_list_t*)list->List.Next;
   }
   return root;
 }
 
-static inline xs_element_t* create_root(const element_list_t* const list)
+static inline xs_element_t* create_root(const global_element_list_t* const list)
 {
   xs_element_t* root = calloc(sizeof(xs_element_t), 1);
   root->Child_Quantity = 1;
@@ -469,8 +529,7 @@ static inline xs_element_t* create_root(const element_list_t* const list)
 
   if(element->Attribute_Quantity)
   {
-    memcpy(&attributes[2], element->Attribute,
-              sizeof(xs_attribute_t) * element->Attribute_Quantity);
+    memcpy(&attributes[2], element->Attribute, sizeof(xs_attribute_t) * element->Attribute_Quantity);
   }
   element->Attribute_Quantity += 2;
   free((void*)element->Attribute);
@@ -481,21 +540,28 @@ static inline xs_element_t* create_root(const element_list_t* const list)
 
 xs_element_t* compile_xsd(const tree_t* const tree, const options_t* const options)
 {
-  element_list_t element_list;
+  global_element_list_t element_list;
   context_t context;
 
-  memset(&element_list, 0, sizeof(element_list_t));
+  memset(&element_list, 0, sizeof(global_element_list_t));
   memset(&context, 0, sizeof(context_t));
   context.Options = options;
 
-  //Parse all the globaL complexType, attributes and simpleType tags
-  // before global elements
+  //Parse all the global elements, globaL complexType, attributes and simpleType tags
   const tree_t* node = tree;
   while(node)
   {
     const xsd_tag_t* const tag = node->Data;
     switch(*tag)
     {
+    case XS_GLOBAL_ELEMENT_TAG:
+    {
+      xs_element_t* element = calloc(sizeof(xs_element_t), 1);
+      parse_element(node, element, &context);
+      add_global_element(&element_list, element);
+      break;
+    }
+
     case XS_COMPLEX_TAG:
     {
       xs_element_t* complexType = calloc(sizeof(xs_element_t), 1);
@@ -507,7 +573,7 @@ xs_element_t* compile_xsd(const tree_t* const tree, const options_t* const optio
     {
       xs_attribute_t* attribute = calloc(sizeof(xs_attribute_t), 1);
       parse_attribute(node, attribute, &context);
-      add_attribute_node(&context.Attribute_List, attribute);
+      add_node((linked_list_t*)&context.Attribute_List, attribute);
       break;
     }
 
@@ -524,24 +590,26 @@ xs_element_t* compile_xsd(const tree_t* const tree, const options_t* const optio
     node = node->Next;
   }
 
-  // Now parse all the global elements
-  node = tree;
-  while(node)
+  // Resolve all element with simple type or complex types
+  if(context.Type_List.Element)
   {
-    const xsd_tag_t* const tag = node->Data;
-    if(*tag == XS_GLOBAL_ELEMENT_TAG)
-    {
-      xs_element_t* element = calloc(sizeof(xs_element_t), 1);
-      parse_element(node, element, &context);
-      add_element_node(&element_list, element);
-    }
-    node = node->Next;
+    resolve_element_types(&context.Type_List, &context.SimpleType_List, &context.ComplexType_List);
   }
 
-  // Resolve all the element references
-  if(context.Element_List.Element)
+  // Resolve all element references
+  if(context.Ref_List.Element)
   {
-    resolve_element_references(&element_list, &context.Element_List);
+    resolve_element_references(&element_list, &context.Ref_List);
+  }
+
+  if(context.Attr_Ref_List.Element)
+  {
+    resolve_attribute_references(&context.Attribute_List, &context.Attr_Ref_List);
+  }
+
+  if(context.Attr_Type_List.Element)
+  {
+    resolve_attribute_types(&context.Attr_Type_List, &context.SimpleType_List);
   }
 
   // search and return root element.

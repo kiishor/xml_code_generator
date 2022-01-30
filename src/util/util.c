@@ -31,71 +31,63 @@ void traverse_up(uint32_t occurrence, void* content, void* context)
   *schemaTree = node->Parent;
 }
 
-void add_attribute_node(attribute_list_t* list, const xs_attribute_t* attribute)
+void add_node(linked_list_t* list, const void* data)
 {
-  if(list->Attribute)
+  if(list->Data)
   {
-    list = (attribute_list_t*)add_list_node((list_t*)list, sizeof(attribute_list_t));
+    list = (linked_list_t*)add_list_node((list_t*)list, sizeof(linked_list_t));
   }
-  list->Attribute = attribute;
+  list->Data = data;
 }
 
-void add_element_node(element_list_t* list, const xs_element_t* element)
-{
-  if(list->Element)
-  {
-    list = (element_list_t*)add_list_node((list_t*)list, sizeof(element_list_t));
-  }
-  list->Element = element;
-}
 
-void add_reference_node(reference_list_t* list, void* element,
-                                     const string_t* const reference)
+void add_unresolved_tag(unresolved_tag_t* list, void* element, const string_t* const tag)
 {
   // TODO: instead of traversing from head to last node, use head and tail pointers
   // to linked list node.
   if(list->Element)
   {
-    list = (reference_list_t*)add_list_node((list_t*)list, sizeof(reference_list_t));
+    list = (unresolved_tag_t*)add_list_node((list_t*)list, sizeof(unresolved_tag_t));
   }
 
   list->Element = element;
-  list->Reference.Length = strlen(reference->String);
-  list->Reference.String = reference->String;
+  list->Tag.Length = strlen(tag->String);
+  list->Tag.String = tag->String;
 }
 
-const attribute_list_t* search_attribute_node(const attribute_list_t* list, const string_t* const reference)
+void add_global_element(global_element_list_t* list, const xs_element_t* const element)
 {
-  while(list)
+  if(list->Element)
   {
-    const string_t* const name = &list->Attribute->Name;
-    if((name->Length == reference->Length) &&
-       (!memcmp(name->String, reference->String, name->Length)))
-    {
-      return list;
-    }
-    list = (attribute_list_t*)list->List.Next;
+    list = (global_element_list_t*)add_list_node((list_t*)list, sizeof(global_element_list_t));
   }
-  return NULL;
+
+  list->Element = element;
 }
 
-const element_list_t* search_element_node(const element_list_t* list, const string_t* const reference)
+/** \brief This function search the linked list node by its name. It supports element_list_t & attribute_list_t
+ *
+ * \param list const linked_list_t* Linked list to be searched
+ * \param reference const string_t* const name of of node to find
+ * \return const linked_list_t* node if found otherwise NULL.
+ *
+ */
+const linked_list_t* search_node(linked_list_t* list, const string_t* const reference)
 {
   while(list)
   {
-    if(list->Element == NULL)
+    if(!list->Data)
     {
       return NULL;
     }
 
-    const string_t* const name = &list->Element->Name;
+    const string_t* const name = list->Data;
     if((name->Length == reference->Length) &&
        (!memcmp(name->String, reference->String, name->Length)))
     {
       return list;
     }
-    list = (element_list_t*)list->List.Next;
+    list = (linked_list_t*)list->List.Next;
   }
   return NULL;
 }
-
