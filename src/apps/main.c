@@ -32,25 +32,21 @@ const char* TagName[TOTAL_XSD_TAGS] = {ALL_XSD_TAG};
  *  ------------------------------ FUNCTION BODY ------------------------------
  */
 
-void free_xsd_tree(const tree_t* node, uint32_t level)
+void free_xsd_tree(const tree_t* node)
 {
   if(node->Data)
   {
-    const xsd_tag_t* const tag = node->Data;
-    printf("Level: %u, Tag: %s", level, TagName[*tag]);
     free(node->Data);
   }
 
   if(node->Next)
   {
-    printf("\t");
-    free_xsd_tree(node->Next, level);
+    free_xsd_tree(node->Next);
   }
 
   if(node->Descendant)
   {
-    printf("\n");
-    free_xsd_tree(node->Descendant, level + 1);
+    free_xsd_tree(node->Descendant);
   }
 
   free((void*)node);
@@ -153,7 +149,7 @@ int main(int argc, char *argv[])
     printf("Parsing completed successfully\n");
     const xs_element_t* root = compile_xsd(pXsdData->Descendant, &options);
     generate_xml_source(root, &options);
-    free_xsd_tree(schemaTree.Descendant, 0);
+    free_xsd_tree(schemaTree.Descendant);
 
 #if GENERATE_PRINT_FUNCTION
     generate_print_file(root);
