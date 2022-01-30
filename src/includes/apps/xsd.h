@@ -89,11 +89,16 @@ typedef struct
 
 typedef struct
 {
-  reference_list_t Element_List;
-  attribute_list_t Attribute_List;
-  element_list_t   ComplexType_List;
-  element_list_t   SimpleType_List;
-  const options_t* Options;
+  unresolved_tag_t Ref_List;          //!< List of elements with unresolved "ref"
+  unresolved_tag_t Type_List;         //!< List of elements with unresolved "type"
+  unresolved_tag_t Attr_Ref_List;     //!< List of attributes with unresolved "ref"
+  unresolved_tag_t Attr_Type_List;    //!< List of attributes with unresolved "type"
+
+  attribute_list_t Attribute_List;     //!< List of attributes found in the schema
+  simpleType_list_t SimpleType_List;    //!< List of simple types found in the schema
+  complexType_list_t ComplexType_List;   //!< List of complext types found in the schema
+
+  const options_t* Options;           //!< Command line options
 }context_t;
 
 /*
