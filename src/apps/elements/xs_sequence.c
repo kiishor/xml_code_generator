@@ -79,9 +79,9 @@ const xs_attribute_t sequence_attr[TOTAL_SEQUENCE_ATTRIBUTES] =
   [EN_sequence_maxOccurs].Target.Type = EN_RELATIVE,
   [EN_sequence_maxOccurs].Target.Offset = offsetof(sequence_t, attr.maxOccurs),
 
-  [EN_sequence_maxOccurs].Content.Type = EN_UNSIGNED,
-  [EN_sequence_maxOccurs].Content.Facet.Uint.MinValue = 0,
-  [EN_sequence_maxOccurs].Content.Facet.Uint.MaxValue = UINT32_MAX,
+  [EN_sequence_maxOccurs].Content.Type = EN_STRING,
+  [EN_sequence_maxOccurs].Content.Facet.String.MinLength = DEFAULT_MIN_STRING_LENGTH,
+  [EN_sequence_maxOccurs].Content.Facet.String.MaxLength = DEFAULT_MAX_STRING_LENGTH,
 
   [EN_sequence_maxOccurs].Use = EN_OPTIONAL,
 };

@@ -11,7 +11,7 @@
 				<Option object_output="obj/Debug/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
-				<Option parameters="C:\project\xml_parser_in_c\example\shiporder1\xml\shiporder3.xsd" />
+				<Option parameters="C:\project\xml_code_generator\workspace\codeblocks\bin\Release\items.xsd" />
 				<Compiler>
 					<Add option="-g" />
 				</Compiler>
