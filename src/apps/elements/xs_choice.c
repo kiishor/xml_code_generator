@@ -79,6 +79,8 @@ const xs_attribute_t Choice_attr[TOTAL_CHOICE_ATTRIBUTES] =
   [EN_choice_maxOccurs].Target.Offset = offsetof(choice_t, attr.maxOccurs),
 
   [EN_choice_maxOccurs].Content.Type = EN_STRING,
+  [EN_choice_maxOccurs].Content.Facet.String.MinLength = DEFAULT_MIN_STRING_LENGTH,
+  [EN_choice_maxOccurs].Content.Facet.String.MaxLength = DEFAULT_MAX_STRING_LENGTH,
 
   [EN_choice_maxOccurs].Use = EN_OPTIONAL,
 };
