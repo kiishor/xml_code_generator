@@ -25,6 +25,14 @@
 #include "cargs.h"
 
 /*
+ *  ------------------------------ GLOBAL VARIABLES ------------------------------
+ */
+
+#define ADD_RESULT_CODE(code, description) [code] = #description,
+const char* Result_Text[] = {XML_PARSER_RESULT};
+#undef ADD_RESULT_CODE
+
+/*
  *  ------------------------------ FUNCTION BODY ------------------------------
  */
 
@@ -140,9 +148,9 @@ int main(int argc, char *argv[])
   tree_t* pXsdData = &schemaTree;
 
   xml_parse_result_t result = parse_xml(&xsd_root, schema, &schemaTree, &pXsdData);
+  printf("%s\n", Result_Text[result]);
   if(result == XML_PARSE_SUCCESS)
   {
-    printf("Parsing completed successfully\n");
     const xs_element_t* root = compile_xsd(pXsdData->Descendant, &options);
     generate_xml_source(root, &options);
     free_xsd_tree(schemaTree.Descendant);
@@ -151,10 +159,6 @@ int main(int argc, char *argv[])
     generate_print_file(root);
 #endif // GENERATE_PRINT_FUNCTION
 
-  }
-  else
-  {
-    printf("Failed to parse XML file: %d\n", result);
   }
 
   free(schema);
