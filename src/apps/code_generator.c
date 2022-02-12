@@ -38,7 +38,7 @@ static const char* C_FILE_DESCRIPTION =
 
  "* For further details refer,\n"
  "* https://github.com/kiishor/xml_code_generator\n"
- "* https://github.com/kiishor/xml_parser_in_c\n"
+ "* https://github.com/kiishor/miniML-Parser\n"
  "*/\n\n";
 
  static const char* H_FILE_DESCRIPTION =
@@ -52,7 +52,7 @@ static const char* C_FILE_DESCRIPTION =
 
  "* For further details refer,\n"
  "* https://github.com/kiishor/xml_code_generator\n"
- "* https://github.com/kiishor/xml_parser_in_c\n"
+ "* https://github.com/kiishor/miniML-Parser\n"
  "*/\n\n";
 
 
