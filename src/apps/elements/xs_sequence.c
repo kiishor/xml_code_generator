@@ -67,7 +67,7 @@ const xs_attribute_t sequence_attr[TOTAL_SEQUENCE_ATTRIBUTES] =
   [EN_sequence_minOccurs].Target.Type = EN_RELATIVE,
   [EN_sequence_minOccurs].Target.Offset = offsetof(sequence_t, attr.minOccurs),
 
-  [EN_sequence_minOccurs].Content.Type = EN_UNSIGNED,
+  [EN_sequence_minOccurs].Content.Type = EN_UINT32,
   [EN_sequence_minOccurs].Content.Facet.Uint.MinValue = 0,
   [EN_sequence_minOccurs].Content.Facet.Uint.MaxValue = UINT32_MAX,
 

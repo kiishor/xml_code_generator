@@ -178,22 +178,22 @@ static inline void write_content(const xml_content_t* const content,
     fprintf(source, "    %s.Content.Facet.Double.MaxValue = %gf,\n", array, content->Facet.Double.MaxValue);
     break;
 
-  case EN_UNSIGNED:
+  case EN_UINT32:
     fprintf(source, "    %s.Content.Facet.Uint.MinValue = %u,\n", array, content->Facet.Uint.MinValue);
     fprintf(source, "    %s.Content.Facet.Uint.MaxValue = %u,\n", array, content->Facet.Uint.MaxValue);
     break;
 
-  case EN_INTEGER:
+  case EN_INT32:
     fprintf(source, "    %s.Content.Facet.Int.MinValue = %d,\n", array, content->Facet.Int.MinValue);
     fprintf(source, "    %s.Content.Facet.Int.MaxValue = %d,\n", array, content->Facet.Int.MaxValue);
     break;
 
-  case EN_UNSIGNED_LONG:
+  case EN_UINT64:
     fprintf(source, "    %s.Content.Facet.Ulong.MinValue = %llu,\n", array, content->Facet.Ulong.MinValue);
     fprintf(source, "    %s.Content.Facet.Ulong.MaxValue = %llu,\n", array, content->Facet.Ulong.MaxValue);
     break;
 
-  case EN_LONG:
+  case EN_INT64:
     fprintf(source, "    %s.Content.Facet.Long.MinValue = %lld,\n", array, content->Facet.Long.MinValue);
     fprintf(source, "    %s.Content.Facet.Long.MaxValue = %lld,\n", array, content->Facet.Long.MaxValue);
     break;

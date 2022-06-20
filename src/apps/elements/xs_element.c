@@ -121,7 +121,7 @@ const xs_attribute_t child_element_attr[TOTAL_CHILD_ELEMENT_ATTRIBUTES] =
   [EN_child_minOccurs].Target.Type = EN_RELATIVE,
   [EN_child_minOccurs].Target.Offset = offsetof(element_t, child.minOccurs),
 
-  [EN_child_minOccurs].Content.Type = EN_UNSIGNED,
+  [EN_child_minOccurs].Content.Type = EN_UINT32,
   [EN_child_minOccurs].Content.Facet.Uint.MinValue = 0,
   [EN_child_minOccurs].Content.Facet.Uint.MaxValue = UINT32_MAX,
 
