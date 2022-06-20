@@ -254,6 +254,11 @@ static inline void parse_complex_element(const tree_t* const tree,
       parse_sequence(node, element, context);
       break;
 
+    case XS_CHOICE_TAG:
+      element->Child_Order = EN_CHOICE;
+      parse_sequence(node, element, context);
+      break;
+
     case XS_SIMPLE_CONTENT_TAG:
       parse_simple_content(node, element, context);
       break;

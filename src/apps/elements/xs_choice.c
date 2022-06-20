@@ -66,7 +66,7 @@ const xs_attribute_t Choice_attr[TOTAL_CHOICE_ATTRIBUTES] =
   [EN_choice_minOccurs].Target.Type = EN_RELATIVE,
   [EN_choice_minOccurs].Target.Offset = offsetof(choice_t, attr.minOccurs),
 
-  [EN_choice_minOccurs].Content.Type = EN_UNSIGNED,
+  [EN_choice_minOccurs].Content.Type = EN_UINT32,
   [EN_choice_minOccurs].Content.Facet.Uint.MinValue = 0,
   [EN_choice_minOccurs].Content.Facet.Uint.MaxValue = UINT32_MAX,
 
