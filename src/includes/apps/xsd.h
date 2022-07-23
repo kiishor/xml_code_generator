@@ -21,7 +21,7 @@
  *  ------------------------------- DEFINITION -------------------------------
  */
 
-#define DEFAULT_MIN_STRING_LENGTH 1
+#define DEFAULT_MIN_STRING_LENGTH 0
 #define DEFAULT_MAX_STRING_LENGTH 128
 
 #define ALL_XSD_TAG                                   \

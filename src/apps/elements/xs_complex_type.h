@@ -10,19 +10,22 @@
  */
 
 /*
- *  ------------------------------ INCLUDE FILES ------------------------------
- */
-#include "xs_type.h"
-
-/*
  *  ------------------------------- DEFINITION -------------------------------
  */
 
 #define ALL_COMPLEX_TYPE_DESCENDANTS(parent) \
   ADD_DESCENDANT(parent, sequence)           \
-  ADD_DESCENDANT(parent, choice)           \
+  ADD_DESCENDANT(parent, choice)             \
   ADD_DESCENDANT(parent, simpleContent)      \
   ADD_DESCENDANT(parent, attribute)
+
+  #define ALL_COMPLEX_TYPE_ATTRIBUTES  \
+  ADD_ATTRIBUTE(id)                    \
+  ADD_ATTRIBUTE(name)                  \
+  ADD_ATTRIBUTE(abstract)              \
+  ADD_ATTRIBUTE(mixed)                 \
+  ADD_ATTRIBUTE(block)                 \
+  ADD_ATTRIBUTE(Final)
 
 /*
  *  ------------------------------- ENUMERATION -------------------------------
@@ -36,14 +39,32 @@ typedef enum
 }en_complexType_Descendant;
 #undef ADD_DESCENDANT
 
+#define ADD_ATTRIBUTE(attr)    EN_complexType_##attr,
+typedef enum
+{
+  ALL_COMPLEX_TYPE_ATTRIBUTES
+  TOTAL_COMPLEX_TYPE_ATTRIBUTES
+}en_complexType_attributes;
+#undef ADD_ATTRIBUTE
+
 /*
  *  -------------------------------- STRUCTURE --------------------------------
  */
 
 typedef struct
 {
+  string_t id;           // Optional
+  string_t name;
+  string_t abstract;
+  string_t mixed;
+  string_t block;
+  string_t Final;
+}complexType_attr_t;
+
+typedef struct
+{
   xsd_tag_t Type;
-  xs_type_attribute_t attr;
+  complexType_attr_t attr;
 }complexType_t;
 
 /*
@@ -52,7 +73,7 @@ typedef struct
 
 extern const xs_element_t xs_complexType;
 extern const xs_element_t ComplexType_Descendant[TOTAL_COMPLEX_TYPE_DESCENDANT];
-extern const xs_attribute_t complexType_Attr[TOTAL_TYPE_ATTRIBUTES];
+extern const xs_attribute_t complexType_Attr[TOTAL_COMPLEX_TYPE_ATTRIBUTES];
 
 /*
  *  ---------------------------- EXPORTED FUNCTION ----------------------------

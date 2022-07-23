@@ -34,13 +34,10 @@ const xs_element_t Choice_Descendant[TOTAL_CHOICE_DESCENDANTS] =
   [EN_choice_child_element].MinOccur      = 0,
   [EN_choice_child_element].MaxOccur      = 64,
   [EN_choice_child_element].Callback      = traverse_up,
-
   [EN_choice_child_element].Target.Type  = EN_DYNAMIC,
   [EN_choice_child_element].Target.Allocate = allocate_child_schema_element,
-
   [EN_choice_child_element].Attribute_Quantity = TOTAL_CHILD_ELEMENT_ATTRIBUTES,
   [EN_choice_child_element].Attribute = child_element_attr,
-
   [EN_choice_child_element].Child_Quantity = TOTAL_ELEMENT_DESCENDANTS,
   [EN_choice_child_element].Child_Order    = EN_CHOICE,
   [EN_choice_child_element].Child          = Element_Descendant,
@@ -50,38 +47,29 @@ const xs_attribute_t Choice_attr[TOTAL_CHOICE_ATTRIBUTES] =
 {
   [EN_choice_id].Name.String = "id",
   [EN_choice_id].Name.Length = sizeof("id") - 1,
-
   [EN_choice_id].Target.Type = EN_RELATIVE,
   [EN_choice_id].Target.Offset = offsetof(choice_t, attr.id),
-
   [EN_choice_id].Content.Type = EN_STRING_DYNAMIC,
   [EN_choice_id].Content.Facet.String.MinLength = DEFAULT_MIN_STRING_LENGTH,
   [EN_choice_id].Content.Facet.String.MaxLength = DEFAULT_MAX_STRING_LENGTH,
-
   [EN_choice_id].Use = EN_OPTIONAL,
 
   [EN_choice_minOccurs].Name.String = "minOccurs",
   [EN_choice_minOccurs].Name.Length = sizeof("minOccurs") - 1,
-
   [EN_choice_minOccurs].Target.Type = EN_RELATIVE,
   [EN_choice_minOccurs].Target.Offset = offsetof(choice_t, attr.minOccurs),
-
   [EN_choice_minOccurs].Content.Type = EN_UINT32,
   [EN_choice_minOccurs].Content.Facet.Uint.MinValue = 0,
   [EN_choice_minOccurs].Content.Facet.Uint.MaxValue = UINT32_MAX,
-
   [EN_choice_minOccurs].Use = EN_OPTIONAL,
 
   [EN_choice_maxOccurs].Name.String = "maxOccurs",
   [EN_choice_maxOccurs].Name.Length = sizeof("maxOccurs") - 1,
-
   [EN_choice_maxOccurs].Target.Type = EN_RELATIVE,
   [EN_choice_maxOccurs].Target.Offset = offsetof(choice_t, attr.maxOccurs),
-
   [EN_choice_maxOccurs].Content.Type = EN_STRING,
   [EN_choice_maxOccurs].Content.Facet.String.MinLength = DEFAULT_MIN_STRING_LENGTH,
   [EN_choice_maxOccurs].Content.Facet.String.MaxLength = DEFAULT_MAX_STRING_LENGTH,
-
   [EN_choice_maxOccurs].Use = EN_OPTIONAL,
 };
 

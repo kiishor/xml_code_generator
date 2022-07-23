@@ -22,7 +22,8 @@
   ADD_ATTRIBUTE(ref)                \
   ADD_ATTRIBUTE(use)                \
   ADD_ATTRIBUTE(Default)            \
-  ADD_ATTRIBUTE(fixed)
+  ADD_ATTRIBUTE(fixed)              \
+  ADD_ATTRIBUTE(form)
 
 /*
  *  ------------------------------- ENUMERATION -------------------------------

@@ -14,21 +14,28 @@
  */
 
 #define ALL_ELEMENT_DESCENDANTS(parent)   \
-  ADD_DESCENDANT(parent, complexType)  \
+  ADD_DESCENDANT(parent, complexType)     \
   ADD_DESCENDANT(parent, simpleType)
 
-#define ALL_ELEMENT_ATTRIBUTES(element) \
+#define ALL_ELEMENT_ATTRIBUTES(element)       \
   ADD_ATTRIBUTE(element, id, string_t)        \
   ADD_ATTRIBUTE(element, name, string_t)      \
   ADD_ATTRIBUTE(element, type, string_t)      \
+  ADD_ATTRIBUTE(element, Default, string_t)   \
+  ADD_ATTRIBUTE(element, fixed, string_t)     \
+  ADD_ATTRIBUTE(element, nillable, string_t)  \
+  ADD_ATTRIBUTE(element, abstract, string_t)  \
+  ADD_ATTRIBUTE(element, block, string_t)     \
 
-#define ALL_CHILD_ELEMENT_ATTRIBUTES(element)   \
+#define ALL_CHILD_ELEMENT_ATTRIBUTES(element) \
   ADD_ATTRIBUTE(element, ref, string_t)       \
   ADD_ATTRIBUTE(element, minOccurs, uint32_t) \
-  ADD_ATTRIBUTE(element, maxOccurs, string_t)
+  ADD_ATTRIBUTE(element, maxOccurs, string_t) \
+  ADD_ATTRIBUTE(element, form, string_t)
 
 #define ALL_GLOBAL_ELEMENT_ATTRIBUTES(element)  \
-  ADD_ATTRIBUTE(element, substitutiongroup, string_t)
+  ADD_ATTRIBUTE(element, substitutiongroup, string_t) \
+  ADD_ATTRIBUTE(element, Final, string_t)
 
 /*
  *  ------------------------------- ENUMERATION -------------------------------
