@@ -98,6 +98,8 @@ int main(int argc, char *argv[])
       return EXIT_FAILURE;
     }
 
+  int exitCode = EXIT_SUCCESS;
+
   // Initialize options
   options_t options = {.Occurrence = ARRAY, .Context = "", .Content_Callback = false};
   cag_option_prepare(&context, Cag_Options, CAG_ARRAY_SIZE(Cag_Options), argc, argv);
@@ -119,11 +121,12 @@ int main(int argc, char *argv[])
 
     default:
       printf("Unknown argument passed.\n");
+      exitCode = EXIT_FAILURE;
 
     case 'h':
       printf("Usage: XML code generator [OPTION] input.xsd \n");
       cag_option_print(Cag_Options, CAG_ARRAY_SIZE(Cag_Options), stdout);
-      return EXIT_SUCCESS;
+      return exitCode;
     }
   }
 
@@ -158,14 +161,14 @@ int main(int argc, char *argv[])
 #if GENERATE_PRINT_FUNCTION
     generate_print_file(root);
 #endif // GENERATE_PRINT_FUNCTION
-
   }
   else
   {
     printf("%s\n", Result_Text[result]);
+    exitCode = EXIT_FAILURE;
   }
 
   free(schema);
-  return EXIT_SUCCESS;
+  return exitCode;
 }
 

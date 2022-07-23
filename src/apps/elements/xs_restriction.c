@@ -132,26 +132,20 @@ const xs_attribute_t restriction_Attr[TOTAL_RESTRICTION_ATTRIBUTES] =
 {
   [EN_restriction_id].Name.String = "id",
   [EN_restriction_id].Name.Length = sizeof("id") - 1,
-
   [EN_restriction_id].Target.Type = EN_RELATIVE,
   [EN_restriction_id].Target.Offset = offsetof(restriction_t, attr.id),
-
   [EN_restriction_id].Content.Type = EN_STRING_DYNAMIC,
   [EN_restriction_id].Content.Facet.String.MinLength = DEFAULT_MIN_STRING_LENGTH,
   [EN_restriction_id].Content.Facet.String.MaxLength = DEFAULT_MAX_STRING_LENGTH,
-
   [EN_restriction_id].Use = EN_OPTIONAL,
 
   [EN_restriction_base].Name.String = "base",
   [EN_restriction_base].Name.Length = sizeof("base") - 1,
-
   [EN_restriction_base].Target.Type = EN_RELATIVE,
   [EN_restriction_base].Target.Offset = offsetof(restriction_t, attr.base),
-
   [EN_restriction_base].Content.Type = EN_STRING_DYNAMIC,
   [EN_restriction_base].Content.Facet.String.MinLength = DEFAULT_MIN_STRING_LENGTH,
   [EN_restriction_base].Content.Facet.String.MaxLength = DEFAULT_MAX_STRING_LENGTH,
-
   [EN_restriction_base].Use = EN_REQUIRED,
 };
 

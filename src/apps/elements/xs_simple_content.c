@@ -35,13 +35,10 @@ const xs_element_t simpleContent_Descendant[TOTAL_SIMPLE_CONTENT_DESCENDANTS] =
   [EN_simple_content_extension].MinOccur     = 0,
   [EN_simple_content_extension].MaxOccur     = 64,
   [EN_simple_content_extension].Callback     = traverse_up,
-
   [EN_simple_content_extension].Target.Type  	= EN_DYNAMIC,
   [EN_simple_content_extension].Target.Allocate = allocate_extension,
-
   [EN_simple_content_extension].Attribute_Quantity = TOTAL_EXTENSION_ATTRIBUTES,
   [EN_simple_content_extension].Attribute 		   = extension_Attr,
-
   [EN_simple_content_extension].Child_Quantity = TOTAL_EXTENSION_DESCENDANTS,
   [EN_simple_content_extension].Child_Order     = EN_CHOICE,
   [EN_simple_content_extension].Child = extension_Descendant,
@@ -51,13 +48,10 @@ const xs_element_t simpleContent_Descendant[TOTAL_SIMPLE_CONTENT_DESCENDANTS] =
   [EN_simple_content_restriction].MinOccur    = 0,
   [EN_simple_content_restriction].MaxOccur    = 64,
   [EN_simple_content_restriction].Callback    = traverse_up,
-
   [EN_simple_content_restriction].Target.Type     = EN_DYNAMIC,
   [EN_simple_content_restriction].Target.Allocate = allocate_restriction,
-
   [EN_simple_content_restriction].Attribute_Quantity = TOTAL_RESTRICTION_ATTRIBUTES,
   [EN_simple_content_restriction].Attribute          = restriction_Attr,
-
   [EN_simple_content_restriction].Child_Quantity = TOTAL_RESTRICTION_DESCENDANTS,
   [EN_simple_content_restriction].Child_Order     = EN_RANDOM,
   [EN_simple_content_restriction].Child          = restriction_Descendant,
