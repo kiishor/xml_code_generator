@@ -27,7 +27,7 @@
  *  ------------------------------- ENUMERATION -------------------------------
  */
 #define ADD_DESCENDANT(descendant)    EN_restriction_##descendant,
-#define ADD_FACET(facet, ...)              EN_restriction_##facet,
+#define ADD_FACET(facet, ...)         EN_restriction_##facet,
 typedef enum
 {
   ALL_RESTRICTION_DESCENDANTS
