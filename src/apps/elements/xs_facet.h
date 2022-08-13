@@ -14,6 +14,7 @@
  */
 #define TOTAL_FACET_ATTRIBUTES 1
 
+
 /*
  *  -------------------------------- STRUCTURE --------------------------------
  */
@@ -46,7 +47,12 @@ extern const xs_element_t xs_minLength;
  *  ---------------------------- EXPORTED FUNCTION ----------------------------
  */
 
-extern void* allocate_facet(uint32_t occurrence, void* context);
+#define ADD_FACET(tag, ...) extern void* allocate_##tag(uint32_t occurrence, void* context);
+
+ALL_FACETS;
+
+#undef ADD_FACET
+
 
 #endif // XS_FACET_H
 

@@ -40,116 +40,35 @@ const xs_attribute_t facet_Attr[TOTAL_FACET_ATTRIBUTES] =
   [0].Use = EN_REQUIRED,
 };
 
-const xs_element_t xs_enumeration =
-{
-  .Name.String  = "xs:enumeration",
-  .Name.Length  = sizeof("xs:enumeration") - 1,
-  .MinOccur     = 0,
-  .MaxOccur     = 64,
-  .Callback      = traverse_up,
-
-  .Target.Type  = EN_DYNAMIC,
-  .Target.Allocate = allocate_facet,
-
-  .Attribute_Quantity = TOTAL_FACET_ATTRIBUTES,
-  .Attribute = facet_Attr,
+#define ADD_FACET(tag, ...)                     \
+const xs_element_t xs_##tag =                   \
+{                                               \
+  .Name.String  = "xs:" #tag,                   \
+  .Name.Length  = sizeof("xs:" #tag) - 1,       \
+  .MinOccur     = 0,                            \
+  .MaxOccur     = 64,                           \
+  .Callback      = traverse_up,                 \
+                                                \
+  .Target.Type  = EN_DYNAMIC,                   \
+  .Target.Allocate = allocate_##tag,            \
+                                                \
+  .Attribute_Quantity = TOTAL_FACET_ATTRIBUTES, \
+  .Attribute = facet_Attr,                      \
 };
 
-const xs_element_t xs_length =
-{
-  .Name.String  = "xs:length",
-  .Name.Length  = sizeof("xs:length") - 1,
-  .MinOccur     = 0,
-  .MaxOccur     = 64,
-  .Callback      = traverse_up,
+ALL_FACETS
 
-  .Target.Type  = EN_DYNAMIC,
-  .Target.Allocate = allocate_facet,
-
-  .Attribute_Quantity = TOTAL_FACET_ATTRIBUTES,
-  .Attribute = facet_Attr,
-};
-
-const xs_element_t xs_maxInclusive =
-{
-  .Name.String  = "xs:maxInclusive",
-  .Name.Length  = sizeof("xs:maxInclusive") - 1,
-  .MinOccur     = 0,
-  .MaxOccur     = 64,
-  .Callback      = traverse_up,
-
-  .Target.Type  = EN_DYNAMIC,
-  .Target.Allocate = allocate_facet,
-
-  .Attribute_Quantity = TOTAL_FACET_ATTRIBUTES,
-  .Attribute = facet_Attr,
-};
-
-const xs_element_t xs_minInclusive =
-{
-  .Name.String  = "xs:minInclusive",
-  .Name.Length  = sizeof("xs:minInclusive") - 1,
-  .MinOccur     = 0,
-  .MaxOccur     = 64,
-  .Callback      = traverse_up,
-
-  .Target.Type  = EN_DYNAMIC,
-  .Target.Allocate = allocate_facet,
-
-  .Attribute_Quantity = TOTAL_FACET_ATTRIBUTES,
-  .Attribute = facet_Attr,
-};
-
-const xs_element_t xs_pattern =
-{
-  .Name.String  = "xs:pattern",
-  .Name.Length  = sizeof("xs:pattern") - 1,
-  .MinOccur     = 0,
-  .MaxOccur     = 64,
-  .Callback      = traverse_up,
-
-  .Target.Type  = EN_DYNAMIC,
-  .Target.Allocate = allocate_facet,
-
-  .Attribute_Quantity = TOTAL_FACET_ATTRIBUTES,
-  .Attribute = facet_Attr,
-};
-
-const xs_element_t xs_maxLength =
-{
-  .Name.String  = "xs:maxLength",
-  .Name.Length  = sizeof("xs:maxLength") - 1,
-  .MinOccur     = 0,
-  .MaxOccur     = 64,
-  .Callback      = traverse_up,
-
-  .Target.Type  = EN_DYNAMIC,
-  .Target.Allocate = allocate_facet,
-
-  .Attribute_Quantity = TOTAL_FACET_ATTRIBUTES,
-  .Attribute = facet_Attr,
-};
-
-const xs_element_t xs_minLength =
-{
-  .Name.String  = "xs:minLength",
-  .Name.Length  = sizeof("xs:minLength") - 1,
-  .MinOccur     = 0,
-  .MaxOccur     = 64,
-  .Callback      = traverse_up,
-
-  .Target.Type  = EN_DYNAMIC,
-  .Target.Allocate = allocate_facet,
-
-  .Attribute_Quantity = TOTAL_FACET_ATTRIBUTES,
-  .Attribute = facet_Attr,
-};
+#undef ADD_FACET
 
 /*
  *  ------------------------------ FUNCTION BODY ------------------------------
  */
 
-void* allocate_facet(uint32_t occurrence, void* context)
-{
-  return allocate_element_type(context, sizeof(xs_facet_t), XS_ENUMERATION_TAG);
+#define ADD_FACET(facet, FACET)  \
+void* allocate_##facet(uint32_t occurrence, void* context) \
+{                                                               \
+  return allocate_element_type(context, sizeof(xs_facet_t), XS_##FACET##_TAG); \
 }
+
+ALL_FACETS
+#undef ADD_FACET

@@ -47,7 +47,8 @@ ADD_DATA_TYPE(XS_FLOAT,                xs:float,              float,    float)  
 ADD_DATA_TYPE(XS_DATE,                 xs:date,               char*,    string)   \
 ADD_DATA_TYPE(XS_TIME,                 xs:time,               char*,    string)   \
 ADD_DATA_TYPE(XS_DATE_TIME,            xs:dateTime,           char*,    string)   \
-ADD_DATA_TYPE(XS_DURATION,             xs:duration,           uint32_t, string)
+ADD_DATA_TYPE(XS_DURATION,             xs:duration,           uint32_t, string)   \
+ADD_DATA_TYPE(XS_ANYURI,               xs:anyURI,             char*,    string)
 
 /*
  *  ------------------------------- ENUMERATION -------------------------------

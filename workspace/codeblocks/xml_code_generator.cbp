@@ -11,7 +11,7 @@
 				<Option object_output="obj/Debug/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
-				<Option parameters="C:\project\xml_code_generator\src\xml_parser\example\purchase_order\xml\purchase_order.xsd" />
+				<Option parameters="-d C:\project\miniML-Parser\example\items\xml\items.xsd" />
 				<Compiler>
 					<Add option="-g" />
 				</Compiler>
@@ -103,6 +103,9 @@
 		</Unit>
 		<Unit filename="../../src/apps/elements/xs_simple_type.h" />
 		<Unit filename="../../src/apps/elements/xs_type.h" />
+		<Unit filename="../../src/apps/facet.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="../../src/apps/list.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -118,6 +121,7 @@
 		<Unit filename="../../src/apps/xsd.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="../../src/includes/apps/facet.h" />
 		<Unit filename="../../src/includes/apps/list.h" />
 		<Unit filename="../../src/includes/apps/tree.h" />
 		<Unit filename="../../src/includes/apps/xs_data_type.h" />

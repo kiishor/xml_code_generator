@@ -12,16 +12,12 @@
 /*
  *  ------------------------------- DEFINITION -------------------------------
  */
-#define ALL_RESTRICTION_DESCENDANTS \
-  ADD_DESCENDANT(attribute)         \
-  ADD_DESCENDANT(simpleType)        \
-  ADD_DESCENDANT(enumeration)       \
-  ADD_DESCENDANT(length)            \
-  ADD_DESCENDANT(minInclusive)      \
-  ADD_DESCENDANT(maxInclusive)      \
-  ADD_DESCENDANT(pattern)           \
-  ADD_DESCENDANT(maxLength)         \
-  ADD_DESCENDANT(minLength)
+
+
+
+#define ALL_RESTRICTION_DESCENDANTS   \
+  ADD_DESCENDANT(attribute)           \
+  ADD_DESCENDANT(simpleType)          \
 
 #define ALL_RESTRICTION_ATTRIBUTES  \
   ADD_ATTRIBUTE(id)                 \
@@ -31,12 +27,15 @@
  *  ------------------------------- ENUMERATION -------------------------------
  */
 #define ADD_DESCENDANT(descendant)    EN_restriction_##descendant,
+#define ADD_FACET(facet, ...)              EN_restriction_##facet,
 typedef enum
 {
   ALL_RESTRICTION_DESCENDANTS
+  ALL_FACETS
   TOTAL_RESTRICTION_DESCENDANTS
 }en_restriction_descendant;
 #undef ADD_DESCENDANT
+#undef ADD_FACET
 
 #define ADD_ATTRIBUTE(attr)     EN_restriction_##attr,
 typedef enum
