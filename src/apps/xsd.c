@@ -19,6 +19,7 @@
 #include "parse_xml.h"
 
 #include "apps/xsd.h"
+#include "apps/facet.h"
 #include "elements/xs_element.h"
 #include "elements/xs_complex_type.h"
 #include "elements/xs_attribute.h"
@@ -26,6 +27,7 @@
 #include "elements/xs_restriction.h"
 #include "elements/xs_extension.h"
 #include "elements/xs_simple_content.h"
+#include "elements/xs_facet.h"
 #include "apps/xs_data_type.h"
 
 /*
@@ -178,14 +180,13 @@ static inline void parse_restriction(const tree_t* const tree,
   string_t* const type = &restriction->attr.base;
   type->Length = strlen(type->String);
 
-
   if(!parse_base_type(&element->Content, type, context))
   {
     // Could not found the given type. It may be simple type or complex type.
     add_unresolved_tag((unresolved_tag_t*)&context->Type_List, element, type);
   }
 
-  if((parent == SIMPLE_CONTENT_PARENT) || (parent == COMPLEX_CONTENT_PARENT))
+  if(parent == SIMPLE_CONTENT_PARENT)
   {
     set_attribute(tree->Descendant, element);
   }
@@ -197,17 +198,72 @@ static inline void parse_restriction(const tree_t* const tree,
     const xsd_tag_t* const tag = node->Data;
     switch(*tag)
     {
-    case XS_SEQUENCE_TAG:
-      assert(parent == COMPLEX_CONTENT_PARENT);
-      element->Child_Order = EN_SEQUENCE;
-      parse_sequence(node, element, context);
-      break;
-
     case XS_ATTRIBUTE_TAG:
        parse_attribute(node, (xs_attribute_t*)&element->Attribute[attr_index++], context);
       break;
 
-    // TODO: support restriction facets
+    case XS_LENGTH_TAG:
+    {
+      const xs_facet_t* const facet = (xs_facet_t*)tag;
+      uint32_t length = strtoul(facet->attr.value.String, NULL, 10);
+      element->Content.Facet.String.MinLength = length;
+      element->Content.Facet.String.MaxLength = length;
+      break;
+    }
+
+    case XS_MAXLENGTH_TAG:
+    {
+      const xs_facet_t* const facet = (xs_facet_t*)tag;
+      uint32_t length = strtoul(facet->attr.value.String, NULL, 10);
+      element->Content.Facet.String.MaxLength = length;
+      break;
+    }
+
+    case XS_MINLENGTH_TAG:
+    {
+      const xs_facet_t* const facet = (xs_facet_t*)tag;
+      uint32_t length = strtoul(facet->attr.value.String, NULL, 10);
+      element->Content.Facet.String.MinLength = length;
+      break;
+    }
+
+    case XS_MAXEXCLUSIVE_TAG:
+    {
+      const xs_facet_t* const facet = (xs_facet_t*)tag;
+      const string_t* const value = &facet->attr.value;
+      void* target = get_facet_max_target(&element->Content);
+      extract_content(&element->Content, target, value->String, value->Length);
+      exclude_facet_max_value(&element->Content);
+      break;
+    }
+
+    case XS_MAXINCLUSIVE_TAG:
+    {
+      const xs_facet_t* const facet = (xs_facet_t*)tag;
+      const string_t* const value = &facet->attr.value;
+      void* target = get_facet_max_target(&element->Content);
+      extract_content(&element->Content, target, value->String, value->Length);
+      break;
+    }
+
+    case XS_MINEXCLUSIVE_TAG:
+    {
+      const xs_facet_t* const facet = (xs_facet_t*)tag;
+      const string_t* const value = &facet->attr.value;
+      void* target = get_facet_min_target(&element->Content);
+      extract_content(&element->Content, target, value->String, value->Length);
+      exclude_facet_min_value(&element->Content);
+      break;
+    }
+
+    case XS_MININCLUSIVE_TAG:
+    {
+      const xs_facet_t* const facet = (xs_facet_t*)tag;
+      const string_t* const value = &facet->attr.value;
+      void* target = get_facet_min_target(&element->Content);
+      extract_content(&element->Content, target, value->String, value->Length);
+      break;
+    }
 
     default:
 //      assert(false);

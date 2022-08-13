@@ -79,6 +79,7 @@ void convert_xsd_data_type(xml_content_t* const content, xs_data_type_t type)
   switch(type)
   {
   case XS_STRING:
+  case XS_ANYURI:
     content->Type = EN_STRING_DYNAMIC;
     content->Facet.String.MinLength = 0;
     content->Facet.String.MaxLength = UINT32_MAX;

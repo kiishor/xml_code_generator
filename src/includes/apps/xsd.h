@@ -28,27 +28,44 @@
   ADD_TAG(XS_SCHEMA_TAG,          xs:schema)          \
   ADD_TAG(XS_GLOBAL_ELEMENT_TAG,  xs:element)         \
   ADD_TAG(XS_CHILD_ELEMENT_TAG,   xs:element)         \
-  ADD_TAG(XS_COMPLEX_TAG,         xs:complexType)      \
+  ADD_TAG(XS_COMPLEX_TAG,         xs:complexType)     \
   ADD_TAG(XS_SEQUENCE_TAG,        xs:sequence)        \
-  ADD_TAG(XS_CHOICE_TAG,          xs:choice)        \
+  ADD_TAG(XS_CHOICE_TAG,          xs:choice)          \
   ADD_TAG(XS_SIMPLE_CONTENT_TAG,  xs:simpleContent)   \
   ADD_TAG(XS_EXTENSION_TAG,       xs:extension)       \
   ADD_TAG(XS_ATTRIBUTE_TAG,       xs:attribute)       \
   ADD_TAG(XS_RESTRICTION_TAG,     xs:restriction)     \
   ADD_TAG(XS_SIMPLE_TYPE_TAG,     xs:simpleType)      \
-  ADD_TAG(XS_ENUMERATION_TAG,     xs:enumeration)
+
+#define ALL_FACETS                  \
+  ADD_FACET(enumeration,    ENUMERATION)       \
+  ADD_FACET(fractionDigits, FRACTION_DIGITS)   \
+  ADD_FACET(length,         LENGTH)            \
+  ADD_FACET(maxExclusive,   MAXEXCLUSIVE)      \
+  ADD_FACET(maxInclusive,   MAXINCLUSIVE)      \
+  ADD_FACET(maxLength,      MAXLENGTH)         \
+  ADD_FACET(minExclusive,   MINEXCLUSIVE)      \
+  ADD_FACET(minInclusive,   MININCLUSIVE)      \
+  ADD_FACET(minLength,      MINLENGTH)         \
+  ADD_FACET(pattern,        PATTERN)           \
+  ADD_FACET(totalDigits,    TOTAL_DIGITS)      \
+  ADD_FACET(whiteSpace,     WHITESPACE)
+
 
 /*
  *  ------------------------------- ENUMERATION -------------------------------
  */
 
 #define ADD_TAG(TAG, ...) TAG,
+#define ADD_FACET(facet, FACET) XS_##FACET##_TAG,
 typedef enum
 {
   ALL_XSD_TAG
+  ALL_FACETS
   TOTAL_XSD_TAGS
 }xsd_tag_t;
 #undef ADD_TAG
+#undef ADD_FACET
 
 //! List of Methods to handle multiple occurrence
 typedef enum
@@ -61,8 +78,7 @@ typedef enum
 typedef enum
 {
   SIMPLE_TYPE_PARENT,
-  SIMPLE_CONTENT_PARENT,
-  COMPLEX_CONTENT_PARENT
+  SIMPLE_CONTENT_PARENT
 }en_restriction_parent;
 
 /*
