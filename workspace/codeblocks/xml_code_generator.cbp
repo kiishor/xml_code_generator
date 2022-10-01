@@ -11,7 +11,7 @@
 				<Option object_output="obj/Debug/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
-				<Option parameters="-d C:\project\miniML-Parser\example\items\xml\items.xsd" />
+				<Option parameters="C:\project\xsd\sample.xsd" />
 				<Compiler>
 					<Add option="-g" />
 				</Compiler>
@@ -102,7 +102,6 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../../src/apps/elements/xs_simple_type.h" />
-		<Unit filename="../../src/apps/elements/xs_type.h" />
 		<Unit filename="../../src/apps/facet.c">
 			<Option compilerVar="CC" />
 		</Unit>
