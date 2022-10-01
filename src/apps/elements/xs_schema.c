@@ -26,6 +26,7 @@
 #include "xs_complex_type.h"
 #include "xs_attribute.h"
 #include "xs_simple_type.h"
+#include "xs_group.h"
 #include "xs_schema.h"
 
 /*
@@ -63,31 +64,45 @@ static const xs_element_t schemaDescendant[TOTAL_SCHEMA_DESCENDANTS] =
   [EN_schema_complexType].Child = ComplexType_Descendant,
 
   [EN_schema_attribute].Name.String = "xs:attribute",
-  [EN_schema_attribute].Name.Length    = sizeof("xs:attribute") - 1,
+  [EN_schema_attribute].Name.Length = sizeof("xs:attribute") - 1,
   [EN_schema_attribute].MinOccur    = 0,
   [EN_schema_attribute].MaxOccur    = 64,
-  [EN_schema_attribute].Callback      = traverse_up,
-  [EN_schema_attribute].Target.Type  = EN_DYNAMIC,
-  [EN_schema_attribute].Target.Allocate = allocate_attribute,
-  [EN_schema_attribute].Target.Size = sizeof(attribute_t),
+  [EN_schema_attribute].Callback    = traverse_up,
+  [EN_schema_attribute].Target.Type = EN_DYNAMIC,
+  [EN_schema_attribute].Target.Allocate    = allocate_attribute,
+  [EN_schema_attribute].Target.Size        = sizeof(attribute_t),
   [EN_schema_attribute].Attribute_Quantity = TOTAL_ATTRIBUTE_ATTRIBUTES,
-  [EN_schema_attribute].Attribute = attribute_Attr,
+  [EN_schema_attribute].Attribute      = attribute_Attr,
   [EN_schema_attribute].Child_Quantity = TOTAL_ATTRIBUTE_DESCENDANTS,
-  [EN_schema_attribute].Child_Order     = EN_CHOICE,
-  [EN_schema_attribute].Child = attribute_Descendant,
+  [EN_schema_attribute].Child_Order    = EN_CHOICE,
+  [EN_schema_attribute].Child          = attribute_Descendant,
 
   [EN_schema_simpleType].Name.String  = "xs:simpleType",
   [EN_schema_simpleType].Name.Length  = sizeof("xs:simpleType") - 1,
   [EN_schema_simpleType].MinOccur     = 0,
   [EN_schema_simpleType].MaxOccur     = 64,
-  [EN_schema_simpleType].Callback      = traverse_up,
+  [EN_schema_simpleType].Callback     = traverse_up,
   [EN_schema_simpleType].Target.Type  = EN_DYNAMIC,
-  [EN_schema_simpleType].Target.Allocate = allocate_simple_type,
+  [EN_schema_simpleType].Target.Allocate    = allocate_simple_type,
   [EN_schema_simpleType].Attribute_Quantity = TOTAL_TYPE_ATTRIBUTES,
-  [EN_schema_simpleType].Attribute = simple_type_Attr,
+  [EN_schema_simpleType].Attribute      = simple_type_Attr,
   [EN_schema_simpleType].Child_Quantity = TOTAL_SIMPLE_TYPE_DESCENDANTS,
-  [EN_schema_simpleType].Child_Order     = EN_CHOICE,
-  [EN_schema_simpleType].Child = simple_type_Descendant,
+  [EN_schema_simpleType].Child_Order    = EN_CHOICE,
+  [EN_schema_simpleType].Child          = simple_type_Descendant,
+
+  [EN_schema_group].Name.String  = "xs:groups",
+  [EN_schema_group].Name.Length  = sizeof("xs:group") - 1,
+  [EN_schema_group].MinOccur     = 0,
+  [EN_schema_group].MaxOccur     = 64,
+  [EN_schema_group].Callback     = traverse_up,
+  [EN_schema_group].Target.Type  = EN_DYNAMIC,
+  [EN_schema_group].Target.Allocate    = allocate_group,
+  [EN_schema_group].Attribute_Quantity = TOTAL_GROUP_ATTRIBUTES,
+  [EN_schema_group].Attribute      = Group_attr,
+  [EN_schema_group].Child_Quantity = TOTAL_GROUP_DESCENDANTS,
+  [EN_schema_group].Child_Order    = EN_CHOICE,
+  [EN_schema_group].Child          = Group_Descendant,
+
 
 };
 

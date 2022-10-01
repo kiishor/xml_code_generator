@@ -17,7 +17,8 @@
   ADD_DESCENDANT(parent, sequence)           \
   ADD_DESCENDANT(parent, choice)             \
   ADD_DESCENDANT(parent, simpleContent)      \
-  ADD_DESCENDANT(parent, attribute)
+  ADD_DESCENDANT(parent, attribute)          \
+  ADD_DESCENDANT(parent, group)
 
   #define ALL_COMPLEX_TYPE_ATTRIBUTES  \
   ADD_ATTRIBUTE(id)                    \

@@ -23,6 +23,7 @@
 #include "xs_choice.h"
 #include "xs_simple_content.h"
 #include "xs_attribute.h"
+#include "xs_group.h"
 #include "xs_schema.h"
 
 /*
@@ -82,6 +83,19 @@ const xs_element_t ComplexType_Descendant[TOTAL_COMPLEX_TYPE_DESCENDANT] =
   [EN_complex_attribute].Child_Quantity = TOTAL_ATTRIBUTE_DESCENDANTS,
   [EN_complex_attribute].Child_Order    = EN_CHOICE,
   [EN_complex_attribute].Child          = attribute_Descendant,
+
+  [EN_complex_group].Name.String  = "xs:groups",
+  [EN_complex_group].Name.Length  = sizeof("xs:group") - 1,
+  [EN_complex_group].MinOccur     = 0,
+  [EN_complex_group].MaxOccur     = 64,
+  [EN_complex_group].Callback     = traverse_up,
+  [EN_complex_group].Target.Type  = EN_DYNAMIC,
+  [EN_complex_group].Target.Allocate    = allocate_group,
+  [EN_complex_group].Attribute_Quantity = TOTAL_GROUP_ATTRIBUTES,
+  [EN_complex_group].Attribute      = Group_attr,
+  [EN_complex_group].Child_Quantity = TOTAL_GROUP_DESCENDANTS,
+  [EN_complex_group].Child_Order    = EN_CHOICE,
+  [EN_complex_group].Child          = Group_Descendant,
 };
 
 const xs_attribute_t complexType_Attr[] =

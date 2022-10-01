@@ -22,6 +22,7 @@
 
 #include "xs_element.h"
 #include "xs_schema.h"
+#include "xs_group.h"
 
 /*
  *  ---------------------------- GLOBAL VARIABLES -----------------------------
@@ -41,6 +42,19 @@ const xs_element_t Choice_Descendant[TOTAL_CHOICE_DESCENDANTS] =
   [EN_choice_child_element].Child_Quantity = TOTAL_ELEMENT_DESCENDANTS,
   [EN_choice_child_element].Child_Order    = EN_CHOICE,
   [EN_choice_child_element].Child          = Element_Descendant,
+
+  [EN_choice_group].Name.String  = "xs:groups",
+  [EN_choice_group].Name.Length  = sizeof("xs:group") - 1,
+  [EN_choice_group].MinOccur     = 0,
+  [EN_choice_group].MaxOccur     = 64,
+  [EN_choice_group].Callback     = traverse_up,
+  [EN_choice_group].Target.Type  = EN_DYNAMIC,
+  [EN_choice_group].Target.Allocate    = allocate_group,
+  [EN_choice_group].Attribute_Quantity = TOTAL_GROUP_ATTRIBUTES,
+  [EN_choice_group].Attribute      = Group_attr,
+  [EN_choice_group].Child_Quantity = TOTAL_GROUP_DESCENDANTS,
+  [EN_choice_group].Child_Order    = EN_CHOICE,
+  [EN_choice_group].Child          = Group_Descendant,
 };
 
 const xs_attribute_t Choice_attr[TOTAL_CHOICE_ATTRIBUTES] =

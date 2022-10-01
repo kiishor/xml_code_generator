@@ -36,6 +36,7 @@
   ADD_TAG(XS_ATTRIBUTE_TAG,       xs:attribute)       \
   ADD_TAG(XS_RESTRICTION_TAG,     xs:restriction)     \
   ADD_TAG(XS_SIMPLE_TYPE_TAG,     xs:simpleType)      \
+  ADD_TAG(XS_GROUP_TAG,           xs:group)
 
 #define ALL_FACETS                  \
   ADD_FACET(enumeration,    ENUMERATION)       \

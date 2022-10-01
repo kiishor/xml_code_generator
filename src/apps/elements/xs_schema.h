@@ -17,7 +17,8 @@
   ADD_DESCENDANT(element)         \
   ADD_DESCENDANT(complexType)     \
   ADD_DESCENDANT(attribute)       \
-  ADD_DESCENDANT(simpleType)
+  ADD_DESCENDANT(simpleType)      \
+  ADD_DESCENDANT(group)
 
 /*
  *  ------------------------------- ENUMERATION -------------------------------

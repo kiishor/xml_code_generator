@@ -13,7 +13,8 @@
  *  ------------------------------- DEFINITION -------------------------------
  */
 #define ALL_SEQUENCE_DESCENDANTS  \
-  ADD_DESCENDANT(child_element)
+  ADD_DESCENDANT(child_element)   \
+  ADD_DESCENDANT(group)
 
 #define ALL_SEQUENCE_ATTRIBUTES  \
   ADD_ATTRIBUTE(id)           \

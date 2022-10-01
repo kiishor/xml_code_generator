@@ -11,7 +11,7 @@
 				<Option object_output="obj/Debug/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
-				<Option parameters="-d C:\project\miniML-Parser\example\items\xml\items.xsd" />
+				<Option parameters="C:\project\miniML-Parser\example\mails.xsd" />
 				<Compiler>
 					<Add option="-g" />
 				</Compiler>
@@ -82,6 +82,10 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../../src/apps/elements/xs_facet.h" />
+		<Unit filename="../../src/apps/elements/xs_group.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../src/apps/elements/xs_group.h" />
 		<Unit filename="../../src/apps/elements/xs_restriction.c">
 			<Option compilerVar="CC" />
 		</Unit>

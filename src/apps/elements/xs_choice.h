@@ -12,7 +12,8 @@
  *  ------------------------------- DEFINITION -------------------------------
  */
 #define ALL_CHOICE_DESCENDANTS  \
-  ADD_DESCENDANT(child_element)
+  ADD_DESCENDANT(child_element) \
+  ADD_DESCENDANT(group)
 
 #define ALL_CHOICE_ATTRIBUTES  \
   ADD_ATTRIBUTE(id)           \

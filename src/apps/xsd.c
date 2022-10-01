@@ -331,6 +331,30 @@ static inline void parse_complex_element(const tree_t* const tree,
   }
 }
 
+static inline void parse_group(const tree_t* const tree, xs_element_t* const element, const context_t* const context)
+{
+
+  const tree_t* const node = tree->Descendant;
+  const xsd_tag_t* const tag = node->Data;
+
+  switch(*tag)
+  {
+  case XS_SEQUENCE_TAG:
+    element->Child_Order = EN_SEQUENCE;
+    parse_sequence(node, element, context);
+    break;
+
+  case XS_CHOICE_TAG:
+    element->Child_Order = EN_CHOICE;
+    parse_sequence(node, element, context);
+    break;
+
+  default:
+    assert(false);
+    return;
+  }
+}
+
 static inline void parse_complex_type(const tree_t* const tree, xs_element_t* const element,
                                       context_t* const context)
 {
@@ -642,6 +666,13 @@ xs_element_t* compile_xsd(const tree_t* const tree, const options_t* const optio
     {
       xs_element_t* simpleType = calloc(sizeof(xs_element_t), 1);
       parse_simple_type(node, simpleType, &context);
+      break;
+    }
+
+    case XS_GROUP_TAG:
+    {
+      xs_element_t* group = calloc(sizeof(xs_element_t), 1);
+      parse_group(node, group, &context);
       break;
     }
 

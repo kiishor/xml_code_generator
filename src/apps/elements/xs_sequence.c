@@ -21,6 +21,7 @@
 #include "xs_sequence.h"
 #include "util/util.h"
 
+#include "xs_group.h"
 #include "xs_element.h"
 #include "xs_schema.h"
 
@@ -42,6 +43,20 @@ const xs_element_t Sequence_Descendant[TOTAL_SEQUENCE_DESCENDANTS] =
   [EN_sequence_child_element].Child_Quantity = TOTAL_ELEMENT_DESCENDANTS,
   [EN_sequence_child_element].Child_Order     = EN_CHOICE,
   [EN_sequence_child_element].Child          = Element_Descendant,
+
+  [EN_sequence_group].Name.String  = "xs:groups",
+  [EN_sequence_group].Name.Length  = sizeof("xs:group") - 1,
+  [EN_sequence_group].MinOccur     = 0,
+  [EN_sequence_group].MaxOccur     = 64,
+  [EN_sequence_group].Callback     = traverse_up,
+  [EN_sequence_group].Target.Type  = EN_DYNAMIC,
+  [EN_sequence_group].Target.Allocate    = allocate_group,
+  [EN_sequence_group].Attribute_Quantity = TOTAL_GROUP_ATTRIBUTES,
+  [EN_sequence_group].Attribute      = Group_attr,
+  [EN_sequence_group].Child_Quantity = TOTAL_GROUP_DESCENDANTS,
+  [EN_sequence_group].Child_Order    = EN_CHOICE,
+  [EN_sequence_group].Child          = Group_Descendant,
+
 };
 
 const xs_attribute_t sequence_attr[TOTAL_SEQUENCE_ATTRIBUTES] =
